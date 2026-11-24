@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Stage = "idle" | "playing" | "description_hold" | "posts_view";
@@ -17,7 +16,6 @@ type PostItem = {
 const DESCRIPTION_REVEAL_TIME = 13.7;
 const PLAYBACK_RATE = 1.0;
 const VIDEO_SRC = "/projects/elevate/ELEVATE%20VIDEO/Untitled%20design.mp4";
-const GENTLE_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const ELEVATE_POSTS: PostItem[] = [
   {
@@ -63,23 +61,27 @@ export default function ElevateProject() {
       setVideoError(true);
     };
 
-    const handleTimeUpdate = () => {
+    const triggerDescriptionHold = () => {
       if (stageRef.current !== "playing") return;
-      if (video.currentTime >= DESCRIPTION_REVEAL_TIME || video.ended) {
-        video.pause();
-        setStage("description_hold");
-      }
+      video.pause();
+      setStage("description_hold");
     };
 
-    const handleEnded = () => {
-      if (stageRef.current === "playing") {
-        setStage("description_hold");
+    const handleTimeUpdate = () => {
+      if (stageRef.current !== "playing") return;
+      const targetTime =
+        Number.isFinite(video.duration) && video.duration > 0
+          ? Math.min(DESCRIPTION_REVEAL_TIME, video.duration - 0.05)
+          : DESCRIPTION_REVEAL_TIME;
+
+      if (video.currentTime >= targetTime) {
+        triggerDescriptionHold();
       }
     };
 
     video.addEventListener("error", handleError);
     video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("ended", handleEnded);
+    video.addEventListener("ended", triggerDescriptionHold);
 
     if (video.readyState >= 2) {
       lockFirstFrame();
@@ -90,7 +92,7 @@ export default function ElevateProject() {
     return () => {
       video.removeEventListener("error", handleError);
       video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("ended", triggerDescriptionHold);
     };
   }, []);
 
@@ -141,6 +143,9 @@ export default function ElevateProject() {
     setActivePostIndex((activePostIndex + 1) % ELEVATE_POSTS.length);
   };
 
+  const isDescriptionVisible = stage === "description_hold";
+  const isPostsVisible = stage === "posts_view";
+
   return (
     <section
       id="elevate-solutions"
@@ -151,208 +156,161 @@ export default function ElevateProject() {
       <video
         ref={videoRef}
         className={`elevate-video ${
-          stage === "description_hold"
-            ? "is-dimmed"
-            : stage === "posts_view"
-            ? "is-faded"
-            : ""
+          isDescriptionVisible ? "is-dimmed" : isPostsVisible ? "is-faded" : ""
         }`}
         src={VIDEO_SRC}
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
         controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
       />
 
-      {videoError && stage !== "description_hold" && stage !== "posts_view" && (
+      {videoError && !isDescriptionVisible && !isPostsVisible && (
         <div className="video-missing-note">
           Video not found at <code>{VIDEO_SRC}</code>. Check the filename inside{" "}
           <code>public/projects/elevate/ELEVATE VIDEO/</code>.
         </div>
       )}
 
-      <AnimatePresence mode="wait">
-        {stage === "description_hold" && (
-          <motion.div
-            key="elevate-description-hold"
-            className="elevate-campaign-screen"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.25, ease: GENTLE_EASE }}
-          >
-            <div className="campaign-center">
-              <motion.div
-                className="campaign-brand"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 1.05, delay: 0.18, ease: GENTLE_EASE }}
+      <div
+        className={`elevate-campaign-screen ${isDescriptionVisible ? "is-visible" : ""}`}
+        aria-hidden={!isDescriptionVisible}
+      >
+        <div className="campaign-center">
+          <div className="campaign-brand">
+            <img
+              src="/projects/elevate/elevate_solutions_logo_extracted.png"
+              alt="Elevate Solutions Logo"
+              className="campaign-extracted-logo"
+              draggable={false}
+            />
+          </div>
+
+          <h2 className="campaign-title">
+            CORPORATE <span>BUSINESS</span>
+          </h2>
+          <p className="campaign-subtitle">SOCIAL MEDIA CAMPAIGN</p>
+          <p className="campaign-body">
+            A strategic social media campaign designed to strengthen brand
+            presence, build trust, and communicate value.
+          </p>
+        </div>
+      </div>
+
+      {isPostsVisible && (
+        <div
+          className="elevate-posts-overlay"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="posts-inner">
+            <div className="posts-header-row">
+              <div>
+                <p className="posts-kicker">CAMPAIGN CREATIVES</p>
+                <h2 className="posts-heading">
+                  CORPORATE <span>BUSINESS</span> POSTS
+                </h2>
+              </div>
+              <button
+                type="button"
+                className="posts-back-btn"
+                onClick={handleBackToOverview}
+              >
+                <ArrowLeft size={14} />
+                <span>BACK TO OVERVIEW</span>
+              </button>
+            </div>
+
+            <div className="posts-grid">
+              {ELEVATE_POSTS.map((post, idx) => (
+                <article
+                  key={post.id}
+                  className="post-card"
+                  onClick={() => setActivePostIndex(idx)}
+                >
+                  <div className="post-media">
+                    {missingImages[post.id] ? (
+                      <div className="post-fallback">
+                        Image not found at <code>{post.src}</code>
+                      </div>
+                    ) : (
+                      <img
+                        src={post.src}
+                        alt={post.title}
+                        className="post-img"
+                        onError={() =>
+                          setMissingImages((prev) => ({ ...prev, [post.id]: true }))
+                        }
+                      />
+                    )}
+                  </div>
+                  <div className="post-meta">
+                    <span className="post-num">{post.indexLabel}</span>
+                    <h3 className="post-title">{post.title}</h3>
+                    <p className="post-caption">{post.caption}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          {activePostIndex !== null && (
+            <div
+              className="post-lightbox"
+              onClick={() => setActivePostIndex(null)}
+              role="dialog"
+              aria-modal="true"
+            >
+              <button
+                type="button"
+                className="lightbox-close"
+                onClick={() => setActivePostIndex(null)}
+                aria-label="Close preview"
+              >
+                <X size={20} />
+              </button>
+
+              <button
+                type="button"
+                className="lightbox-nav prev"
+                onClick={handlePrevPost}
+                aria-label="Previous post"
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              <div
+                className="lightbox-content"
+                onClick={(e) => e.stopPropagation()}
               >
                 <img
-                  src="/projects/elevate/elevate_solutions_logo_extracted.png"
-                  alt="Elevate Solutions Logo"
-                  className="campaign-extracted-logo"
-                  draggable={false}
+                  src={ELEVATE_POSTS[activePostIndex].src}
+                  alt={ELEVATE_POSTS[activePostIndex].title}
+                  className="lightbox-img"
                 />
-              </motion.div>
-
-              <motion.h2
-                className="campaign-title"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 1.1, delay: 0.3, ease: GENTLE_EASE }}
-              >
-                CORPORATE <span>BUSINESS</span>
-              </motion.h2>
-
-              <motion.p
-                className="campaign-subtitle"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 1.05, delay: 0.42, ease: GENTLE_EASE }}
-              >
-                SOCIAL MEDIA CAMPAIGN
-              </motion.p>
-
-              <motion.p
-                className="campaign-body"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 1.1, delay: 0.54, ease: GENTLE_EASE }}
-              >
-                A strategic social media campaign designed to strengthen brand
-                presence, build trust, and communicate value.
-              </motion.p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {stage === "posts_view" && (
-          <motion.div
-            key="elevate-posts-overlay"
-            className="elevate-posts-overlay"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.55, ease: GENTLE_EASE }}
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="posts-inner">
-              <div className="posts-header-row">
-                <div>
-                  <p className="posts-kicker">CAMPAIGN CREATIVES</p>
-                  <h2 className="posts-heading">
-                    CORPORATE <span>BUSINESS</span> POSTS
-                  </h2>
+                <div className="lightbox-caption">
+                  <span>{ELEVATE_POSTS[activePostIndex].indexLabel}</span>
+                  <p>{ELEVATE_POSTS[activePostIndex].title}</p>
                 </div>
-                <button
-                  type="button"
-                  className="posts-back-btn"
-                  onClick={handleBackToOverview}
-                >
-                  <ArrowLeft size={14} />
-                  <span>BACK TO OVERVIEW</span>
-                </button>
               </div>
 
-              <div className="posts-grid">
-                {ELEVATE_POSTS.map((post, idx) => (
-                  <article
-                    key={post.id}
-                    className="post-card"
-                    onClick={() => setActivePostIndex(idx)}
-                  >
-                    <div className="post-media">
-                      {missingImages[post.id] ? (
-                        <div className="post-fallback">
-                          Image not found at <code>{post.src}</code>
-                        </div>
-                      ) : (
-                        <img
-                          src={post.src}
-                          alt={post.title}
-                          className="post-img"
-                          onError={() =>
-                            setMissingImages((prev) => ({ ...prev, [post.id]: true }))
-                          }
-                        />
-                      )}
-                    </div>
-                    <div className="post-meta">
-                      <span className="post-num">{post.indexLabel}</span>
-                      <h3 className="post-title">{post.title}</h3>
-                      <p className="post-caption">{post.caption}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            {activePostIndex !== null && (
-              <div
-                className="post-lightbox"
-                onClick={() => setActivePostIndex(null)}
-                role="dialog"
-                aria-modal="true"
+              <button
+                type="button"
+                className="lightbox-nav next"
+                onClick={handleNextPost}
+                aria-label="Next post"
               >
-                <button
-                  type="button"
-                  className="lightbox-close"
-                  onClick={() => setActivePostIndex(null)}
-                  aria-label="Close preview"
-                >
-                  <X size={20} />
-                </button>
-
-                <button
-                  type="button"
-                  className="lightbox-nav prev"
-                  onClick={handlePrevPost}
-                  aria-label="Previous post"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-
-                <div
-                  className="lightbox-content"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <img
-                    src={ELEVATE_POSTS[activePostIndex].src}
-                    alt={ELEVATE_POSTS[activePostIndex].title}
-                    className="lightbox-img"
-                  />
-                  <div className="lightbox-caption">
-                    <span>{ELEVATE_POSTS[activePostIndex].indexLabel}</span>
-                    <p>{ELEVATE_POSTS[activePostIndex].title}</p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  className="lightbox-nav next"
-                  onClick={handleNextPost}
-                  aria-label="Next post"
-                >
-                  <ChevronRight size={24} />
-                </button>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <ChevronRight size={24} />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       <div
         className={`elevate-vignette ${
-          stage === "description_hold" || stage === "posts_view" ? "is-hidden" : ""
+          isDescriptionVisible || isPostsVisible ? "is-hidden" : ""
         }`}
       />
 
@@ -366,71 +324,47 @@ export default function ElevateProject() {
         </span>
       </div>
 
-      <AnimatePresence>
-        {stage === "idle" && (
-          <motion.div
-            key="prompt-idle"
-            className="elevate-prompt"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.55, ease: GENTLE_EASE }}
-          >
-            <p className="prompt-kicker">
-              3D ARCHITECTURAL VISUALIZATION &amp; BRAND CAMPAIGN
-            </p>
-            <h2 className="prompt-headline">
-              ELEVATE <em>SOLUTIONS.</em>
-            </h2>
-            <div className="touch-pill">
-              <span className="pulse-dot" />
-              <span>TOUCH ANYWHERE TO BEGIN THE EXPERIENCE</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className={`elevate-prompt ${stage === "idle" ? "is-visible" : ""}`}>
+        <p className="prompt-kicker">
+          3D ARCHITECTURAL VISUALIZATION &amp; BRAND CAMPAIGN
+        </p>
+        <h2 className="prompt-headline">
+          ELEVATE <em>SOLUTIONS.</em>
+        </h2>
+        <div className="touch-pill">
+          <span className="pulse-dot" />
+          <span>TOUCH ANYWHERE TO BEGIN THE EXPERIENCE</span>
+        </div>
+      </div>
 
-      <AnimatePresence>
-        {stage === "description_hold" && (
-          <motion.div
-            key="elevate-side-dock"
-            className="elevate-side-dock"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{
-              duration: 1.05,
-              delay: 0.62,
-              ease: GENTLE_EASE,
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="posts-link"
-              onClick={handleOpenPosts}
-              aria-label="Click this icon to view the complete posts"
-            >
-              <span className="posts-copy">
-                Click this icon to view the complete posts
-              </span>
-              <span className="posts-icon">
-                <LayoutGrid size={18} strokeWidth={1.9} />
-              </span>
-            </button>
+      <div
+        className={`elevate-side-dock ${isDescriptionVisible ? "is-visible" : ""}`}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="posts-link"
+          onClick={handleOpenPosts}
+          aria-label="Click this icon to view the complete posts"
+        >
+          <span className="posts-copy">
+            Click this icon to view the complete posts
+          </span>
+          <span className="posts-icon">
+            <LayoutGrid size={18} strokeWidth={1.9} />
+          </span>
+        </button>
 
-            <button
-              type="button"
-              className="replay-btn"
-              onClick={handleReplay}
-            >
-              <RotateCcw size={12} />
-              <span>REPLAY SEQUENCE</span>
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <button
+          type="button"
+          className="replay-btn"
+          onClick={handleReplay}
+        >
+          <RotateCcw size={12} />
+          <span>REPLAY SEQUENCE</span>
+        </button>
+      </div>
 
       <style jsx global>{`
         .elevate-experience {
@@ -457,13 +391,12 @@ export default function ElevateProject() {
           display: block;
           pointer-events: none;
           opacity: 1;
-          will-change: opacity;
-          transition: opacity 1.25s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .elevate-experience .elevate-video.is-dimmed {
           z-index: 4;
-          opacity: 0.38;
+          opacity: 0.28;
         }
 
         .elevate-experience .elevate-video.is-faded {
@@ -495,14 +428,18 @@ export default function ElevateProject() {
           padding: 0 7vw;
           background: radial-gradient(
             circle at 50% 42%,
-            rgba(20, 34, 28, 0.46) 0%,
-            rgba(17, 24, 21, 0.64) 56%,
-            rgba(13, 19, 16, 0.78) 100%
+            rgba(20, 34, 28, 0.56) 0%,
+            rgba(17, 24, 21, 0.76) 62%,
+            rgba(13, 19, 16, 0.88) 100%
           );
-          backdrop-filter: blur(2px);
-          -webkit-backdrop-filter: blur(2px);
-          will-change: opacity;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1);
           -webkit-font-smoothing: antialiased;
+        }
+
+        .elevate-experience .elevate-campaign-screen.is-visible {
+          opacity: 1;
         }
 
         .elevate-experience .campaign-center {
@@ -513,14 +450,13 @@ export default function ElevateProject() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          text-shadow: 0 2px 18px rgba(10, 15, 13, 0.72);
+          transform: translateY(8px);
+          transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+          text-shadow: 0 2px 18px rgba(10, 15, 13, 0.78);
         }
 
-        .elevate-experience .campaign-brand,
-        .elevate-experience .campaign-title,
-        .elevate-experience .campaign-subtitle,
-        .elevate-experience .campaign-body {
-          will-change: transform, opacity;
+        .elevate-experience .elevate-campaign-screen.is-visible .campaign-center {
+          transform: translateY(0);
         }
 
         .elevate-experience .campaign-brand {
@@ -580,7 +516,6 @@ export default function ElevateProject() {
               #0e1411 100%
             ),
             #111815;
-          will-change: transform, opacity;
           cursor: default;
         }
 
@@ -837,6 +772,14 @@ export default function ElevateProject() {
           z-index: 12;
           max-width: 620px;
           pointer-events: none;
+          opacity: 0;
+          transform: translateY(10px);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .elevate-experience .elevate-prompt.is-visible {
+          opacity: 1;
+          transform: translateY(0);
         }
 
         .elevate-experience .prompt-kicker {
@@ -892,7 +835,16 @@ export default function ElevateProject() {
           flex-direction: column;
           align-items: flex-end;
           gap: 12px;
-          will-change: transform, opacity;
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(8px);
+          transition: opacity 1.1s ease 0.45s, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s;
+        }
+
+        .elevate-experience .elevate-side-dock.is-visible {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0);
         }
 
         .elevate-experience .posts-link {
