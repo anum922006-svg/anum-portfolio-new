@@ -17,7 +17,7 @@ type PostItem = {
 const DESCRIPTION_REVEAL_TIME = 13.7;
 const PLAYBACK_RATE = 1.0;
 const VIDEO_SRC = "/projects/elevate/ELEVATE%20VIDEO/Untitled%20design.mp4";
-const SMOOTH_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const GENTLE_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const ELEVATE_POSTS: PostItem[] = [
   {
@@ -180,15 +180,15 @@ export default function ElevateProject() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.85, ease: SMOOTH_EASE }}
+            transition={{ duration: 1.25, ease: GENTLE_EASE }}
           >
             <div className="campaign-center">
               <motion.div
                 className="campaign-brand"
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.75, delay: 0.08, ease: SMOOTH_EASE }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 1.05, delay: 0.18, ease: GENTLE_EASE }}
               >
                 <img
                   src="/projects/elevate/elevate_solutions_logo_extracted.png"
@@ -200,30 +200,30 @@ export default function ElevateProject() {
 
               <motion.h2
                 className="campaign-title"
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.8, delay: 0.16, ease: SMOOTH_EASE }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 1.1, delay: 0.3, ease: GENTLE_EASE }}
               >
                 CORPORATE <span>BUSINESS</span>
               </motion.h2>
 
               <motion.p
                 className="campaign-subtitle"
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.75, delay: 0.24, ease: SMOOTH_EASE }}
+                transition={{ duration: 1.05, delay: 0.42, ease: GENTLE_EASE }}
               >
                 SOCIAL MEDIA CAMPAIGN
               </motion.p>
 
               <motion.p
                 className="campaign-body"
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.8, delay: 0.32, ease: SMOOTH_EASE }}
+                transition={{ duration: 1.1, delay: 0.54, ease: GENTLE_EASE }}
               >
                 A strategic social media campaign designed to strengthen brand
                 presence, build trust, and communicate value.
@@ -241,7 +241,7 @@ export default function ElevateProject() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.5, ease: SMOOTH_EASE }}
+            transition={{ duration: 0.55, ease: GENTLE_EASE }}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
           >
@@ -374,7 +374,7 @@ export default function ElevateProject() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.55, ease: SMOOTH_EASE }}
+            transition={{ duration: 0.55, ease: GENTLE_EASE }}
           >
             <p className="prompt-kicker">
               3D ARCHITECTURAL VISUALIZATION &amp; BRAND CAMPAIGN
@@ -395,13 +395,13 @@ export default function ElevateProject() {
           <motion.div
             key="elevate-side-dock"
             className="elevate-side-dock"
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
+            exit={{ opacity: 0, y: 8 }}
             transition={{
-              duration: 0.75,
-              delay: 0.35,
-              ease: SMOOTH_EASE,
+              duration: 1.05,
+              delay: 0.62,
+              ease: GENTLE_EASE,
             }}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
@@ -458,12 +458,12 @@ export default function ElevateProject() {
           pointer-events: none;
           opacity: 1;
           will-change: opacity;
-          transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: opacity 1.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .elevate-experience .elevate-video.is-dimmed {
-          z-index: 7;
-          opacity: 0.22;
+          z-index: 4;
+          opacity: 0.38;
         }
 
         .elevate-experience .elevate-video.is-faded {
@@ -494,11 +494,13 @@ export default function ElevateProject() {
           justify-content: center;
           padding: 0 7vw;
           background: radial-gradient(
-            circle at 50% 35%,
-            rgba(28, 45, 39, 0.58) 0%,
-            rgba(17, 24, 21, 0.8) 58%,
-            rgba(13, 19, 16, 0.9) 100%
+            circle at 50% 42%,
+            rgba(20, 34, 28, 0.46) 0%,
+            rgba(17, 24, 21, 0.64) 56%,
+            rgba(13, 19, 16, 0.78) 100%
           );
+          backdrop-filter: blur(2px);
+          -webkit-backdrop-filter: blur(2px);
           will-change: opacity;
           -webkit-font-smoothing: antialiased;
         }
@@ -511,6 +513,7 @@ export default function ElevateProject() {
           display: flex;
           flex-direction: column;
           align-items: center;
+          text-shadow: 0 2px 18px rgba(10, 15, 13, 0.72);
         }
 
         .elevate-experience .campaign-brand,
@@ -553,7 +556,7 @@ export default function ElevateProject() {
           margin: 18px 0 36px;
           font-size: clamp(13px, 1.4vw, 18px);
           letter-spacing: 0.34em;
-          color: rgba(229, 222, 213, 0.88);
+          color: rgba(229, 222, 213, 0.94);
         }
 
         .elevate-experience .campaign-body {
@@ -561,7 +564,7 @@ export default function ElevateProject() {
           max-width: 560px;
           font-size: clamp(15px, 1.35vw, 19px);
           line-height: 1.75;
-          color: rgba(229, 222, 213, 0.78);
+          color: rgba(229, 222, 213, 0.88);
         }
 
         .elevate-experience .elevate-posts-overlay {
