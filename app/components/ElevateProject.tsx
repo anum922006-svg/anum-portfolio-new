@@ -212,20 +212,15 @@ export default function ElevateProject() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="living-light-layer" aria-hidden="true">
-              <div className="light-sweep sweep-one" />
-              <div className="light-sweep sweep-two" />
-            </div>
-
             <motion.div
               className="campaign-center"
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.95,
-                delay: 0.15,
+                duration: 0.8,
+                delay: 0.1,
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
@@ -450,12 +445,13 @@ export default function ElevateProject() {
 
       <style jsx global>{`
         .elevate-experience {
+          color-scheme: light;
           position: relative;
           width: 100%;
           height: 100vh;
           min-height: 100svh;
           overflow: hidden;
-          background: #111312;
+          background: #0f1c17;
           cursor: pointer;
           user-select: none;
           touch-action: manipulation;
@@ -472,12 +468,12 @@ export default function ElevateProject() {
           display: block;
           pointer-events: none;
           opacity: 1;
-          transition: opacity 0.9s ease;
+          transition: opacity 0.8s ease;
         }
 
         .elevate-experience .elevate-video.is-dimmed {
           z-index: 7;
-          opacity: 0.36;
+          opacity: 0.22;
         }
 
         .elevate-experience .elevate-video.is-faded {
@@ -492,7 +488,7 @@ export default function ElevateProject() {
           padding: 16px 20px;
           border-radius: 10px;
           border: 1px solid rgba(201, 173, 106, 0.45);
-          background: rgba(17, 24, 21, 0.9);
+          background: rgba(15, 28, 23, 0.92);
           color: #e8e3d9;
           font-size: 13px;
           line-height: 1.5;
@@ -509,47 +505,11 @@ export default function ElevateProject() {
           padding: 0 7vw;
           background: radial-gradient(
             circle at 50% 35%,
-            rgba(24, 27, 25, 0.38) 0%,
-            rgba(16, 18, 17, 0.58) 55%,
-            rgba(13, 15, 14, 0.68) 100%
+            rgba(22, 41, 33, 0.55) 0%,
+            rgba(15, 28, 23, 0.78) 58%,
+            rgba(11, 21, 17, 0.88) 100%
           );
           -webkit-font-smoothing: antialiased;
-        }
-
-        .elevate-experience .living-light-layer {
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
-          pointer-events: none;
-          z-index: 1;
-        }
-
-        .elevate-experience .light-sweep {
-          position: absolute;
-          top: -20%;
-          bottom: -20%;
-          left: 0;
-          width: 44%;
-          background: linear-gradient(
-            105deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.03) 32%,
-            rgba(255, 255, 255, 0.13) 50%,
-            rgba(255, 255, 255, 0.03) 68%,
-            rgba(255, 255, 255, 0) 100%
-          );
-          will-change: transform;
-          transform: translate3d(-130%, 0, 0) skewX(-18deg);
-        }
-
-        .elevate-experience .sweep-one {
-          animation: elevateLightSweep 6.5s linear infinite;
-        }
-
-        .elevate-experience .sweep-two {
-          width: 28%;
-          opacity: 0.7;
-          animation: elevateLightSweep 10s linear 3.2s infinite;
         }
 
         .elevate-experience .campaign-center {
@@ -574,7 +534,6 @@ export default function ElevateProject() {
           height: auto;
           object-fit: contain;
           display: block;
-          mix-blend-mode: lighten;
           pointer-events: none;
         }
 
@@ -615,9 +574,9 @@ export default function ElevateProject() {
           padding: 74px 5vw 48px;
           background: radial-gradient(
               circle at 50% 15%,
-              rgba(42, 74, 60, 0.55) 0%,
-              rgba(18, 36, 29, 0.96) 55%,
-              #0d1814 100%
+              rgba(36, 62, 51, 0.55) 0%,
+              rgba(16, 30, 24, 0.96) 55%,
+              #0c1612 100%
             ),
             #0f1c17;
           cursor: default;
@@ -663,7 +622,7 @@ export default function ElevateProject() {
           padding: 9px 14px;
           border-radius: 999px;
           border: 1px solid rgba(232, 227, 217, 0.28);
-          background: rgba(17, 24, 21, 0.85);
+          background: rgba(15, 28, 23, 0.88);
           color: #e8e3d9;
           font-size: 10px;
           letter-spacing: 0.18em;
@@ -686,7 +645,7 @@ export default function ElevateProject() {
           border-radius: 14px;
           overflow: hidden;
           border: 1px solid rgba(158, 134, 81, 0.35);
-          background: rgba(17, 24, 21, 0.88);
+          background: rgba(15, 28, 23, 0.9);
           cursor: pointer;
           transition: transform 0.25s ease, border-color 0.25s ease;
         }
@@ -698,7 +657,7 @@ export default function ElevateProject() {
 
         .elevate-experience .post-media {
           width: 100%;
-          background: #0b1411;
+          background: #0b1410;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -748,7 +707,7 @@ export default function ElevateProject() {
           position: fixed;
           inset: 0;
           z-index: 60;
-          background: rgba(8, 14, 11, 0.92);
+          background: rgba(8, 15, 12, 0.92);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -795,7 +754,7 @@ export default function ElevateProject() {
           height: 42px;
           border-radius: 999px;
           border: 1px solid rgba(232, 227, 217, 0.28);
-          background: rgba(17, 24, 21, 0.85);
+          background: rgba(15, 28, 23, 0.88);
           color: #e8e3d9;
           display: inline-flex;
           align-items: center;
@@ -811,7 +770,7 @@ export default function ElevateProject() {
           height: 44px;
           border-radius: 999px;
           border: 1px solid rgba(232, 227, 217, 0.28);
-          background: rgba(17, 24, 21, 0.85);
+          background: rgba(15, 28, 23, 0.88);
           color: #e8e3d9;
           display: inline-flex;
           align-items: center;
@@ -834,10 +793,10 @@ export default function ElevateProject() {
           pointer-events: none;
           background: linear-gradient(
             180deg,
-            rgba(17, 24, 21, 0.42) 0%,
-            rgba(17, 24, 21, 0) 22%,
-            rgba(17, 24, 21, 0) 76%,
-            rgba(17, 24, 21, 0.58) 100%
+            rgba(15, 28, 23, 0.42) 0%,
+            rgba(15, 28, 23, 0) 22%,
+            rgba(15, 28, 23, 0) 76%,
+            rgba(15, 28, 23, 0.58) 100%
           );
           transition: opacity 0.6s ease;
         }
@@ -906,7 +865,7 @@ export default function ElevateProject() {
           gap: 12px;
           padding: 12px 20px;
           border: 1px solid rgba(232, 227, 217, 0.32);
-          background: rgba(17, 24, 21, 0.78);
+          background: rgba(15, 28, 23, 0.82);
           border-radius: 999px;
           font-size: 10px;
           letter-spacing: 0.2em;
@@ -940,7 +899,7 @@ export default function ElevateProject() {
           padding: 10px 12px 10px 18px;
           border-radius: 12px;
           border: 1px solid rgba(158, 134, 81, 0.55);
-          background: rgba(17, 24, 21, 0.88);
+          background: rgba(15, 28, 23, 0.9);
           color: #e8e3d9;
           text-decoration: none;
           cursor: pointer;
@@ -969,7 +928,7 @@ export default function ElevateProject() {
           height: 40px;
           border-radius: 9px;
           background: #9e8651;
-          color: #111815;
+          color: #0f1c17;
           flex-shrink: 0;
         }
 
@@ -977,7 +936,7 @@ export default function ElevateProject() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          background: rgba(17, 24, 21, 0.82);
+          background: rgba(15, 28, 23, 0.85);
           border: 1px solid rgba(232, 227, 217, 0.25);
           color: rgba(232, 227, 217, 0.82);
           padding: 8px 14px;
@@ -993,15 +952,6 @@ export default function ElevateProject() {
           color: #9e8651;
         }
 
-        @keyframes elevateLightSweep {
-          0% {
-            transform: translate3d(-130%, 0, 0) skewX(-18deg);
-          }
-          100% {
-            transform: translate3d(320%, 0, 0) skewX(-18deg);
-          }
-        }
-
         @keyframes elevatePulseGlow {
           0%,
           100% {
@@ -1015,12 +965,23 @@ export default function ElevateProject() {
         }
 
         @media (max-width: 800px) {
+          .elevate-experience {
+            width: 100%;
+            height: 62svh;
+            min-height: 420px;
+          }
+          .elevate-experience .elevate-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #0f1c17;
+          }
           .elevate-experience .elevate-side-dock {
             right: 20px;
-            bottom: 24px;
+            bottom: 20px;
           }
           .elevate-experience .elevate-prompt {
-            bottom: 14vh;
+            bottom: 10vh;
           }
         }
       `}</style>
