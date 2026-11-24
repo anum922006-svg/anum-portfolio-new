@@ -6,11 +6,6 @@ import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight } from "
 
 type Stage = "idle" | "playing" | "description_hold" | "posts_view";
 
-type VideoWithVFC = HTMLVideoElement & {
-  requestVideoFrameCallback?: (callback: () => void) => number;
-  cancelVideoFrameCallback?: (handle: number) => void;
-};
-
 type PostItem = {
   id: string;
   indexLabel: string;
@@ -22,6 +17,7 @@ type PostItem = {
 const DESCRIPTION_REVEAL_TIME = 13.7;
 const PLAYBACK_RATE = 1.0;
 const VIDEO_SRC = "/projects/elevate/ELEVATE%20VIDEO/Untitled%20design.mp4";
+const SMOOTH_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const ELEVATE_POSTS: PostItem[] = [
   {
@@ -41,14 +37,17 @@ const ELEVATE_POSTS: PostItem[] = [
 ];
 
 export default function ElevateProject() {
-  const videoRef = useRef<VideoWithVFC | null>(null);
-  const frameHandleRef = useRef<number | null>(null);
-  const useVfcRef = useRef(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const stageRef = useRef<Stage>("idle");
 
   const [stage, setStage] = useState<Stage>("idle");
   const [videoError, setVideoError] = useState(false);
   const [activePostIndex, setActivePostIndex] = useState<number | null>(null);
   const [missingImages, setMissingImages] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    stageRef.current = stage;
+  }, [stage]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -64,7 +63,23 @@ export default function ElevateProject() {
       setVideoError(true);
     };
 
+    const handleTimeUpdate = () => {
+      if (stageRef.current !== "playing") return;
+      if (video.currentTime >= DESCRIPTION_REVEAL_TIME || video.ended) {
+        video.pause();
+        setStage("description_hold");
+      }
+    };
+
+    const handleEnded = () => {
+      if (stageRef.current === "playing") {
+        setStage("description_hold");
+      }
+    };
+
     video.addEventListener("error", handleError);
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("ended", handleEnded);
 
     if (video.readyState >= 2) {
       lockFirstFrame();
@@ -74,54 +89,10 @@ export default function ElevateProject() {
 
     return () => {
       video.removeEventListener("error", handleError);
-      stopFrameMonitor();
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("ended", handleEnded);
     };
   }, []);
-
-  const stopFrameMonitor = () => {
-    const video = videoRef.current;
-    if (frameHandleRef.current === null) return;
-
-    if (useVfcRef.current && video?.cancelVideoFrameCallback) {
-      video.cancelVideoFrameCallback(frameHandleRef.current);
-    } else {
-      cancelAnimationFrame(frameHandleRef.current);
-    }
-    frameHandleRef.current = null;
-  };
-
-  const startFrameMonitor = () => {
-    stopFrameMonitor();
-
-    const checkFrame = () => {
-      const video = videoRef.current;
-      if (!video) return;
-
-      if (video.currentTime >= DESCRIPTION_REVEAL_TIME || video.ended) {
-        video.pause();
-        setStage("description_hold");
-        stopFrameMonitor();
-        return;
-      }
-
-      if (video.requestVideoFrameCallback) {
-        useVfcRef.current = true;
-        frameHandleRef.current = video.requestVideoFrameCallback(checkFrame);
-      } else {
-        useVfcRef.current = false;
-        frameHandleRef.current = requestAnimationFrame(checkFrame);
-      }
-    };
-
-    const video = videoRef.current;
-    if (video?.requestVideoFrameCallback) {
-      useVfcRef.current = true;
-      frameHandleRef.current = video.requestVideoFrameCallback(checkFrame);
-    } else {
-      useVfcRef.current = false;
-      frameHandleRef.current = requestAnimationFrame(checkFrame);
-    }
-  };
 
   const handleStart = () => {
     if (stage !== "idle") return;
@@ -131,10 +102,7 @@ export default function ElevateProject() {
     setStage("playing");
     video.muted = true;
     video.playbackRate = PLAYBACK_RATE;
-    video
-      .play()
-      .then(() => startFrameMonitor())
-      .catch(() => {});
+    video.play().catch(() => {});
   };
 
   const handleReplay = (e: React.MouseEvent | React.PointerEvent) => {
@@ -142,7 +110,6 @@ export default function ElevateProject() {
     const video = videoRef.current;
     if (!video) return;
 
-    stopFrameMonitor();
     setVideoError(false);
     setActivePostIndex(null);
     video.pause();
@@ -193,7 +160,7 @@ export default function ElevateProject() {
         src={VIDEO_SRC}
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
       />
@@ -205,43 +172,63 @@ export default function ElevateProject() {
         </div>
       )}
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {stage === "description_hold" && (
           <motion.div
+            key="elevate-description-hold"
             className="elevate-campaign-screen"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.85, ease: SMOOTH_EASE }}
           >
-            <motion.div
-              className="campaign-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              <div className="campaign-brand">
+            <div className="campaign-center">
+              <motion.div
+                className="campaign-brand"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.75, delay: 0.08, ease: SMOOTH_EASE }}
+              >
                 <img
                   src="/projects/elevate/elevate_solutions_logo_extracted.png"
                   alt="Elevate Solutions Logo"
                   className="campaign-extracted-logo"
                   draggable={false}
                 />
-              </div>
+              </motion.div>
 
-              <h2 className="campaign-title">
+              <motion.h2
+                className="campaign-title"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.8, delay: 0.16, ease: SMOOTH_EASE }}
+              >
                 CORPORATE <span>BUSINESS</span>
-              </h2>
-              <p className="campaign-subtitle">SOCIAL MEDIA CAMPAIGN</p>
-              <p className="campaign-body">
+              </motion.h2>
+
+              <motion.p
+                className="campaign-subtitle"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.75, delay: 0.24, ease: SMOOTH_EASE }}
+              >
+                SOCIAL MEDIA CAMPAIGN
+              </motion.p>
+
+              <motion.p
+                className="campaign-body"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.8, delay: 0.32, ease: SMOOTH_EASE }}
+              >
                 A strategic social media campaign designed to strengthen brand
                 presence, build trust, and communicate value.
-              </p>
-            </motion.div>
+              </motion.p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -249,11 +236,12 @@ export default function ElevateProject() {
       <AnimatePresence>
         {stage === "posts_view" && (
           <motion.div
+            key="elevate-posts-overlay"
             className="elevate-posts-overlay"
-            initial={{ opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.5, ease: SMOOTH_EASE }}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
           >
@@ -383,10 +371,10 @@ export default function ElevateProject() {
           <motion.div
             key="prompt-idle"
             className="elevate-prompt"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -14 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.55, ease: SMOOTH_EASE }}
           >
             <p className="prompt-kicker">
               3D ARCHITECTURAL VISUALIZATION &amp; BRAND CAMPAIGN
@@ -405,14 +393,15 @@ export default function ElevateProject() {
       <AnimatePresence>
         {stage === "description_hold" && (
           <motion.div
+            key="elevate-side-dock"
             className="elevate-side-dock"
-            initial={{ opacity: 0, x: 28 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
             transition={{
-              duration: 0.65,
-              delay: 0.25,
-              ease: [0.22, 1, 0.36, 1],
+              duration: 0.75,
+              delay: 0.35,
+              ease: SMOOTH_EASE,
             }}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
@@ -468,7 +457,8 @@ export default function ElevateProject() {
           display: block;
           pointer-events: none;
           opacity: 1;
-          transition: opacity 0.8s ease;
+          will-change: opacity;
+          transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .elevate-experience .elevate-video.is-dimmed {
@@ -505,10 +495,11 @@ export default function ElevateProject() {
           padding: 0 7vw;
           background: radial-gradient(
             circle at 50% 35%,
-            rgba(28, 45, 39, 0.55) 0%,
-            rgba(17, 24, 21, 0.78) 58%,
-            rgba(13, 19, 16, 0.88) 100%
+            rgba(28, 45, 39, 0.58) 0%,
+            rgba(17, 24, 21, 0.8) 58%,
+            rgba(13, 19, 16, 0.9) 100%
           );
+          will-change: opacity;
           -webkit-font-smoothing: antialiased;
         }
 
@@ -520,6 +511,13 @@ export default function ElevateProject() {
           display: flex;
           flex-direction: column;
           align-items: center;
+        }
+
+        .elevate-experience .campaign-brand,
+        .elevate-experience .campaign-title,
+        .elevate-experience .campaign-subtitle,
+        .elevate-experience .campaign-body {
+          will-change: transform, opacity;
         }
 
         .elevate-experience .campaign-brand {
@@ -579,6 +577,7 @@ export default function ElevateProject() {
               #0e1411 100%
             ),
             #111815;
+          will-change: transform, opacity;
           cursor: default;
         }
 
@@ -890,6 +889,7 @@ export default function ElevateProject() {
           flex-direction: column;
           align-items: flex-end;
           gap: 12px;
+          will-change: transform, opacity;
         }
 
         .elevate-experience .posts-link {
@@ -968,20 +968,22 @@ export default function ElevateProject() {
           .elevate-experience {
             width: 100%;
             height: 100svh;
-            min-height: 620px;
+            min-height: 640px;
+            background: #111815;
           }
           .elevate-experience .elevate-video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center center;
+            background: #111815;
           }
           .elevate-experience .elevate-side-dock {
             right: 20px;
             bottom: 24px;
           }
           .elevate-experience .elevate-prompt {
-            bottom: 10vh;
+            bottom: 8vh;
           }
         }
       `}</style>
