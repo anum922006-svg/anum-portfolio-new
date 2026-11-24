@@ -451,7 +451,7 @@ export default function ElevateProject() {
           height: 100vh;
           min-height: 100svh;
           overflow: hidden;
-          background: #0f1c17;
+          background: #111815;
           cursor: pointer;
           user-select: none;
           touch-action: manipulation;
@@ -488,8 +488,8 @@ export default function ElevateProject() {
           padding: 16px 20px;
           border-radius: 10px;
           border: 1px solid rgba(201, 173, 106, 0.45);
-          background: rgba(15, 28, 23, 0.92);
-          color: #e8e3d9;
+          background: rgba(17, 24, 21, 0.92);
+          color: #e5ded5;
           font-size: 13px;
           line-height: 1.5;
           text-align: center;
@@ -505,9 +505,9 @@ export default function ElevateProject() {
           padding: 0 7vw;
           background: radial-gradient(
             circle at 50% 35%,
-            rgba(22, 41, 33, 0.55) 0%,
-            rgba(15, 28, 23, 0.78) 58%,
-            rgba(11, 21, 17, 0.88) 100%
+            rgba(28, 45, 39, 0.55) 0%,
+            rgba(17, 24, 21, 0.78) 58%,
+            rgba(13, 19, 16, 0.88) 100%
           );
           -webkit-font-smoothing: antialiased;
         }
@@ -544,7 +544,7 @@ export default function ElevateProject() {
           font-weight: 400;
           letter-spacing: 0.04em;
           line-height: 1.04;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .elevate-experience .campaign-title span {
@@ -555,7 +555,7 @@ export default function ElevateProject() {
           margin: 18px 0 36px;
           font-size: clamp(13px, 1.4vw, 18px);
           letter-spacing: 0.34em;
-          color: rgba(232, 227, 217, 0.88);
+          color: rgba(229, 222, 213, 0.88);
         }
 
         .elevate-experience .campaign-body {
@@ -563,7 +563,7 @@ export default function ElevateProject() {
           max-width: 560px;
           font-size: clamp(15px, 1.35vw, 19px);
           line-height: 1.75;
-          color: rgba(232, 227, 217, 0.78);
+          color: rgba(229, 222, 213, 0.78);
         }
 
         .elevate-experience .elevate-posts-overlay {
@@ -575,10 +575,10 @@ export default function ElevateProject() {
           background: radial-gradient(
               circle at 50% 15%,
               rgba(36, 62, 51, 0.55) 0%,
-              rgba(16, 30, 24, 0.96) 55%,
-              #0c1612 100%
+              rgba(17, 24, 21, 0.96) 55%,
+              #0e1411 100%
             ),
-            #0f1c17;
+            #111815;
           cursor: default;
         }
 
@@ -608,7 +608,7 @@ export default function ElevateProject() {
           font-family: Georgia, "Times New Roman", serif;
           font-size: clamp(28px, 3.8vw, 48px);
           font-weight: 400;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .elevate-experience .posts-heading span {
@@ -621,9 +621,9 @@ export default function ElevateProject() {
           gap: 8px;
           padding: 9px 14px;
           border-radius: 999px;
-          border: 1px solid rgba(232, 227, 217, 0.28);
-          background: rgba(15, 28, 23, 0.88);
-          color: #e8e3d9;
+          border: 1px solid rgba(229, 222, 213, 0.28);
+          background: rgba(17, 24, 21, 0.88);
+          color: #e5ded5;
           font-size: 10px;
           letter-spacing: 0.18em;
           cursor: pointer;
@@ -645,7 +645,7 @@ export default function ElevateProject() {
           border-radius: 14px;
           overflow: hidden;
           border: 1px solid rgba(158, 134, 81, 0.35);
-          background: rgba(15, 28, 23, 0.9);
+          background: rgba(17, 24, 21, 0.9);
           cursor: pointer;
           transition: transform 0.25s ease, border-color 0.25s ease;
         }
@@ -657,7 +657,7 @@ export default function ElevateProject() {
 
         .elevate-experience .post-media {
           width: 100%;
-          background: #0b1410;
+          background: #0e1411;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -672,7 +672,7 @@ export default function ElevateProject() {
         .elevate-experience .post-fallback {
           padding: 18px;
           font-size: 12px;
-          color: rgba(232, 227, 217, 0.72);
+          color: rgba(229, 222, 213, 0.72);
           text-align: center;
         }
 
@@ -693,21 +693,21 @@ export default function ElevateProject() {
           font-family: Georgia, "Times New Roman", serif;
           font-size: 18px;
           font-weight: 400;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .elevate-experience .post-caption {
           margin: 0;
           font-size: 13px;
           line-height: 1.5;
-          color: rgba(232, 227, 217, 0.72);
+          color: rgba(229, 222, 213, 0.72);
         }
 
         .elevate-experience .post-lightbox {
           position: fixed;
           inset: 0;
           z-index: 60;
-          background: rgba(8, 15, 12, 0.92);
+          background: rgba(10, 15, 13, 0.92);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -743,7 +743,7 @@ export default function ElevateProject() {
         .elevate-experience .lightbox-caption p {
           margin: 4px 0 0;
           font-size: 14px;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .elevate-experience .lightbox-close {
@@ -753,9 +753,9 @@ export default function ElevateProject() {
           width: 42px;
           height: 42px;
           border-radius: 999px;
-          border: 1px solid rgba(232, 227, 217, 0.28);
-          background: rgba(15, 28, 23, 0.88);
-          color: #e8e3d9;
+          border: 1px solid rgba(229, 222, 213, 0.28);
+          background: rgba(17, 24, 21, 0.88);
+          color: #e5ded5;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -769,9 +769,9 @@ export default function ElevateProject() {
           width: 44px;
           height: 44px;
           border-radius: 999px;
-          border: 1px solid rgba(232, 227, 217, 0.28);
-          background: rgba(15, 28, 23, 0.88);
-          color: #e8e3d9;
+          border: 1px solid rgba(229, 222, 213, 0.28);
+          background: rgba(17, 24, 21, 0.88);
+          color: #e5ded5;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -793,10 +793,10 @@ export default function ElevateProject() {
           pointer-events: none;
           background: linear-gradient(
             180deg,
-            rgba(15, 28, 23, 0.42) 0%,
-            rgba(15, 28, 23, 0) 22%,
-            rgba(15, 28, 23, 0) 76%,
-            rgba(15, 28, 23, 0.58) 100%
+            rgba(17, 24, 21, 0.42) 0%,
+            rgba(17, 24, 21, 0) 22%,
+            rgba(17, 24, 21, 0) 76%,
+            rgba(17, 24, 21, 0.58) 100%
           );
           transition: opacity 0.6s ease;
         }
@@ -825,7 +825,7 @@ export default function ElevateProject() {
         }
 
         .elevate-experience .elevate-status {
-          color: rgba(232, 227, 217, 0.78);
+          color: rgba(229, 222, 213, 0.78);
         }
 
         .elevate-experience .elevate-prompt {
@@ -851,7 +851,7 @@ export default function ElevateProject() {
           line-height: 0.9;
           letter-spacing: -0.04em;
           font-weight: 400;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .elevate-experience .prompt-headline em {
@@ -864,12 +864,12 @@ export default function ElevateProject() {
           align-items: center;
           gap: 12px;
           padding: 12px 20px;
-          border: 1px solid rgba(232, 227, 217, 0.32);
-          background: rgba(15, 28, 23, 0.82);
+          border: 1px solid rgba(229, 222, 213, 0.32);
+          background: rgba(17, 24, 21, 0.82);
           border-radius: 999px;
           font-size: 10px;
           letter-spacing: 0.2em;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .elevate-experience .pulse-dot {
@@ -899,8 +899,8 @@ export default function ElevateProject() {
           padding: 10px 12px 10px 18px;
           border-radius: 12px;
           border: 1px solid rgba(158, 134, 81, 0.55);
-          background: rgba(15, 28, 23, 0.9);
-          color: #e8e3d9;
+          background: rgba(17, 24, 21, 0.9);
+          color: #e5ded5;
           text-decoration: none;
           cursor: pointer;
           box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
@@ -909,7 +909,7 @@ export default function ElevateProject() {
 
         .elevate-experience .posts-link:hover {
           transform: translateX(-4px);
-          border-color: #e8e3d9;
+          border-color: #e5ded5;
         }
 
         .elevate-experience .posts-copy {
@@ -917,7 +917,7 @@ export default function ElevateProject() {
           font-size: 11px;
           line-height: 1.4;
           text-align: right;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .elevate-experience .posts-icon {
@@ -928,7 +928,7 @@ export default function ElevateProject() {
           height: 40px;
           border-radius: 9px;
           background: #9e8651;
-          color: #0f1c17;
+          color: #111815;
           flex-shrink: 0;
         }
 
@@ -936,9 +936,9 @@ export default function ElevateProject() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          background: rgba(15, 28, 23, 0.85);
-          border: 1px solid rgba(232, 227, 217, 0.25);
-          color: rgba(232, 227, 217, 0.82);
+          background: rgba(17, 24, 21, 0.85);
+          border: 1px solid rgba(229, 222, 213, 0.25);
+          color: rgba(229, 222, 213, 0.82);
           padding: 8px 14px;
           border-radius: 999px;
           font-size: 9px;
@@ -967,18 +967,18 @@ export default function ElevateProject() {
         @media (max-width: 800px) {
           .elevate-experience {
             width: 100%;
-            height: 62svh;
-            min-height: 420px;
+            height: 100svh;
+            min-height: 620px;
           }
           .elevate-experience .elevate-video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            background: #0f1c17;
+            object-fit: cover;
+            object-position: center center;
           }
           .elevate-experience .elevate-side-dock {
             right: 20px;
-            bottom: 20px;
+            bottom: 24px;
           }
           .elevate-experience .elevate-prompt {
             bottom: 10vh;

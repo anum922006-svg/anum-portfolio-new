@@ -65,8 +65,8 @@ function ParticleField({ isMobile }: { isMobile: boolean }) {
   return (
     <points
       ref={pointsRef}
-      position={isMobile ? [0.25, -0.35, -1.2] : [1.2, 0.1, -1]}
-      scale={isMobile ? 0.72 : 1}
+      position={isMobile ? [0.1, -1.8, -1.2] : [1.2, 0.1, -1]}
+      scale={isMobile ? 0.65 : 1}
     >
       <bufferGeometry>
         <bufferAttribute
@@ -94,8 +94,8 @@ function ParticleField({ isMobile }: { isMobile: boolean }) {
 
 function FloatingGeometry({ isMobile }: { isMobile: boolean }) {
   const group = useRef<THREE.Group>(null);
-  const baseYPos = isMobile ? -0.45 : 0;
-  const baseXPos = isMobile ? 0.45 : 2.1;
+  const baseYPos = isMobile ? -2.35 : 0;
+  const baseXPos = isMobile ? 0.15 : 2.1;
 
   useFrame((state) => {
     if (!group.current) return;
@@ -118,7 +118,7 @@ function FloatingGeometry({ isMobile }: { isMobile: boolean }) {
       0.035
     );
 
-    const targetY = baseYPos + Math.sin(time * 0.45) * 0.12 + pointerY * 0.08;
+    const targetY = baseYPos + Math.sin(time * 0.45) * 0.1 + pointerY * 0.06;
     group.current.position.y = THREE.MathUtils.lerp(
       group.current.position.y,
       targetY,
@@ -137,7 +137,7 @@ function FloatingGeometry({ isMobile }: { isMobile: boolean }) {
     <group
       ref={group}
       position={[baseXPos, baseYPos, -0.5]}
-      scale={isMobile ? 0.72 : 1}
+      scale={isMobile ? 0.62 : 1}
     >
       <mesh>
         <icosahedronGeometry args={[1.25, 2]} />
@@ -154,7 +154,7 @@ function FloatingGeometry({ isMobile }: { isMobile: boolean }) {
         <icosahedronGeometry args={[1.25, 2]} />
 
         <meshBasicMaterial
-          color="#E8E3D9"
+          color="#E5DED5"
           wireframe
           transparent
           opacity={0.16}
@@ -178,7 +178,7 @@ function CameraMotion({ isMobile }: { isMobile: boolean }) {
 
     const targetX = Math.sin(time * 0.15) * 0.15 + pointerX * 0.08;
     const targetY = Math.cos(time * 0.12) * 0.08 + pointerY * 0.05;
-    const targetZ = isMobile ? 8.6 : 7;
+    const targetZ = isMobile ? 8.2 : 7;
 
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.025);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.025);
@@ -229,10 +229,6 @@ export default function Home() {
     if (!pageRef.current) return;
 
     const ctx = gsap.context(() => {
-      /* -----------------------------------------------------
-         HERO TEXT
-         ----------------------------------------------------- */
-
       gsap.fromTo(
         ".hero-word",
         {
@@ -268,10 +264,6 @@ export default function Home() {
         }
       );
 
-      /* -----------------------------------------------------
-         HERO CONTENT SCROLL
-         ----------------------------------------------------- */
-
       gsap.to(".hero-content", {
         yPercent: -32,
         scale: 0.86,
@@ -286,10 +278,6 @@ export default function Home() {
           invalidateOnRefresh: true,
         },
       });
-
-      /* -----------------------------------------------------
-         HERO 3D VISUAL
-         ----------------------------------------------------- */
 
       gsap.to(".hero-visual", {
         scale: 1.35,
@@ -306,10 +294,6 @@ export default function Home() {
           invalidateOnRefresh: true,
         },
       });
-
-      /* -----------------------------------------------------
-         ABOUT ME
-         ----------------------------------------------------- */
 
       gsap.fromTo(
         ".about-reveal",
@@ -333,10 +317,6 @@ export default function Home() {
         }
       );
 
-      /* -----------------------------------------------------
-         APPROACH
-         ----------------------------------------------------- */
-
       gsap.fromTo(
         ".approach-card",
         {
@@ -357,10 +337,6 @@ export default function Home() {
           },
         }
       );
-
-      /* -----------------------------------------------------
-         VERTICAL FLOW
-         ----------------------------------------------------- */
 
       gsap.fromTo(
         ".flow-step",
@@ -406,10 +382,6 @@ export default function Home() {
         }
       );
 
-      /* -----------------------------------------------------
-         WHAT I BRING
-         ----------------------------------------------------- */
-
       gsap.fromTo(
         ".bring-item",
         {
@@ -444,10 +416,6 @@ export default function Home() {
 
   return (
     <main ref={pageRef} className="portfolio-page">
-      {/* =====================================================
-          HERO
-          ===================================================== */}
-
       <section className="hero-section">
         <div className="ambient ambient-one" />
 
@@ -456,7 +424,7 @@ export default function Home() {
         <div className="hero-visual">
           <Canvas
             camera={{
-              position: [0, 0, isMobile ? 8.6 : 7],
+              position: [0, 0, isMobile ? 8.2 : 7],
               fov: 48,
             }}
             dpr={[1, 1.5]}
@@ -509,10 +477,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================================
-          ABOUT ME
-          ===================================================== */}
-
       <section className="about-section section-light">
         <div className="section-number about-reveal">02</div>
 
@@ -545,10 +509,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* =====================================================
-          APPROACH
-          ===================================================== */}
 
       <section className="approach-section section-dark">
         <div className="section-number">03</div>
@@ -587,10 +547,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* =====================================================
-          WHAT I BRING
-          ===================================================== */}
 
       <section className="bring-section section-light">
         <div className="section-number">04</div>
@@ -640,10 +596,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================================
-          SELECTED WORK TRANSITION
-          ===================================================== */}
-
       <section className="work-transition">
         <div className="transition-number">05</div>
 
@@ -662,10 +614,6 @@ export default function Home() {
       </section>
 
       <ElevateProject />
-
-      {/* =====================================================
-          STYLES
-          ===================================================== */}
 
       <style jsx global>{`
         *,
@@ -686,7 +634,7 @@ export default function Home() {
           forced-color-adjust: none;
           margin: 0;
           background: #111815;
-          color: #e8e3d9;
+          color: #e5ded5;
           font-family: Arial, Helvetica, sans-serif;
           -webkit-text-size-adjust: 100%;
         }
@@ -702,10 +650,6 @@ export default function Home() {
           overflow-x: clip;
           background: #111815;
         }
-
-        /* ================================================
-           HERO
-           ================================================ */
 
         .hero-section {
           position: relative;
@@ -731,10 +675,10 @@ export default function Home() {
           grid-template-columns: 1fr 1fr 1fr;
           align-items: center;
           padding: 28px 42px;
-          border-bottom: 1px solid rgba(232, 227, 217, 0.12);
+          border-bottom: 1px solid rgba(229, 222, 213, 0.12);
           font-size: 10px;
           letter-spacing: 0.18em;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .brand {
@@ -779,7 +723,7 @@ export default function Home() {
           width: min(760px, 78vw);
           transform-style: preserve-3d;
           will-change: transform, opacity;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .hero-index {
@@ -800,7 +744,7 @@ export default function Home() {
           letter-spacing: -0.065em;
           text-transform: uppercase;
           transform-style: preserve-3d;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .hero-word {
@@ -823,7 +767,7 @@ export default function Home() {
 
         .hero-description p {
           margin: 0;
-          color: #e8e3d9;
+          color: #e5ded5;
           opacity: 0.7;
           font-size: 13px;
           line-height: 1.8;
@@ -838,13 +782,13 @@ export default function Home() {
           font-size: 9px;
           letter-spacing: 0.22em;
           opacity: 0.6;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .scroll-line {
           width: 80px;
           height: 1px;
-          background: rgba(232, 227, 217, 0.25);
+          background: rgba(229, 222, 213, 0.25);
           position: relative;
           overflow: hidden;
         }
@@ -891,19 +835,15 @@ export default function Home() {
           height: 400px;
           left: -10%;
           bottom: -15%;
-          background: rgba(232, 227, 217, 0.04);
+          background: rgba(229, 222, 213, 0.04);
         }
-
-        /* ================================================
-           SHARED SECTIONS
-           ================================================ */
 
         .section-light {
           color-scheme: light;
           position: relative;
           min-height: 100vh;
           padding: 150px 8vw;
-          background-color: #e8e3d9 !important;
+          background-color: #e5ded5 !important;
           color: #1c2d27 !important;
         }
 
@@ -913,7 +853,7 @@ export default function Home() {
           min-height: 100vh;
           padding: 150px 8vw;
           background-color: #1c2d27 !important;
-          color: #e8e3d9 !important;
+          color: #e5ded5 !important;
         }
 
         .section-number {
@@ -939,10 +879,6 @@ export default function Home() {
           letter-spacing: 0.25em;
           opacity: 0.55;
         }
-
-        /* ================================================
-           ABOUT
-           ================================================ */
 
         .about-copy {
           max-width: 900px;
@@ -973,17 +909,13 @@ export default function Home() {
           color: #1c2d27;
         }
 
-        /* ================================================
-           APPROACH
-           ================================================ */
-
         .approach-card {
           padding: 60px;
           min-height: 570px;
-          border: 1px solid rgba(232, 227, 217, 0.15);
+          border: 1px solid rgba(229, 222, 213, 0.15);
           background: linear-gradient(
             135deg,
-            rgba(232, 227, 217, 0.05),
+            rgba(229, 222, 213, 0.05),
             rgba(158, 134, 81, 0.03)
           );
           transform-style: preserve-3d;
@@ -996,10 +928,6 @@ export default function Home() {
           letter-spacing: 0.22em;
           opacity: 0.5;
         }
-
-        /* ================================================
-           VERTICAL THINK / STRUCTURE / CREATE
-           ================================================ */
 
         .approach-flow {
           width: 100%;
@@ -1058,10 +986,6 @@ export default function Home() {
           opacity: 0.65;
         }
 
-        /* ================================================
-           WHAT I BRING
-           ================================================ */
-
         .bring-content {
           max-width: 1000px;
         }
@@ -1111,10 +1035,6 @@ export default function Home() {
           color: #1c2d27;
         }
 
-        /* ================================================
-           SELECTED WORK TRANSITION
-           ================================================ */
-
         .work-transition {
           color-scheme: light;
           min-height: 90vh;
@@ -1128,7 +1048,7 @@ export default function Home() {
               transparent 35%
             ),
             #111815;
-          color: #e8e3d9;
+          color: #e5ded5;
         }
 
         .transition-number {
@@ -1157,21 +1077,17 @@ export default function Home() {
           width: 100%;
           height: 1px;
           margin: 70px 0 30px;
-          background: rgba(232, 227, 217, 0.15);
+          background: rgba(229, 222, 213, 0.15);
         }
 
         .work-transition p {
           max-width: 420px;
           margin-left: auto;
-          color: #e8e3d9;
+          color: #e5ded5;
           opacity: 0.55;
           font-size: 12px;
           line-height: 1.8;
         }
-
-        /* ================================================
-           RESPONSIVE (MOBILE ONLY <= 800px)
-           ================================================ */
 
         @media (max-width: 800px) {
           .hero-section {
@@ -1190,11 +1106,12 @@ export default function Home() {
 
           .hero-content {
             left: 22px;
+            top: 44%;
             width: calc(100% - 44px);
           }
 
           .hero-content h1 {
-            font-size: clamp(54px, 15.5vw, 96px);
+            font-size: clamp(50px, 14.5vw, 88px);
           }
 
           .gold-word {
@@ -1202,13 +1119,13 @@ export default function Home() {
           }
 
           .hero-description {
-            margin-top: 32px;
+            margin-top: 24px;
             margin-left: 0;
             width: min(320px, 85vw);
           }
 
           .hero-bottom {
-            margin-top: 40px;
+            margin-top: 28px;
             margin-left: 0;
           }
 
