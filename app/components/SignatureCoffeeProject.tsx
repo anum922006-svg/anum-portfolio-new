@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 
-type Stage = "idle" | "playing" | "description_hold" | "posts_view";
+type Stage = "idle" | "playing" | "ended" | "posts_view";
 
 type PostItem = {
   id: string;
@@ -13,7 +13,6 @@ type PostItem = {
   src: string;
 };
 
-const DESCRIPTION_REVEAL_TIME = 13.5;
 const VIDEO_SRC = "/projects/signature-coffee/Signature cofee video/Signature Coffee video.mp4";
 
 const COFFEE_POSTS: PostItem[] = [
@@ -27,15 +26,15 @@ const COFFEE_POSTS: PostItem[] = [
   {
     id: "coffee-post-2",
     indexLabel: "POST 02",
-    title: "Specialty Brews & Single-Origin Beans",
-    caption: "Pour-over showcase featuring Ethiopia Yirgacheffe & Guatemala Antigua.",
+    title: "Menu Selections & Café Pricing",
+    caption: "Full espresso classics, pour-overs, and bakery menu layout.",
     src: "/projects/signature-coffee/Signature coffee images/signature coffee pg 2.png",
   },
   {
     id: "coffee-post-3",
     indexLabel: "POST 03",
-    title: "Menu Selections & Café Pricing",
-    caption: "Full espresso classics, pour-overs, and bakery menu layout.",
+    title: "Specialty Brews & Single-Origin Beans",
+    caption: "Pour-over showcase featuring Ethiopia Yirgacheffe & Guatemala Antigua.",
     src: "/projects/signature-coffee/Signature coffee images/signature coffee pg 3.png",
   },
 ];
@@ -67,33 +66,24 @@ export default function SignatureCoffeeProject() {
 
     const lockFirstFrame = () => {
       setVideoError(false);
-      video.pause();
-      video.currentTime = 0.05;
+      try {
+        video.pause();
+        video.currentTime = 0.02;
+      } catch {
+        // Ignore seek errors before metadata is ready
+      }
     };
 
     const handleError = () => setVideoError(true);
 
-    const triggerDescriptionHold = () => {
-      if (stageRef.current !== "playing") return;
+    const handleEnded = () => {
+      if (stageRef.current === "posts_view") return;
       video.pause();
-      setStage("description_hold");
-    };
-
-    const handleTimeUpdate = () => {
-      if (stageRef.current !== "playing") return;
-      const targetTime =
-        Number.isFinite(video.duration) && video.duration > 0
-          ? Math.min(DESCRIPTION_REVEAL_TIME, video.duration - 0.05)
-          : DESCRIPTION_REVEAL_TIME;
-
-      if (video.currentTime >= targetTime) {
-        triggerDescriptionHold();
-      }
+      setStage("ended");
     };
 
     video.addEventListener("error", handleError);
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("ended", triggerDescriptionHold);
+    video.addEventListener("ended", handleEnded);
 
     if (video.readyState >= 2) {
       lockFirstFrame();
@@ -103,22 +93,33 @@ export default function SignatureCoffeeProject() {
 
     return () => {
       video.removeEventListener("error", handleError);
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("ended", triggerDescriptionHold);
+      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("loadeddata", lockFirstFrame);
     };
   }, []);
 
-  const handleStart = () => {
-    if (stage !== "idle") return;
+  const startPlayback = () => {
     const video = videoRef.current;
     if (!video) return;
+    if (stageRef.current === "playing" || stageRef.current === "posts_view") return;
 
     setStage("playing");
     video.muted = true;
-    video.play().catch(() => {});
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => {
+        setStage("idle");
+      });
+    }
   };
 
-  const handleReplay = (e: React.MouseEvent | React.PointerEvent) => {
+  const handleStageTap = () => {
+    if (stageRef.current === "idle" || stageRef.current === "ended") {
+      startPlayback();
+    }
+  };
+
+  const handleReplay = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const video = videoRef.current;
     if (!video) return;
@@ -126,50 +127,61 @@ export default function SignatureCoffeeProject() {
     setVideoError(false);
     setActivePostIndex(null);
     video.pause();
-    video.currentTime = 0.05;
+    try {
+      video.currentTime = 0.02;
+    } catch {
+      // Ignore seek error
+    }
     setStage("idle");
   };
 
-  const handleOpenPosts = (e: React.MouseEvent) => {
+  const handleOpenPosts = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    const video = videoRef.current;
+    if (video && !video.paused) {
+      video.pause();
+    }
     setStage("posts_view");
   };
 
-  const handleBackToOverview = (e: React.MouseEvent) => {
+  const handleBackToScene = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setActivePostIndex(null);
-    setStage("description_hold");
+    const video = videoRef.current;
+    if (video && video.ended) {
+      setStage("ended");
+    } else {
+      setStage("idle");
+    }
   };
 
-  const handlePrevPost = (e: React.MouseEvent) => {
+  const handlePrevPost = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (activePostIndex === null) return;
     setActivePostIndex((activePostIndex - 1 + COFFEE_POSTS.length) % COFFEE_POSTS.length);
   };
 
-  const handleNextPost = (e: React.MouseEvent) => {
+  const handleNextPost = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (activePostIndex === null) return;
     setActivePostIndex((activePostIndex + 1) % COFFEE_POSTS.length);
   };
 
-  const isDescriptionVisible = stage === "description_hold";
   const isPostsVisible = stage === "posts_view";
+  const showControls = stage === "ended" || stage === "playing";
 
   return (
     <section
       id="signature-coffee"
       className="elevate-experience coffee-experience"
-      onPointerDown={handleStart}
+      onClick={handleStageTap}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <div className="elevate-media-frame">
+      <div className="elevate-media-frame coffee-media-frame">
         <video
           ref={videoRef}
-          className={`elevate-video ${
-            isDescriptionVisible ? "is-dimmed" : isPostsVisible ? "is-faded" : ""
-          }`}
+          className={`elevate-video coffee-video ${isPostsVisible ? "is-faded" : ""}`}
           src={VIDEO_SRC}
           muted
           playsInline
@@ -179,37 +191,16 @@ export default function SignatureCoffeeProject() {
         />
       </div>
 
-      {videoError && !isDescriptionVisible && !isPostsVisible && (
+      {videoError && !isPostsVisible && (
         <div className="video-missing-note">
           Video not found at <code>{VIDEO_SRC}</code>. Check the file inside{" "}
           <code>public/projects/signature-coffee/Signature cofee video/</code>.
         </div>
       )}
 
-      <div
-        className={`elevate-campaign-screen ${isDescriptionVisible ? "is-visible" : ""}`}
-        aria-hidden={!isDescriptionVisible}
-      >
-        <div className="campaign-center">
-          <p className="prompt-kicker" style={{ marginBottom: "16px" }}>
-            COFFEE SHOP • EST. 2023 • COFFEE &amp; GOOD VIBES
-          </p>
-
-          <h2 className="campaign-title">
-            SIGNATURE <span>COFFEE</span>
-          </h2>
-          <p className="campaign-subtitle">INTERACTIVE CAFÉ &amp; MENU EXPERIENCE</p>
-          <p className="campaign-body">
-            Artisanal roasting, single-origin pour-overs, and warm hospitality
-            brought together in a tactile digital showcase.
-          </p>
-        </div>
-      </div>
-
       {isPostsVisible && (
         <div
           className="elevate-posts-overlay"
-          onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="posts-inner">
@@ -223,10 +214,10 @@ export default function SignatureCoffeeProject() {
               <button
                 type="button"
                 className="posts-back-btn"
-                onClick={handleBackToOverview}
+                onClick={handleBackToScene}
               >
                 <ArrowLeft size={14} />
-                <span>BACK TO OVERVIEW</span>
+                <span>BACK TO SHOWCASE</span>
               </button>
             </div>
 
@@ -317,37 +308,21 @@ export default function SignatureCoffeeProject() {
       )}
 
       <div
-        className={`elevate-vignette ${
-          isDescriptionVisible || isPostsVisible ? "is-hidden" : ""
-        }`}
+        className={`elevate-vignette ${isPostsVisible ? "is-hidden" : ""}`}
       />
 
       <div className="elevate-top-bar">
         <span className="elevate-num">02 / SIGNATURE COFFEE</span>
         <span className="elevate-status">
-          {stage === "idle" && "AWAITING INTERACTION"}
+          {stage === "idle" && "TAP TO PLAY"}
           {stage === "playing" && "CAFÉ SHOWCASE"}
-          {stage === "description_hold" && "CAMPAIGN OVERVIEW"}
+          {stage === "ended" && "SHOWCASE COMPLETE"}
           {stage === "posts_view" && "CAMPAIGN POSTS"}
         </span>
       </div>
 
-      <div className={`elevate-prompt ${stage === "idle" ? "is-visible" : ""}`}>
-        <p className="prompt-kicker">
-          BRAND IDENTITY, MENU SYSTEM &amp; INTERACTIVE SHOWCASE
-        </p>
-        <h2 className="prompt-headline">
-          SIGNATURE <em>COFFEE.</em>
-        </h2>
-        <div className="touch-pill">
-          <span className="pulse-dot" />
-          <span>TOUCH ANYWHERE TO BEGIN THE EXPERIENCE</span>
-        </div>
-      </div>
-
       <div
-        className={`elevate-side-dock ${isDescriptionVisible ? "is-visible" : ""}`}
-        onPointerDown={(e) => e.stopPropagation()}
+        className={`elevate-side-dock ${showControls && !isPostsVisible ? "is-visible" : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -373,6 +348,40 @@ export default function SignatureCoffeeProject() {
           <span>REPLAY SEQUENCE</span>
         </button>
       </div>
+
+      <style jsx>{`
+        .coffee-experience {
+          background: #0d1310;
+          cursor: pointer;
+          touch-action: manipulation;
+        }
+
+        .coffee-media-frame {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #0d1310;
+        }
+
+        .coffee-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: opacity 0.45s ease, filter 0.45s ease;
+        }
+
+        @media (max-width: 800px) {
+          .coffee-experience {
+            min-height: 100svh;
+          }
+
+          .coffee-video {
+            object-fit: contain;
+            max-height: 100svh;
+            background: #0d1310;
+          }
+        }
+      `}</style>
     </section>
   );
 }
