@@ -929,8 +929,8 @@ export default function ElevateProject() {
           .elevate-experience .elevate-video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            object-position: center center;
+            object-fit: cover;
+            object-position: 50% 45%;
             background: #111815;
           }
           .elevate-experience .elevate-side-dock {
