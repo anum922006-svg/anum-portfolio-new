@@ -6,6 +6,8 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ElevateProject from "./components/ElevateProject";
+import SignatureCoffeeProject from "./components/SignatureCoffeeProject";
+
 gsap.registerPlugin(ScrollTrigger);
 
 /* =========================================================
@@ -69,10 +71,7 @@ function ParticleField({ isMobile }: { isMobile: boolean }) {
       scale={isMobile ? 0.65 : 1}
     >
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
 
       <pointsMaterial
@@ -614,6 +613,8 @@ export default function Home() {
       </section>
 
       <ElevateProject />
+
+      <SignatureCoffeeProject />
 
       <style jsx global>{`
         *,
