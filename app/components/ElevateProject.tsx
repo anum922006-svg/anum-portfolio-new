@@ -348,23 +348,23 @@ export default function ElevateProject() {
         .showcase-section {
           width: 100%;
           min-height: 100svh;
-          padding: 36px 4vw;
+          padding: 48px 4vw;
           background: #0d1310;
           color: #e5ded5;
           border-top: 1px solid rgba(229, 222, 213, 0.08);
           display: flex;
           flex-direction: column;
-          justify-content: center;
+          justify-content: flex-start;
           touch-action: manipulation;
         }
 
         .showcase-container {
           width: 100%;
-          max-width: 1680px;
+          max-width: 1560px;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 18px;
+          gap: 16px;
         }
 
         .showcase-header {
@@ -392,8 +392,8 @@ export default function ElevateProject() {
         .showcase-title {
           margin: 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(28px, 3.4vw, 44px);
-          line-height: 1.05;
+          font-size: clamp(26px, 3vw, 40px);
+          line-height: 1.12;
           font-weight: 400;
           color: #e5ded5;
         }
@@ -406,7 +406,7 @@ export default function ElevateProject() {
         .showcase-desc {
           margin: 0;
           font-size: 14px;
-          line-height: 1.55;
+          line-height: 1.5;
           color: rgba(229, 222, 213, 0.72);
         }
 
@@ -424,9 +424,9 @@ export default function ElevateProject() {
         .showcase-stage {
           position: relative;
           width: 100%;
-          height: calc(100svh - 220px);
-          min-height: 460px;
-          max-height: 820px;
+          aspect-ratio: 16 / 9;
+          max-height: 68svh;
+          margin: 0 auto;
           background: #070b09;
           border-radius: 14px;
           overflow: hidden;
@@ -453,7 +453,7 @@ export default function ElevateProject() {
           align-items: center;
           justify-content: space-between;
           gap: 16px;
-          padding-top: 4px;
+          padding-top: 2px;
           flex-wrap: wrap;
         }
 
@@ -527,6 +527,7 @@ export default function ElevateProject() {
 
           .showcase-title {
             font-size: 28px;
+            line-height: 1.05;
           }
 
           .showcase-desc {
@@ -535,7 +536,6 @@ export default function ElevateProject() {
 
           .showcase-stage {
             height: auto;
-            min-height: 0;
             max-height: none;
             aspect-ratio: 16 / 9;
             border-radius: 10px;
