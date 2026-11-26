@@ -413,7 +413,7 @@ export default function SignatureCoffeeProject() {
           flex-direction: column;
           gap: 4px;
           max-width: 660px;
-          text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85);
+          text-shadow: 0 2px 18px rgba(0, 0, 0, 0.9);
         }
 
         .showcase-index {
@@ -450,6 +450,7 @@ export default function SignatureCoffeeProject() {
           letter-spacing: 0.2em;
           text-transform: uppercase;
           color: #faf6ef;
+          background: rgba(12, 9, 7, 0.82);
           text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
           padding: 8px 14px;
           border: 1px solid var(--accent-border);
@@ -472,9 +473,9 @@ export default function SignatureCoffeeProject() {
           width: 100%;
           height: 100%;
           display: block;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
-          filter: contrast(1.06) saturate(1.08);
+          image-rendering: high-quality;
           transform: translateZ(0);
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
@@ -507,10 +508,8 @@ export default function SignatureCoffeeProject() {
           padding: 8px 12px 8px 16px;
           border-radius: 999px;
           border: 1px solid var(--accent-border);
-          background: rgba(12, 16, 13, 0.55);
-          backdrop-filter: blur(6px);
+          background: rgba(12, 9, 7, 0.85);
           color: #faf6ef;
-          text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
           font-size: 12px;
           font-weight: 500;
           cursor: pointer;
@@ -558,8 +557,7 @@ export default function SignatureCoffeeProject() {
           padding: 10px 16px;
           border-radius: 999px;
           border: 1px solid var(--accent-border);
-          background: rgba(12, 16, 13, 0.62);
-          backdrop-filter: blur(6px);
+          background: rgba(12, 9, 7, 0.85);
           color: var(--accent);
           font-size: 11px;
           font-weight: 600;
@@ -616,7 +614,6 @@ export default function SignatureCoffeeProject() {
 
           .showcase-status {
             background: transparent;
-            backdrop-filter: none;
             text-shadow: none;
             color: var(--accent);
             border-color: rgba(223, 160, 114, 0.4);
@@ -628,10 +625,6 @@ export default function SignatureCoffeeProject() {
             aspect-ratio: 16 / 9;
             border-radius: 10px;
             border: 1px solid rgba(229, 222, 213, 0.12);
-          }
-
-          .showcase-video {
-            object-fit: contain;
           }
 
           .showcase-footer {
@@ -649,8 +642,6 @@ export default function SignatureCoffeeProject() {
             font-size: 12px;
             padding: 10px 12px 10px 16px;
             background: rgba(229, 222, 213, 0.06);
-            backdrop-filter: none;
-            text-shadow: none;
             border-color: var(--accent-border);
           }
 
@@ -669,7 +660,6 @@ export default function SignatureCoffeeProject() {
             width: 100%;
             justify-content: center;
             background: transparent;
-            backdrop-filter: none;
             border-color: rgba(229, 222, 213, 0.24);
             color: #faf6ef;
           }

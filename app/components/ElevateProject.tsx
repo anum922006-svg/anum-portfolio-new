@@ -163,6 +163,7 @@ export default function ElevateProject() {
 
   const isPostsVisible = stage === "posts_view";
   const showStartInfo = stage === "idle" || isPostsVisible;
+  const showReplay = stage === "ended";
 
   return (
     <section
@@ -346,14 +347,19 @@ export default function ElevateProject() {
             </span>
           </button>
 
-          <button
-            type="button"
-            className="showcase-replay-btn"
-            onClick={handleReplay}
-          >
-            <RotateCcw size={14} strokeWidth={2.2} />
-            <span>REPLAY SEQUENCE</span>
-          </button>
+          {showReplay && (
+            <div className="showcase-ended-group">
+              <span className="showcase-ended-note">Sequence complete — replay or view posts</span>
+              <button
+                type="button"
+                className="showcase-replay-btn"
+                onClick={handleReplay}
+              >
+                <RotateCcw size={14} strokeWidth={2.2} />
+                <span>REPLAY SEQUENCE</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -364,16 +370,16 @@ export default function ElevateProject() {
           height: 100svh;
           padding: 0;
           background: #070b09;
-          color: #e5ded5;
+          color: #f5f0e8;
           overflow: hidden;
           touch-action: manipulation;
         }
 
         .elevate-theme {
-          --accent: #d4af37;
-          --accent-soft: rgba(212, 175, 55, 0.22);
-          --accent-border: rgba(212, 175, 55, 0.55);
-          --badge-ink: #0c100e;
+          --accent: #e5c158;
+          --accent-soft: rgba(229, 193, 88, 0.24);
+          --accent-border: rgba(229, 193, 88, 0.65);
+          --badge-ink: #0d110e;
         }
 
         .showcase-container {
@@ -400,11 +406,7 @@ export default function ElevateProject() {
           flex-direction: column;
           gap: 4px;
           max-width: 660px;
-          padding: 12px 16px;
-          border-radius: 12px;
-          background: rgba(7, 11, 9, 0.65);
-          backdrop-filter: blur(8px);
-          border: 1px solid rgba(229, 222, 213, 0.12);
+          text-shadow: 0 2px 18px rgba(0, 0, 0, 0.9);
         }
 
         .showcase-index {
@@ -421,7 +423,7 @@ export default function ElevateProject() {
           font-size: clamp(24px, 2.8vw, 38px);
           line-height: 1.08;
           font-weight: 400;
-          color: #f3eee7;
+          color: #faf6ef;
         }
 
         .showcase-title em {
@@ -431,19 +433,19 @@ export default function ElevateProject() {
 
         .showcase-desc {
           margin: 0;
-          font-size: 13px;
-          line-height: 1.45;
-          color: rgba(243, 238, 231, 0.88);
+          font-size: 13.5px;
+          line-height: 1.5;
+          color: #f5f0e8;
         }
 
         .showcase-status {
           font-size: 10px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: var(--accent);
-          background: rgba(7, 11, 9, 0.78);
-          backdrop-filter: blur(8px);
-          padding: 9px 15px;
+          color: #faf6ef;
+          background: rgba(7, 11, 9, 0.82);
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+          padding: 8px 14px;
           border: 1px solid var(--accent-border);
           border-radius: 999px;
           white-space: nowrap;
@@ -464,9 +466,9 @@ export default function ElevateProject() {
           width: 100%;
           height: 100%;
           display: block;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
-          filter: contrast(1.05) saturate(1.06);
+          image-rendering: high-quality;
           transform: translateZ(0);
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
@@ -496,12 +498,11 @@ export default function ElevateProject() {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          padding: 9px 13px 9px 16px;
+          padding: 8px 12px 8px 16px;
           border-radius: 999px;
           border: 1px solid var(--accent-border);
-          background: rgba(10, 15, 12, 0.86);
-          backdrop-filter: blur(8px);
-          color: #f3eee7;
+          background: rgba(10, 14, 11, 0.85);
+          color: #faf6ef;
           font-size: 12px;
           font-weight: 500;
           cursor: pointer;
@@ -526,8 +527,21 @@ export default function ElevateProject() {
           flex-shrink: 0;
         }
 
-        .showcase-replay-btn {
+        .showcase-ended-group {
           pointer-events: auto;
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .showcase-ended-note {
+          font-size: 12px;
+          color: #faf6ef;
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+        }
+
+        .showcase-replay-btn {
           position: relative;
           z-index: 16;
           display: inline-flex;
@@ -536,8 +550,7 @@ export default function ElevateProject() {
           padding: 10px 16px;
           border-radius: 999px;
           border: 1px solid var(--accent-border);
-          background: rgba(10, 15, 12, 0.86);
-          backdrop-filter: blur(8px);
+          background: rgba(10, 14, 11, 0.85);
           color: var(--accent);
           font-size: 11px;
           font-weight: 600;
@@ -579,10 +592,7 @@ export default function ElevateProject() {
           }
 
           .showcase-meta {
-            padding: 0;
-            background: transparent;
-            backdrop-filter: none;
-            border: none;
+            text-shadow: none;
           }
 
           .showcase-title {
@@ -592,14 +602,14 @@ export default function ElevateProject() {
 
           .showcase-desc {
             font-size: 13px;
-            color: rgba(229, 222, 213, 0.72);
+            color: #e8e1d5;
           }
 
           .showcase-status {
             background: transparent;
-            backdrop-filter: none;
+            text-shadow: none;
             color: var(--accent);
-            border-color: rgba(212, 175, 55, 0.35);
+            border-color: rgba(229, 193, 88, 0.4);
             padding: 8px 12px;
           }
 
@@ -608,10 +618,6 @@ export default function ElevateProject() {
             aspect-ratio: 16 / 9;
             border-radius: 10px;
             border: 1px solid rgba(229, 222, 213, 0.12);
-          }
-
-          .showcase-video {
-            object-fit: contain;
           }
 
           .showcase-footer {
@@ -629,17 +635,26 @@ export default function ElevateProject() {
             font-size: 12px;
             padding: 10px 12px 10px 16px;
             background: rgba(229, 222, 213, 0.06);
-            backdrop-filter: none;
             border-color: var(--accent-border);
+          }
+
+          .showcase-ended-group {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+          }
+
+          .showcase-ended-note {
+            text-shadow: none;
+            color: #e8e1d5;
           }
 
           .showcase-replay-btn {
             width: 100%;
             justify-content: center;
             background: transparent;
-            backdrop-filter: none;
-            border-color: rgba(229, 222, 213, 0.22);
-            color: #e5ded5;
+            border-color: rgba(229, 222, 213, 0.24);
+            color: #faf6ef;
           }
         }
       `}</style>
