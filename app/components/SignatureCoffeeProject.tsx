@@ -169,7 +169,7 @@ export default function SignatureCoffeeProject() {
   };
 
   const isPostsVisible = stage === "posts_view";
-  const showStartCue = stage === "idle";
+  const showStartInfo = stage === "idle";
   const showReplay = stage === "ended";
 
   return (
@@ -180,8 +180,17 @@ export default function SignatureCoffeeProject() {
       onContextMenu={(e) => e.preventDefault()}
     >
       <div className="showcase-container">
-        {showStartCue && (
-          <div className="showcase-top-cue">
+        {showStartInfo && (
+          <div className="showcase-header">
+            <div className="showcase-meta">
+              <span className="showcase-index">02 / SIGNATURE COFFEE</span>
+              <h2 className="showcase-title">
+                SIGNATURE <em>COFFEE</em>
+              </h2>
+              <p className="showcase-desc">
+                Specialty café identity, menu system, and interactive campaign showcase.
+              </p>
+            </div>
             <span className="showcase-status">TOUCH SCREEN TO PLAY</span>
           </div>
         )}
@@ -192,7 +201,7 @@ export default function SignatureCoffeeProject() {
             className={`showcase-video ${isPostsVisible ? "is-faded" : ""}`}
             muted
             playsInline
-            preload="auto"
+            preload={isMobile ? "auto" : "auto"}
             controlsList="nodownload nofullscreen noremoteplayback"
             disablePictureInPicture
           >
@@ -211,19 +220,20 @@ export default function SignatureCoffeeProject() {
           className="showcase-footer"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="showcase-controls-stack">
-            <button
-              type="button"
-              className="showcase-posts-btn"
-              onClick={handleOpenPosts}
-            >
-              <span>Click this icon to view the complete posts</span>
-              <span className="showcase-icon-badge">
-                <LayoutGrid size={15} strokeWidth={1.8} />
-              </span>
-            </button>
+          <button
+            type="button"
+            className="showcase-posts-btn"
+            onClick={handleOpenPosts}
+          >
+            <span>Click this icon to view the complete posts</span>
+            <span className="showcase-icon-badge">
+              <LayoutGrid size={15} strokeWidth={1.8} />
+            </span>
+          </button>
 
-            {showReplay && (
+          {showReplay && (
+            <div className="showcase-ended-group">
+              <span className="showcase-ended-note">Sequence complete</span>
               <button
                 type="button"
                 className="showcase-replay-btn"
@@ -232,8 +242,8 @@ export default function SignatureCoffeeProject() {
                 <RotateCcw size={13} strokeWidth={1.8} />
                 <span>REPLAY SEQUENCE</span>
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -362,10 +372,13 @@ export default function SignatureCoffeeProject() {
         .showcase-section {
           position: relative;
           width: 100%;
-          height: 100svh;
-          padding: 0;
-          background: #070b09;
-          color: #ece6dc;
+          min-height: 100svh;
+          padding: 40px 4vw;
+          background: #0d1310;
+          color: #f3eee6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           overflow: hidden;
           touch-action: manipulation;
         }
@@ -373,17 +386,54 @@ export default function SignatureCoffeeProject() {
         .showcase-container {
           position: relative;
           width: 100%;
-          max-width: 100%;
-          height: 100svh;
-          margin: 0;
+          max-width: 1400px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
         }
 
-        .showcase-top-cue {
-          position: absolute;
-          top: 24px;
-          right: 28px;
-          z-index: 12;
-          pointer-events: none;
+        .showcase-header {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .showcase-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          max-width: 680px;
+        }
+
+        .showcase-index {
+          font-size: 11px;
+          letter-spacing: 0.22em;
+          color: #d6c5a5;
+          text-transform: uppercase;
+        }
+
+        .showcase-title {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(26px, 3vw, 40px);
+          line-height: 1.08;
+          font-weight: 400;
+          color: #f3eee6;
+        }
+
+        .showcase-title em {
+          color: #dfd0b3;
+          font-style: italic;
+        }
+
+        .showcase-desc {
+          margin: 0;
+          font-size: 13.5px;
+          line-height: 1.5;
+          color: rgba(243, 238, 230, 0.82);
         }
 
         .showcase-status {
@@ -391,9 +441,9 @@ export default function SignatureCoffeeProject() {
           letter-spacing: 0.2em;
           text-transform: uppercase;
           color: #ebe4d8;
-          background: rgba(12, 16, 13, 0.72);
+          background: rgba(243, 238, 230, 0.05);
           padding: 8px 14px;
-          border: 1px solid rgba(229, 222, 213, 0.24);
+          border: 1px solid rgba(243, 238, 230, 0.2);
           border-radius: 999px;
           white-space: nowrap;
         }
@@ -401,23 +451,23 @@ export default function SignatureCoffeeProject() {
         .showcase-stage {
           position: relative;
           width: 100%;
-          max-width: 100%;
-          height: 100svh;
-          margin: 0;
-          background: #050806;
+          max-width: min(100%, calc(76svh * 16 / 9));
+          aspect-ratio: 16 / 9;
+          margin: 0 auto;
+          background: #070b09;
+          border-radius: 14px;
+          border: 1px solid rgba(243, 238, 230, 0.14);
           overflow: hidden;
           cursor: pointer;
           z-index: 1;
         }
 
         .showcase-video {
-          position: absolute;
-          inset: 0;
           width: 100%;
           height: 100%;
           display: block;
-          object-fit: cover;
-          object-position: center center;
+          object-fit: contain;
+          object-position: center;
           transform: translateZ(0);
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
@@ -428,21 +478,16 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-footer {
-          position: absolute;
-          right: 28px;
-          bottom: 24px;
+          position: relative;
           z-index: 30;
+          width: 100%;
+          max-width: min(100%, calc(76svh * 16 / 9));
+          margin: 0 auto;
           display: flex;
-          justify-content: flex-end;
-          pointer-events: none;
-        }
-
-        .showcase-controls-stack {
-          pointer-events: auto;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 10px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          flex-wrap: wrap;
         }
 
         .showcase-posts-btn {
@@ -453,8 +498,8 @@ export default function SignatureCoffeeProject() {
           gap: 12px;
           padding: 8px 12px 8px 16px;
           border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.25);
-          background: rgba(12, 16, 13, 0.76);
+          border: 1px solid rgba(243, 238, 230, 0.22);
+          background: rgba(243, 238, 230, 0.05);
           color: #f3eee6;
           font-size: 12px;
           font-weight: 400;
@@ -464,8 +509,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-posts-btn:hover {
-          border-color: rgba(229, 222, 213, 0.5);
-          background: rgba(229, 222, 213, 0.14);
+          border-color: rgba(243, 238, 230, 0.45);
+          background: rgba(243, 238, 230, 0.1);
         }
 
         .showcase-icon-badge {
@@ -475,9 +520,22 @@ export default function SignatureCoffeeProject() {
           width: 28px;
           height: 28px;
           border-radius: 50%;
-          background: #d6c5a5;
-          color: #0d120f;
+          background: rgba(214, 197, 165, 0.2);
+          color: #f3eee6;
+          border: 1px solid rgba(214, 197, 165, 0.35);
           flex-shrink: 0;
+        }
+
+        .showcase-ended-group {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .showcase-ended-note {
+          font-size: 12px;
+          color: rgba(243, 238, 230, 0.8);
         }
 
         .showcase-replay-btn {
@@ -488,8 +546,8 @@ export default function SignatureCoffeeProject() {
           gap: 8px;
           padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.25);
-          background: rgba(12, 16, 13, 0.76);
+          border: 1px solid rgba(243, 238, 230, 0.22);
+          background: transparent;
           color: #f3eee6;
           font-size: 11px;
           letter-spacing: 0.14em;
@@ -499,8 +557,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-replay-btn:hover {
-          border-color: rgba(229, 222, 213, 0.5);
-          background: rgba(229, 222, 213, 0.14);
+          border-color: rgba(243, 238, 230, 0.45);
+          background: rgba(243, 238, 230, 0.08);
         }
 
         .posts-modal-backdrop {
@@ -508,8 +566,7 @@ export default function SignatureCoffeeProject() {
           inset: 0;
           z-index: 80;
           overflow-y: auto;
-          background: rgba(7, 10, 8, 0.95);
-          backdrop-filter: blur(10px);
+          background: rgba(9, 13, 11, 0.96);
           padding: 28px 20px 56px;
         }
 
@@ -527,7 +584,7 @@ export default function SignatureCoffeeProject() {
           justify-content: space-between;
           gap: 16px;
           padding-bottom: 16px;
-          border-bottom: 1px solid rgba(229, 222, 213, 0.12);
+          border-bottom: 1px solid rgba(243, 238, 230, 0.12);
           flex-wrap: wrap;
         }
 
@@ -563,8 +620,8 @@ export default function SignatureCoffeeProject() {
           gap: 8px;
           padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.24);
-          background: rgba(229, 222, 213, 0.06);
+          border: 1px solid rgba(243, 238, 230, 0.22);
+          background: rgba(243, 238, 230, 0.06);
           color: #f3eee6;
           font-size: 11px;
           letter-spacing: 0.14em;
@@ -578,8 +635,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .editorial-post-card {
-          background: #111714;
-          border: 1px solid rgba(229, 222, 213, 0.13);
+          background: #121815;
+          border: 1px solid rgba(243, 238, 230, 0.12);
           border-radius: 16px;
           overflow: hidden;
           display: flex;
@@ -590,13 +647,13 @@ export default function SignatureCoffeeProject() {
 
         .editorial-post-card:hover {
           transform: translateY(-2px);
-          border-color: rgba(229, 222, 213, 0.32);
+          border-color: rgba(243, 238, 230, 0.3);
         }
 
         .editorial-post-frame {
           background: #090d0b;
           padding: 12px;
-          border-bottom: 1px solid rgba(229, 222, 213, 0.08);
+          border-bottom: 1px solid rgba(243, 238, 230, 0.08);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -632,7 +689,7 @@ export default function SignatureCoffeeProject() {
         .editorial-post-hint {
           font-size: 10px;
           letter-spacing: 0.14em;
-          color: rgba(236, 230, 220, 0.58);
+          color: rgba(243, 238, 230, 0.56);
         }
 
         .editorial-post-title {
@@ -648,61 +705,48 @@ export default function SignatureCoffeeProject() {
           margin: 0;
           font-size: 13px;
           line-height: 1.55;
-          color: rgba(236, 230, 220, 0.76);
+          color: rgba(243, 238, 230, 0.76);
         }
 
         @media (max-width: 800px) {
           .showcase-section {
-            height: auto;
             min-height: auto;
             display: block;
             padding: 64px 16px;
             background: #0d1310;
-            border-top: 1px solid rgba(229, 222, 213, 0.08);
+            border-top: 1px solid rgba(243, 238, 230, 0.08);
             overflow: visible;
           }
 
           .showcase-container {
-            height: auto;
-            display: flex;
-            flex-direction: column;
+            max-width: 100%;
             gap: 16px;
           }
 
-          .showcase-top-cue {
-            position: static;
-            pointer-events: auto;
+          .showcase-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
           }
 
-          .showcase-status {
-            background: transparent;
-            color: #d6c5a5;
-            border-color: rgba(229, 222, 213, 0.25);
-            padding: 8px 12px;
+          .showcase-title {
+            font-size: 28px;
+            line-height: 1.05;
+          }
+
+          .showcase-desc {
+            font-size: 13px;
           }
 
           .showcase-stage {
-            height: auto;
+            max-width: 100%;
             aspect-ratio: 16 / 9;
             border-radius: 10px;
-            border: 1px solid rgba(229, 222, 213, 0.12);
-          }
-
-          .showcase-video {
-            position: static;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
           }
 
           .showcase-footer {
-            position: static;
-            justify-content: stretch;
-            pointer-events: auto;
-          }
-
-          .showcase-controls-stack {
-            width: 100%;
+            max-width: 100%;
+            flex-direction: column;
             align-items: stretch;
             gap: 12px;
           }
@@ -710,15 +754,18 @@ export default function SignatureCoffeeProject() {
           .showcase-posts-btn {
             width: 100%;
             justify-content: space-between;
-            font-size: 12px;
             padding: 10px 12px 10px 16px;
-            background: rgba(229, 222, 213, 0.06);
+          }
+
+          .showcase-ended-group {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
           }
 
           .showcase-replay-btn {
             width: 100%;
             justify-content: center;
-            background: transparent;
           }
 
           .posts-modal-backdrop {
