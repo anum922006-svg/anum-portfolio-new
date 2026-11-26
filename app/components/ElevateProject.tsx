@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 
-type Stage = "idle" | "playing" | "description_hold" | "posts_view";
+type Stage = "idle" | "playing" | "ended" | "posts_view";
 
 type PostItem = {
   id: string;
@@ -13,24 +13,22 @@ type PostItem = {
   src: string;
 };
 
-const DESCRIPTION_REVEAL_TIME = 13.7;
-const PLAYBACK_RATE = 1.0;
-const VIDEO_SRC = "/projects/elevate/ELEVATE%20VIDEO/Untitled%20design.mp4";
+const ELEVATE_VIDEO_SRC = "/projects/elevate/ELEVATE VIDEO/Untitled design.mp4";
 
 const ELEVATE_POSTS: PostItem[] = [
   {
-    id: "post-1",
+    id: "elevate-post-1",
     indexLabel: "POST 01",
-    title: "Corporate Identity & Architectural Vision",
-    caption: "Campaign creative #1 from the Elevate Solutions series.",
-    src: "/projects/elevate/ELEVATE%20PICTURES/elevate%20pg%201.png",
+    title: "Elevate Solutions Brand & Campaign Showcase",
+    caption: "Strategic corporate identity and visual storytelling creative.",
+    src: "/projects/elevate/ELEVATE PICTURES/elevate pg 1.png",
   },
   {
-    id: "post-2",
+    id: "elevate-post-2",
     indexLabel: "POST 02",
-    title: "Brand Trust & Strategic Presence",
-    caption: "Campaign creative #2 from the Elevate Solutions series.",
-    src: "/projects/elevate/ELEVATE%20PICTURES/elevate%20pg%202.png",
+    title: "Elevate Solutions Editorial & Digital System",
+    caption: "Structured visual system designed for clarity and impact.",
+    src: "/projects/elevate/ELEVATE PICTURES/elevate pg 2.png",
   },
 ];
 
@@ -42,6 +40,14 @@ export default function ElevateProject() {
   const [videoError, setVideoError] = useState(false);
   const [activePostIndex, setActivePostIndex] = useState<number | null>(null);
   const [missingImages, setMissingImages] = useState<Record<string, boolean>>({});
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkViewport = () => setIsMobile(window.innerWidth <= 800);
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+    return () => window.removeEventListener("resize", checkViewport);
+  }, []);
 
   useEffect(() => {
     stageRef.current = stage;
@@ -53,35 +59,24 @@ export default function ElevateProject() {
 
     const lockFirstFrame = () => {
       setVideoError(false);
-      video.pause();
-      video.currentTime = 0.05;
-    };
-
-    const handleError = () => {
-      setVideoError(true);
-    };
-
-    const triggerDescriptionHold = () => {
-      if (stageRef.current !== "playing") return;
-      video.pause();
-      setStage("description_hold");
-    };
-
-    const handleTimeUpdate = () => {
-      if (stageRef.current !== "playing") return;
-      const targetTime =
-        Number.isFinite(video.duration) && video.duration > 0
-          ? Math.min(DESCRIPTION_REVEAL_TIME, video.duration - 0.05)
-          : DESCRIPTION_REVEAL_TIME;
-
-      if (video.currentTime >= targetTime) {
-        triggerDescriptionHold();
+      try {
+        video.pause();
+        video.currentTime = 0.02;
+      } catch {
+        // Ignore seek error before metadata loads
       }
     };
 
+    const handleError = () => setVideoError(true);
+
+    const handleEnded = () => {
+      if (stageRef.current === "posts_view") return;
+      video.pause();
+      setStage("ended");
+    };
+
     video.addEventListener("error", handleError);
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("ended", triggerDescriptionHold);
+    video.addEventListener("ended", handleEnded);
 
     if (video.readyState >= 2) {
       lockFirstFrame();
@@ -91,23 +86,33 @@ export default function ElevateProject() {
 
     return () => {
       video.removeEventListener("error", handleError);
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("ended", triggerDescriptionHold);
+      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("loadeddata", lockFirstFrame);
     };
   }, []);
 
-  const handleStart = () => {
-    if (stage !== "idle") return;
+  const startPlayback = () => {
     const video = videoRef.current;
     if (!video) return;
+    if (stageRef.current === "playing" || stageRef.current === "posts_view") return;
 
     setStage("playing");
     video.muted = true;
-    video.playbackRate = PLAYBACK_RATE;
-    video.play().catch(() => {});
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => {
+        setStage("idle");
+      });
+    }
   };
 
-  const handleReplay = (e: React.MouseEvent | React.PointerEvent) => {
+  const handleStageTap = () => {
+    if (stageRef.current === "idle" || stageRef.current === "ended") {
+      startPlayback();
+    }
+  };
+
+  const handleReplay = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const video = videoRef.current;
     if (!video) return;
@@ -115,110 +120,97 @@ export default function ElevateProject() {
     setVideoError(false);
     setActivePostIndex(null);
     video.pause();
-    video.currentTime = 0.05;
+    try {
+      video.currentTime = 0.02;
+    } catch {
+      // Ignore seek error
+    }
     setStage("idle");
   };
 
-  const handleOpenPosts = (e: React.MouseEvent) => {
+  const handleOpenPosts = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    const video = videoRef.current;
+    if (video && !video.paused) {
+      video.pause();
+    }
     setStage("posts_view");
   };
 
-  const handleBackToOverview = (e: React.MouseEvent) => {
+  const handleBackToScene = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setActivePostIndex(null);
-    setStage("description_hold");
+    const video = videoRef.current;
+    if (video && video.ended) {
+      setStage("ended");
+    } else {
+      setStage("idle");
+    }
   };
 
-  const handlePrevPost = (e: React.MouseEvent) => {
+  const handlePrevPost = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (activePostIndex === null) return;
     setActivePostIndex((activePostIndex - 1 + ELEVATE_POSTS.length) % ELEVATE_POSTS.length);
   };
 
-  const handleNextPost = (e: React.MouseEvent) => {
+  const handleNextPost = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (activePostIndex === null) return;
     setActivePostIndex((activePostIndex + 1) % ELEVATE_POSTS.length);
   };
 
-  const isDescriptionVisible = stage === "description_hold";
   const isPostsVisible = stage === "posts_view";
+  const showControls = stage === "ended" || stage === "playing";
 
   return (
     <section
       id="elevate-solutions"
-      className="elevate-experience"
-      onPointerDown={handleStart}
+      className="elevate-experience elevate-framed-experience"
+      onClick={handleStageTap}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <video
-        ref={videoRef}
-        className={`elevate-video ${
-          isDescriptionVisible ? "is-dimmed" : isPostsVisible ? "is-faded" : ""
-        }`}
-        src={VIDEO_SRC}
-        muted
-        playsInline
-        preload="auto"
-        controlsList="nodownload nofullscreen noremoteplayback"
-        disablePictureInPicture
-      />
+      <div className="elevate-media-frame elevate-framed-media">
+        <video
+          ref={videoRef}
+          className={`elevate-video elevate-framed-video ${isPostsVisible ? "is-faded" : ""}`}
+          src={ELEVATE_VIDEO_SRC}
+          muted
+          playsInline
+          preload={isMobile ? "auto" : "auto"}
+          controlsList="nodownload nofullscreen noremoteplayback"
+          disablePictureInPicture
+        />
+      </div>
 
-      {videoError && !isDescriptionVisible && !isPostsVisible && (
+      {videoError && !isPostsVisible && (
         <div className="video-missing-note">
-          Video not found at <code>{VIDEO_SRC}</code>. Check the filename inside{" "}
-          <code>public/projects/elevate/ELEVATE VIDEO/</code>.
+          Video not found at <code>{ELEVATE_VIDEO_SRC}</code>. Check the file inside{" "}
+          <code>public/projects/elevate/ELEVATE VIDEO/</code>[cite: 9].
         </div>
       )}
-
-      <div
-        className={`elevate-campaign-screen ${isDescriptionVisible ? "is-visible" : ""}`}
-        aria-hidden={!isDescriptionVisible}
-      >
-        <div className="campaign-center">
-          <div className="campaign-brand">
-            <img
-              src="/projects/elevate/elevate_solutions_logo_extracted.png"
-              alt="Elevate Solutions Logo"
-              className="campaign-extracted-logo"
-              draggable={false}
-            />
-          </div>
-
-          <h2 className="campaign-title">
-            CORPORATE <span>BUSINESS</span>
-          </h2>
-          <p className="campaign-subtitle">SOCIAL MEDIA CAMPAIGN</p>
-          <p className="campaign-body">
-            A strategic social media campaign designed to strengthen brand
-            presence, build trust, and communicate value.
-          </p>
-        </div>
-      </div>
 
       {isPostsVisible && (
         <div
           className="elevate-posts-overlay"
-          onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="posts-inner">
             <div className="posts-header-row">
               <div>
-                <p className="posts-kicker">CAMPAIGN CREATIVES</p>
+                <p className="posts-kicker">CAMPAIGN &amp; IDENTITY CREATIVES</p>
                 <h2 className="posts-heading">
-                  CORPORATE <span>BUSINESS</span> POSTS
+                  ELEVATE <span>SOLUTIONS</span> POSTS
                 </h2>
               </div>
               <button
                 type="button"
                 className="posts-back-btn"
-                onClick={handleBackToOverview}
+                onClick={handleBackToScene}
               >
                 <ArrowLeft size={14} />
-                <span>BACK TO OVERVIEW</span>
+                <span>BACK TO SHOWCASE</span>
               </button>
             </div>
 
@@ -309,37 +301,21 @@ export default function ElevateProject() {
       )}
 
       <div
-        className={`elevate-vignette ${
-          isDescriptionVisible || isPostsVisible ? "is-hidden" : ""
-        }`}
+        className={`elevate-vignette ${isPostsVisible ? "is-hidden" : ""}`}
       />
 
       <div className="elevate-top-bar">
         <span className="elevate-num">01 / ELEVATE SOLUTIONS</span>
         <span className="elevate-status">
-          {stage === "idle" && "AWAITING INTERACTION"}
-          {stage === "playing" && "ARCHITECTURAL SHOWCASE"}
-          {stage === "description_hold" && "CAMPAIGN OVERVIEW"}
+          {stage === "idle" && "TAP TO PLAY"}
+          {stage === "playing" && "IDENTITY SHOWCASE"}
+          {stage === "ended" && "SHOWCASE COMPLETE"}
           {stage === "posts_view" && "CAMPAIGN POSTS"}
         </span>
       </div>
 
-      <div className={`elevate-prompt ${stage === "idle" ? "is-visible" : ""}`}>
-        <p className="prompt-kicker">
-          3D ARCHITECTURAL VISUALIZATION &amp; BRAND CAMPAIGN
-        </p>
-        <h2 className="prompt-headline">
-          ELEVATE <em>SOLUTIONS.</em>
-        </h2>
-        <div className="touch-pill">
-          <span className="pulse-dot" />
-          <span>TOUCH ANYWHERE TO BEGIN THE EXPERIENCE</span>
-        </div>
-      </div>
-
       <div
-        className={`elevate-side-dock ${isDescriptionVisible ? "is-visible" : ""}`}
-        onPointerDown={(e) => e.stopPropagation()}
+        className={`elevate-side-dock ${showControls && !isPostsVisible ? "is-visible" : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -366,579 +342,59 @@ export default function ElevateProject() {
         </button>
       </div>
 
-      <style jsx global>{`
-        .elevate-experience {
-          color-scheme: light;
+      <style jsx>{`
+        .elevate-framed-experience {
           position: relative;
           width: 100%;
-          height: 100vh;
           min-height: 100svh;
-          overflow: hidden;
-          background: #111815;
+          background: #0d1310;
           cursor: pointer;
-          user-select: none;
           touch-action: manipulation;
-        }
-
-        .elevate-experience .elevate-video {
-          position: absolute;
-          inset: 0;
-          z-index: 2;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center center;
-          display: block;
-          pointer-events: none;
-          opacity: 1;
-          transition: opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .elevate-experience .elevate-video.is-dimmed {
-          z-index: 4;
-          opacity: 0.28;
-        }
-
-        .elevate-experience .elevate-video.is-faded {
-          opacity: 0;
-        }
-
-        .elevate-experience .video-missing-note {
-          position: relative;
-          z-index: 15;
-          max-width: 560px;
-          margin: 0 24px;
-          padding: 16px 20px;
-          border-radius: 10px;
-          border: 1px solid rgba(201, 173, 106, 0.45);
-          background: rgba(17, 24, 21, 0.92);
-          color: #e5ded5;
-          font-size: 13px;
-          line-height: 1.5;
-          text-align: center;
-        }
-
-        .elevate-experience .elevate-campaign-screen {
-          position: absolute;
-          inset: 0;
-          z-index: 8;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0 7vw;
-          background: radial-gradient(
-            circle at 50% 42%,
-            rgba(20, 34, 28, 0.56) 0%,
-            rgba(17, 24, 21, 0.76) 62%,
-            rgba(13, 19, 16, 0.88) 100%
-          );
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1);
-          -webkit-font-smoothing: antialiased;
-        }
-
-        .elevate-experience .elevate-campaign-screen.is-visible {
-          opacity: 1;
-        }
-
-        .elevate-experience .campaign-center {
-          position: relative;
-          z-index: 2;
-          max-width: 820px;
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          transform: translateY(8px);
-          transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
-          text-shadow: 0 2px 18px rgba(10, 15, 13, 0.78);
-        }
-
-        .elevate-experience .elevate-campaign-screen.is-visible .campaign-center {
-          transform: translateY(0);
-        }
-
-        .elevate-experience .campaign-brand {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 32px;
-        }
-
-        .elevate-experience .campaign-extracted-logo {
-          width: clamp(145px, 16vw, 215px);
-          height: auto;
-          object-fit: contain;
-          display: block;
-          pointer-events: none;
-        }
-
-        .elevate-experience .campaign-title {
-          margin: 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(38px, 5.4vw, 76px);
-          font-weight: 400;
-          letter-spacing: 0.04em;
-          line-height: 1.04;
-          color: #e5ded5;
-        }
-
-        .elevate-experience .campaign-title span {
-          color: #c9ad6a;
-        }
-
-        .elevate-experience .campaign-subtitle {
-          margin: 18px 0 36px;
-          font-size: clamp(13px, 1.4vw, 18px);
-          letter-spacing: 0.34em;
-          color: rgba(229, 222, 213, 0.94);
-        }
-
-        .elevate-experience .campaign-body {
-          margin: 0 auto;
-          max-width: 560px;
-          font-size: clamp(15px, 1.35vw, 19px);
-          line-height: 1.75;
-          color: rgba(229, 222, 213, 0.88);
-        }
-
-        .elevate-experience .elevate-posts-overlay {
-          position: absolute;
-          inset: 0;
-          z-index: 18;
-          overflow-y: auto;
-          padding: 74px 5vw 48px;
-          background: radial-gradient(
-              circle at 50% 15%,
-              rgba(36, 62, 51, 0.55) 0%,
-              rgba(17, 24, 21, 0.96) 55%,
-              #0e1411 100%
-            ),
-            #111815;
-          cursor: default;
-        }
-
-        .elevate-experience .posts-inner {
-          max-width: 980px;
-          margin: 0 auto;
-        }
-
-        .elevate-experience .posts-header-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          gap: 16px;
-          flex-wrap: wrap;
-          margin-bottom: 28px;
-        }
-
-        .elevate-experience .posts-kicker {
-          margin: 0 0 8px;
-          font-size: 10px;
-          letter-spacing: 0.25em;
-          color: #c9ad6a;
-        }
-
-        .elevate-experience .posts-heading {
-          margin: 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(28px, 3.8vw, 48px);
-          font-weight: 400;
-          color: #e5ded5;
-        }
-
-        .elevate-experience .posts-heading span {
-          color: #c9ad6a;
-        }
-
-        .elevate-experience .posts-back-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 9px 14px;
-          border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.28);
-          background: rgba(17, 24, 21, 0.88);
-          color: #e5ded5;
-          font-size: 10px;
-          letter-spacing: 0.18em;
-          cursor: pointer;
-        }
-
-        .elevate-experience .posts-back-btn:hover {
-          border-color: #c9ad6a;
-          color: #c9ad6a;
-        }
-
-        .elevate-experience .posts-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 24px;
-          align-items: start;
-        }
-
-        .elevate-experience .post-card {
-          border-radius: 14px;
           overflow: hidden;
-          border: 1px solid rgba(158, 134, 81, 0.35);
-          background: rgba(17, 24, 21, 0.9);
-          cursor: pointer;
-          transition: transform 0.25s ease, border-color 0.25s ease;
         }
 
-        .elevate-experience .post-card:hover {
-          transform: translateY(-4px);
-          border-color: #c9ad6a;
-        }
-
-        .elevate-experience .post-media {
+        .elevate-framed-media {
+          position: relative;
           width: 100%;
-          background: #0e1411;
+          min-height: 100svh;
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-
-        .elevate-experience .post-img {
-          width: 100%;
-          height: auto;
-          display: block;
-        }
-
-        .elevate-experience .post-fallback {
-          padding: 18px;
-          font-size: 12px;
-          color: rgba(229, 222, 213, 0.72);
-          text-align: center;
-        }
-
-        .elevate-experience .post-meta {
-          padding: 16px 18px 20px;
-        }
-
-        .elevate-experience .post-num {
-          display: inline-block;
-          font-size: 10px;
-          letter-spacing: 0.22em;
-          color: #c9ad6a;
-          margin-bottom: 5px;
-        }
-
-        .elevate-experience .post-title {
-          margin: 0 0 5px;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 18px;
-          font-weight: 400;
-          color: #e5ded5;
-        }
-
-        .elevate-experience .post-caption {
-          margin: 0;
-          font-size: 13px;
-          line-height: 1.5;
-          color: rgba(229, 222, 213, 0.72);
-        }
-
-        .elevate-experience .post-lightbox {
-          position: fixed;
-          inset: 0;
-          z-index: 60;
-          background: rgba(10, 15, 13, 0.92);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          background: #0d1310;
           padding: 24px;
         }
 
-        .elevate-experience .lightbox-content {
-          max-width: min(88vw, 720px);
-          max-height: 86vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .elevate-experience .lightbox-img {
-          max-width: 100%;
-          max-height: 74vh;
+        .elevate-framed-video {
+          width: 100%;
+          max-width: 1280px;
+          max-height: 88svh;
+          aspect-ratio: 16 / 9;
           object-fit: contain;
-          border-radius: 10px;
-        }
-
-        .elevate-experience .lightbox-caption {
-          text-align: center;
-        }
-
-        .elevate-experience .lightbox-caption span {
-          font-size: 10px;
-          letter-spacing: 0.22em;
-          color: #c9ad6a;
-        }
-
-        .elevate-experience .lightbox-caption p {
-          margin: 4px 0 0;
-          font-size: 14px;
-          color: #e5ded5;
-        }
-
-        .elevate-experience .lightbox-close {
-          position: fixed;
-          top: 22px;
-          right: 24px;
-          width: 42px;
-          height: 42px;
-          border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.28);
-          background: rgba(17, 24, 21, 0.88);
-          color: #e5ded5;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-        }
-
-        .elevate-experience .lightbox-nav {
-          position: fixed;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 44px;
-          height: 44px;
-          border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.28);
-          background: rgba(17, 24, 21, 0.88);
-          color: #e5ded5;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-        }
-
-        .elevate-experience .lightbox-nav.prev {
-          left: 20px;
-        }
-
-        .elevate-experience .lightbox-nav.next {
-          right: 20px;
-        }
-
-        .elevate-experience .elevate-vignette {
-          position: absolute;
-          inset: 0;
-          z-index: 5;
-          pointer-events: none;
-          background: linear-gradient(
-            180deg,
-            rgba(17, 24, 21, 0.42) 0%,
-            rgba(17, 24, 21, 0) 22%,
-            rgba(17, 24, 21, 0) 76%,
-            rgba(17, 24, 21, 0.58) 100%
-          );
-          transition: opacity 0.6s ease;
-        }
-
-        .elevate-experience .elevate-vignette.is-hidden {
-          opacity: 0;
-        }
-
-        .elevate-experience .elevate-top-bar {
-          position: absolute;
-          top: 28px;
-          left: 5vw;
-          right: 5vw;
-          z-index: 22;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 10px;
-          letter-spacing: 0.24em;
-          pointer-events: none;
-        }
-
-        .elevate-experience .elevate-num {
-          color: #9e8651;
-          font-weight: 700;
-        }
-
-        .elevate-experience .elevate-status {
-          color: rgba(229, 222, 213, 0.78);
-        }
-
-        .elevate-experience .elevate-prompt {
-          position: absolute;
-          left: 5vw;
-          bottom: 9vh;
-          z-index: 12;
-          max-width: 620px;
-          pointer-events: none;
-          opacity: 0;
-          transform: translateY(10px);
-          transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .elevate-experience .elevate-prompt.is-visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .elevate-experience .prompt-kicker {
-          margin: 0 0 10px;
-          font-size: 10px;
-          letter-spacing: 0.26em;
-          color: #9e8651;
-        }
-
-        .elevate-experience .prompt-headline {
-          margin: 0 0 22px;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(42px, 5.5vw, 82px);
-          line-height: 0.9;
-          letter-spacing: -0.04em;
-          font-weight: 400;
-          color: #e5ded5;
-        }
-
-        .elevate-experience .prompt-headline em {
-          color: #9e8651;
-          font-style: italic;
-        }
-
-        .elevate-experience .touch-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 20px;
-          border: 1px solid rgba(229, 222, 213, 0.32);
-          background: rgba(17, 24, 21, 0.82);
-          border-radius: 999px;
-          font-size: 10px;
-          letter-spacing: 0.2em;
-          color: #e5ded5;
-        }
-
-        .elevate-experience .pulse-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #9e8651;
-          box-shadow: 0 0 10px #9e8651;
-          animation: elevatePulseGlow 1.8s ease-in-out infinite;
-        }
-
-        .elevate-experience .elevate-side-dock {
-          position: absolute;
-          right: 4vw;
-          bottom: 6vh;
-          z-index: 20;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 12px;
-          opacity: 0;
-          pointer-events: none;
-          transform: translateY(8px);
-          transition: opacity 1.1s ease 0.45s, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s;
-        }
-
-        .elevate-experience .elevate-side-dock.is-visible {
-          opacity: 1;
-          pointer-events: auto;
-          transform: translateY(0);
-        }
-
-        .elevate-experience .posts-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 14px;
-          padding: 10px 12px 10px 18px;
           border-radius: 12px;
-          border: 1px solid rgba(158, 134, 81, 0.55);
-          background: rgba(17, 24, 21, 0.9);
-          color: #e5ded5;
-          text-decoration: none;
-          cursor: pointer;
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-          transition: transform 0.25s ease, border-color 0.25s ease;
-        }
-
-        .elevate-experience .posts-link:hover {
-          transform: translateX(-4px);
-          border-color: #e5ded5;
-        }
-
-        .elevate-experience .posts-copy {
-          max-width: 175px;
-          font-size: 11px;
-          line-height: 1.4;
-          text-align: right;
-          color: #e5ded5;
-        }
-
-        .elevate-experience .posts-icon {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 9px;
-          background: #9e8651;
-          color: #111815;
-          flex-shrink: 0;
-        }
-
-        .elevate-experience .replay-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: rgba(17, 24, 21, 0.85);
-          border: 1px solid rgba(229, 222, 213, 0.25);
-          color: rgba(229, 222, 213, 0.82);
-          padding: 8px 14px;
-          border-radius: 999px;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          cursor: pointer;
-          transition: border-color 0.2s ease, color 0.2s ease;
-        }
-
-        .elevate-experience .replay-btn:hover {
-          border-color: #9e8651;
-          color: #9e8651;
-        }
-
-        @keyframes elevatePulseGlow {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1.4);
-            opacity: 0.55;
-          }
+          image-rendering: auto;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          transition: opacity 0.45s ease, filter 0.45s ease;
         }
 
         @media (max-width: 800px) {
-          .elevate-experience {
+          .elevate-framed-experience {
+            min-height: auto;
+          }
+
+          .elevate-framed-media {
+            min-height: auto;
+            padding: 68px 14px 36px;
+          }
+
+          .elevate-framed-video {
             width: 100%;
-            height: 100svh;
-            min-height: 640px;
-            background: #111815;
-          }
-          .elevate-experience .elevate-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: 50% 45%;
-            background: #111815;
-          }
-          .elevate-experience .elevate-side-dock {
-            right: 20px;
-            bottom: 24px;
-          }
-          .elevate-experience .elevate-prompt {
-            bottom: 8vh;
+            max-width: 100%;
+            height: auto;
+            max-height: 68svh;
+            aspect-ratio: 16 / 9;
+            object-fit: contain;
+            border-radius: 10px;
           }
         }
       `}</style>
