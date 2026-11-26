@@ -169,239 +169,387 @@ export default function SignatureCoffeeProject() {
   };
 
   const isPostsVisible = stage === "posts_view";
-  const showControls = stage === "ended" || stage === "playing";
 
   return (
     <section
       id="signature-coffee"
-      className="elevate-experience coffee-experience"
+      className="showcase-section"
       onClick={handleStageTap}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <div className="elevate-media-frame coffee-media-frame">
-        <video
-          ref={videoRef}
-          className={`elevate-video coffee-video ${isPostsVisible ? "is-faded" : ""}`}
-          src={VIDEO_SRC}
-          muted
-          playsInline
-          preload={isMobile ? "auto" : "auto"}
-          controlsList="nodownload nofullscreen noremoteplayback"
-          disablePictureInPicture
-        />
-      </div>
-
-      {videoError && !isPostsVisible && (
-        <div className="video-missing-note">
-          Video not found at <code>{VIDEO_SRC}</code>. Check the file inside{" "}
-          <code>public/projects/signature-coffee/Signature cofee video/</code>.
-        </div>
-      )}
-
-      {isPostsVisible && (
-        <div
-          className="elevate-posts-overlay"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="posts-inner">
-            <div className="posts-header-row">
-              <div>
-                <p className="posts-kicker">CAMPAIGN &amp; MENU CREATIVES</p>
-                <h2 className="posts-heading">
-                  SIGNATURE <span>COFFEE</span> POSTS
-                </h2>
-              </div>
-              <button
-                type="button"
-                className="posts-back-btn"
-                onClick={handleBackToScene}
-              >
-                <ArrowLeft size={14} />
-                <span>BACK TO SHOWCASE</span>
-              </button>
-            </div>
-
-            <div className="posts-grid">
-              {COFFEE_POSTS.map((post, idx) => (
-                <article
-                  key={post.id}
-                  className="post-card"
-                  onClick={() => setActivePostIndex(idx)}
-                >
-                  <div className="post-media">
-                    {missingImages[post.id] ? (
-                      <div className="post-fallback">
-                        Image not found at <code>{post.src}</code>
-                      </div>
-                    ) : (
-                      <img
-                        src={post.src}
-                        alt={post.title}
-                        className="post-img"
-                        onError={() =>
-                          setMissingImages((prev) => ({ ...prev, [post.id]: true }))
-                        }
-                      />
-                    )}
-                  </div>
-                  <div className="post-meta">
-                    <span className="post-num">{post.indexLabel}</span>
-                    <h3 className="post-title">{post.title}</h3>
-                    <p className="post-caption">{post.caption}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
+      <div className="showcase-container">
+        <div className="showcase-header">
+          <div className="showcase-meta">
+            <span className="showcase-index">02 / SIGNATURE COFFEE</span>
+            <h2 className="showcase-title">
+              SIGNATURE <em>COFFEE</em>
+            </h2>
+            <p className="showcase-desc">
+              Specialty café identity, menu system, and interactive campaign showcase.
+            </p>
           </div>
+          <span className="showcase-status">
+            {stage === "idle" && "TAP VIDEO TO PLAY"}
+            {stage === "playing" && "NOW PLAYING"}
+            {stage === "ended" && "SEQUENCE COMPLETE"}
+            {stage === "posts_view" && "CAMPAIGN POSTS"}
+          </span>
+        </div>
 
-          {activePostIndex !== null && (
+        <div className="showcase-stage">
+          <video
+            ref={videoRef}
+            className={`showcase-video ${isPostsVisible ? "is-faded" : ""}`}
+            src={VIDEO_SRC}
+            muted
+            playsInline
+            preload={isMobile ? "auto" : "auto"}
+            controlsList="nodownload nofullscreen noremoteplayback"
+            disablePictureInPicture
+          />
+
+          {videoError && !isPostsVisible && (
+            <div className="video-missing-note">
+              Video not found at <code>{VIDEO_SRC}</code>. Check{" "}
+              <code>public/projects/signature-coffee/Signature cofee video/</code>[cite: 9].
+            </div>
+          )}
+
+          {isPostsVisible && (
             <div
-              className="post-lightbox"
-              onClick={() => setActivePostIndex(null)}
-              role="dialog"
-              aria-modal="true"
+              className="elevate-posts-overlay"
+              onClick={(e) => e.stopPropagation()}
             >
-              <button
-                type="button"
-                className="lightbox-close"
-                onClick={() => setActivePostIndex(null)}
-                aria-label="Close preview"
-              >
-                <X size={20} />
-              </button>
+              <div className="posts-inner">
+                <div className="posts-header-row">
+                  <div>
+                    <p className="posts-kicker">CAMPAIGN &amp; MENU CREATIVES</p>
+                    <h3 className="posts-heading">
+                      SIGNATURE <span>COFFEE</span> POSTS
+                    </h3>
+                  </div>
+                  <button
+                    type="button"
+                    className="posts-back-btn"
+                    onClick={handleBackToScene}
+                  >
+                    <ArrowLeft size={14} />
+                    <span>BACK TO SHOWCASE</span>
+                  </button>
+                </div>
 
-              <button
-                type="button"
-                className="lightbox-nav prev"
-                onClick={handlePrevPost}
-                aria-label="Previous post"
-              >
-                <ChevronLeft size={24} />
-              </button>
-
-              <div
-                className="lightbox-content"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img
-                  src={COFFEE_POSTS[activePostIndex].src}
-                  alt={COFFEE_POSTS[activePostIndex].title}
-                  className="lightbox-img"
-                />
-                <div className="lightbox-caption">
-                  <span>{COFFEE_POSTS[activePostIndex].indexLabel}</span>
-                  <p>{COFFEE_POSTS[activePostIndex].title}</p>
+                <div className="posts-grid">
+                  {COFFEE_POSTS.map((post, idx) => (
+                    <article
+                      key={post.id}
+                      className="post-card"
+                      onClick={() => setActivePostIndex(idx)}
+                    >
+                      <div className="post-media">
+                        {missingImages[post.id] ? (
+                          <div className="post-fallback">
+                            Image not found at <code>{post.src}</code>
+                          </div>
+                        ) : (
+                          <img
+                            src={post.src}
+                            alt={post.title}
+                            className="post-img"
+                            onError={() =>
+                              setMissingImages((prev) => ({ ...prev, [post.id]: true }))
+                            }
+                          />
+                        )}
+                      </div>
+                      <div className="post-meta">
+                        <span className="post-num">{post.indexLabel}</span>
+                        <h4 className="post-title">{post.title}</h4>
+                        <p className="post-caption">{post.caption}</p>
+                      </div>
+                    </article>
+                  ))}
                 </div>
               </div>
 
-              <button
-                type="button"
-                className="lightbox-nav next"
-                onClick={handleNextPost}
-                aria-label="Next post"
-              >
-                <ChevronRight size={24} />
-              </button>
+              {activePostIndex !== null && (
+                <div
+                  className="post-lightbox"
+                  onClick={() => setActivePostIndex(null)}
+                  role="dialog"
+                  aria-modal="true"
+                >
+                  <button
+                    type="button"
+                    className="lightbox-close"
+                    onClick={() => setActivePostIndex(null)}
+                    aria-label="Close preview"
+                  >
+                    <X size={20} />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="lightbox-nav prev"
+                    onClick={handlePrevPost}
+                    aria-label="Previous post"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+
+                  <div
+                    className="lightbox-content"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <img
+                      src={COFFEE_POSTS[activePostIndex].src}
+                      alt={COFFEE_POSTS[activePostIndex].title}
+                      className="lightbox-img"
+                    />
+                    <div className="lightbox-caption">
+                      <span>{COFFEE_POSTS[activePostIndex].indexLabel}</span>
+                      <p>{COFFEE_POSTS[activePostIndex].title}</p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="lightbox-nav next"
+                    onClick={handleNextPost}
+                    aria-label="Next post"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
 
-      <div
-        className={`elevate-vignette ${isPostsVisible ? "is-hidden" : ""}`}
-      />
-
-      <div className="elevate-top-bar">
-        <span className="elevate-num">02 / SIGNATURE COFFEE</span>
-        <span className="elevate-status">
-          {stage === "idle" && "TAP TO PLAY"}
-          {stage === "playing" && "CAFÉ SHOWCASE"}
-          {stage === "ended" && "SHOWCASE COMPLETE"}
-          {stage === "posts_view" && "CAMPAIGN POSTS"}
-        </span>
-      </div>
-
-      <div
-        className={`elevate-side-dock ${showControls && !isPostsVisible ? "is-visible" : ""}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          type="button"
-          className="posts-link"
-          onClick={handleOpenPosts}
-          aria-label="Click this icon to view the complete posts"
+        <div
+          className="showcase-footer"
+          onClick={(e) => e.stopPropagation()}
         >
-          <span className="posts-copy">
-            Click this icon to view the complete posts
-          </span>
-          <span className="posts-icon">
-            <LayoutGrid size={18} strokeWidth={1.9} />
-          </span>
-        </button>
+          <button
+            type="button"
+            className="showcase-posts-btn"
+            onClick={handleOpenPosts}
+          >
+            <span>Click this icon to view the complete posts</span>
+            <span className="showcase-icon-badge">
+              <LayoutGrid size={16} strokeWidth={1.9} />
+            </span>
+          </button>
 
-        <button
-          type="button"
-          className="replay-btn"
-          onClick={handleReplay}
-        >
-          <RotateCcw size={12} />
-          <span>REPLAY SEQUENCE</span>
-        </button>
+          <button
+            type="button"
+            className="showcase-replay-btn"
+            onClick={handleReplay}
+          >
+            <RotateCcw size={13} />
+            <span>REPLAY SEQUENCE</span>
+          </button>
+        </div>
       </div>
 
       <style jsx>{`
-        .coffee-experience {
-          position: relative;
+        .showcase-section {
           width: 100%;
-          min-height: 100svh;
+          padding: 96px 6vw;
           background: #0d1310;
-          cursor: pointer;
+          color: #e5ded5;
+          border-top: 1px solid rgba(229, 222, 213, 0.08);
           touch-action: manipulation;
-          overflow: hidden;
         }
 
-        .coffee-media-frame {
+        .showcase-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .showcase-header {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .showcase-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          max-width: 680px;
+        }
+
+        .showcase-index {
+          font-size: 11px;
+          letter-spacing: 0.22em;
+          color: #9e8651;
+          text-transform: uppercase;
+        }
+
+        .showcase-title {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(30px, 4vw, 48px);
+          line-height: 1.05;
+          font-weight: 400;
+          color: #e5ded5;
+        }
+
+        .showcase-title em {
+          color: #9e8651;
+          font-style: italic;
+        }
+
+        .showcase-desc {
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.65;
+          color: rgba(229, 222, 213, 0.72);
+        }
+
+        .showcase-status {
+          font-size: 10px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: #9e8651;
+          padding: 8px 12px;
+          border: 1px solid rgba(158, 134, 81, 0.35);
+          border-radius: 999px;
+          white-space: nowrap;
+        }
+
+        .showcase-stage {
           position: relative;
           width: 100%;
-          min-height: 100svh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #0d1310;
-          padding: 24px;
+          aspect-ratio: 16 / 9;
+          background: #070b09;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 1px solid rgba(229, 222, 213, 0.12);
+          cursor: pointer;
         }
 
-        .coffee-video {
+        .showcase-video {
           width: 100%;
-          max-width: 1280px;
-          max-height: 88svh;
-          aspect-ratio: 16 / 9;
+          height: 100%;
+          display: block;
           object-fit: contain;
-          border-radius: 12px;
-          image-rendering: auto;
           transform: translateZ(0);
           backface-visibility: hidden;
-          transition: opacity 0.45s ease, filter 0.45s ease;
+          transition: opacity 0.35s ease;
+        }
+
+        .showcase-video.is-faded {
+          opacity: 0.2;
+        }
+
+        .showcase-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding-top: 8px;
+          flex-wrap: wrap;
+        }
+
+        .showcase-posts-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 14px 10px 18px;
+          border-radius: 999px;
+          border: 1px solid rgba(229, 222, 213, 0.18);
+          background: rgba(229, 222, 213, 0.05);
+          color: #e5ded5;
+          font-size: 12px;
+          cursor: pointer;
+          transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .showcase-posts-btn:hover {
+          border-color: #9e8651;
+          background: rgba(158, 134, 81, 0.12);
+        }
+
+        .showcase-icon-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background: #9e8651;
+          color: #111815;
+          flex-shrink: 0;
+        }
+
+        .showcase-replay-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 11px 16px;
+          border-radius: 999px;
+          border: 1px solid rgba(229, 222, 213, 0.16);
+          background: transparent;
+          color: #e5ded5;
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          cursor: pointer;
+          transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .showcase-replay-btn:hover {
+          border-color: #9e8651;
+          color: #9e8651;
         }
 
         @media (max-width: 800px) {
-          .coffee-experience {
-            min-height: auto;
+          .showcase-section {
+            padding: 64px 16px;
           }
 
-          .coffee-media-frame {
-            min-height: auto;
-            padding: 68px 14px 36px;
+          .showcase-container {
+            gap: 16px;
           }
 
-          .coffee-video {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            max-height: 68svh;
-            aspect-ratio: 16 / 9;
-            object-fit: contain;
+          .showcase-header {
+            flex-direction: column;
+            gap: 12px;
+          }
+
+          .showcase-title {
+            font-size: 28px;
+          }
+
+          .showcase-desc {
+            font-size: 13px;
+          }
+
+          .showcase-stage {
             border-radius: 10px;
+          }
+
+          .showcase-footer {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          }
+
+          .showcase-posts-btn {
+            width: 100%;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 10px 12px 10px 16px;
+          }
+
+          .showcase-replay-btn {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>
