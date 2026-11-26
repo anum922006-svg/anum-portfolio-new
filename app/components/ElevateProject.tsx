@@ -348,7 +348,7 @@ export default function ElevateProject() {
         .showcase-section {
           width: 100%;
           min-height: 100svh;
-          padding: 48px 4vw;
+          padding: 36px 3vw;
           background: #0d1310;
           color: #e5ded5;
           border-top: 1px solid rgba(229, 222, 213, 0.08);
@@ -360,7 +360,7 @@ export default function ElevateProject() {
 
         .showcase-container {
           width: 100%;
-          max-width: 1560px;
+          max-width: 100%;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
@@ -424,11 +424,12 @@ export default function ElevateProject() {
         .showcase-stage {
           position: relative;
           width: 100%;
-          aspect-ratio: 16 / 9;
-          max-height: 68svh;
+          height: 72svh;
+          min-height: 440px;
+          max-height: 820px;
           margin: 0 auto;
           background: #070b09;
-          border-radius: 14px;
+          border-radius: 12px;
           overflow: hidden;
           border: 1px solid rgba(229, 222, 213, 0.12);
           cursor: pointer;
@@ -438,7 +439,8 @@ export default function ElevateProject() {
           width: 100%;
           height: 100%;
           display: block;
-          object-fit: contain;
+          object-fit: cover;
+          object-position: center;
           transform: translateZ(0);
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
@@ -536,9 +538,14 @@ export default function ElevateProject() {
 
           .showcase-stage {
             height: auto;
+            min-height: 0;
             max-height: none;
             aspect-ratio: 16 / 9;
             border-radius: 10px;
+          }
+
+          .showcase-video {
+            object-fit: contain;
           }
 
           .showcase-footer {
