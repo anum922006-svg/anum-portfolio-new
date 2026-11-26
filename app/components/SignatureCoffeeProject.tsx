@@ -211,7 +211,7 @@ export default function SignatureCoffeeProject() {
           {videoError && !isPostsVisible && (
             <div className="video-missing-note">
               Video not found at <code>{VIDEO_SRC}</code>. Check{" "}
-              <code>public/projects/signature-coffee/Signature cofee video/</code>[cite: 9].
+              <code>public/projects/signature-coffee/Signature cofee video/</code>.
             </div>
           )}
 
@@ -354,24 +354,29 @@ export default function SignatureCoffeeProject() {
       <style jsx>{`
         .showcase-section {
           width: 100%;
-          padding: 96px 6vw;
+          min-height: 100svh;
+          padding: 36px 4vw;
           background: #0d1310;
           color: #e5ded5;
           border-top: 1px solid rgba(229, 222, 213, 0.08);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           touch-action: manipulation;
         }
 
         .showcase-container {
-          max-width: 1200px;
+          width: 100%;
+          max-width: 1680px;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          gap: 18px;
         }
 
         .showcase-header {
           display: flex;
-          align-items: flex-start;
+          align-items: flex-end;
           justify-content: space-between;
           gap: 20px;
           flex-wrap: wrap;
@@ -380,8 +385,8 @@ export default function SignatureCoffeeProject() {
         .showcase-meta {
           display: flex;
           flex-direction: column;
-          gap: 8px;
-          max-width: 680px;
+          gap: 6px;
+          max-width: 760px;
         }
 
         .showcase-index {
@@ -394,7 +399,7 @@ export default function SignatureCoffeeProject() {
         .showcase-title {
           margin: 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(30px, 4vw, 48px);
+          font-size: clamp(28px, 3.4vw, 44px);
           line-height: 1.05;
           font-weight: 400;
           color: #e5ded5;
@@ -408,7 +413,7 @@ export default function SignatureCoffeeProject() {
         .showcase-desc {
           margin: 0;
           font-size: 14px;
-          line-height: 1.65;
+          line-height: 1.55;
           color: rgba(229, 222, 213, 0.72);
         }
 
@@ -417,7 +422,7 @@ export default function SignatureCoffeeProject() {
           letter-spacing: 0.2em;
           text-transform: uppercase;
           color: #9e8651;
-          padding: 8px 12px;
+          padding: 8px 14px;
           border: 1px solid rgba(158, 134, 81, 0.35);
           border-radius: 999px;
           white-space: nowrap;
@@ -426,7 +431,9 @@ export default function SignatureCoffeeProject() {
         .showcase-stage {
           position: relative;
           width: 100%;
-          aspect-ratio: 16 / 9;
+          height: calc(100svh - 220px);
+          min-height: 460px;
+          max-height: 820px;
           background: #070b09;
           border-radius: 14px;
           overflow: hidden;
@@ -453,7 +460,7 @@ export default function SignatureCoffeeProject() {
           align-items: center;
           justify-content: space-between;
           gap: 16px;
-          padding-top: 8px;
+          padding-top: 4px;
           flex-wrap: wrap;
         }
 
@@ -510,6 +517,8 @@ export default function SignatureCoffeeProject() {
 
         @media (max-width: 800px) {
           .showcase-section {
+            min-height: auto;
+            display: block;
             padding: 64px 16px;
           }
 
@@ -519,6 +528,7 @@ export default function SignatureCoffeeProject() {
 
           .showcase-header {
             flex-direction: column;
+            align-items: flex-start;
             gap: 12px;
           }
 
@@ -531,6 +541,10 @@ export default function SignatureCoffeeProject() {
           }
 
           .showcase-stage {
+            height: auto;
+            min-height: 0;
+            max-height: none;
+            aspect-ratio: 16 / 9;
             border-radius: 10px;
           }
 
