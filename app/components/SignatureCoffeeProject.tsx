@@ -464,6 +464,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-video {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
           display: block;
