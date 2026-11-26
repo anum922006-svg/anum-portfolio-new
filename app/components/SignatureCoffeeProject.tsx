@@ -13,7 +13,7 @@ type PostItem = {
   src: string;
 };
 
-const VIDEO_SRC = "/projects/signature-coffee/Signature cofee video/Signature Coffee video.mp4";
+const VIDEO_SRC = "/projects/signature-coffee/Signature cofee video/Signature Coffee.mp4";
 
 const COFFEE_POSTS: PostItem[] = [
   {
@@ -70,7 +70,7 @@ export default function SignatureCoffeeProject() {
         video.pause();
         video.currentTime = 0.02;
       } catch {
-        // Ignore seek errors before metadata is ready
+        // Ignore seek error before metadata loads
       }
     };
 
@@ -185,7 +185,7 @@ export default function SignatureCoffeeProject() {
           src={VIDEO_SRC}
           muted
           playsInline
-          preload={isMobile ? "metadata" : "auto"}
+          preload={isMobile ? "auto" : "auto"}
           controlsList="nodownload nofullscreen noremoteplayback"
           disablePictureInPicture
         />
@@ -351,34 +351,57 @@ export default function SignatureCoffeeProject() {
 
       <style jsx>{`
         .coffee-experience {
+          position: relative;
+          width: 100%;
+          min-height: 100svh;
           background: #0d1310;
           cursor: pointer;
           touch-action: manipulation;
+          overflow: hidden;
         }
 
         .coffee-media-frame {
+          position: relative;
+          width: 100%;
+          min-height: 100svh;
           display: flex;
           align-items: center;
           justify-content: center;
           background: #0d1310;
+          padding: 24px;
         }
 
         .coffee-video {
           width: 100%;
-          height: 100%;
-          object-fit: cover;
+          max-width: 1280px;
+          max-height: 88svh;
+          aspect-ratio: 16 / 9;
+          object-fit: contain;
+          border-radius: 12px;
+          image-rendering: auto;
+          transform: translateZ(0);
+          backface-visibility: hidden;
           transition: opacity 0.45s ease, filter 0.45s ease;
         }
 
         @media (max-width: 800px) {
           .coffee-experience {
-            min-height: 100svh;
+            min-height: auto;
+          }
+
+          .coffee-media-frame {
+            min-height: auto;
+            padding: 68px 14px 36px;
           }
 
           .coffee-video {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            max-height: 68svh;
+            aspect-ratio: 16 / 9;
             object-fit: contain;
-            max-height: 100svh;
-            background: #0d1310;
+            border-radius: 10px;
           }
         }
       `}</style>
