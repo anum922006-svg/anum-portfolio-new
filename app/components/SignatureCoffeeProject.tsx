@@ -372,13 +372,10 @@ export default function SignatureCoffeeProject() {
         .showcase-section {
           position: relative;
           width: 100%;
-          min-height: 100svh;
-          padding: 44px 4vw;
+          height: 100svh;
+          padding: 0;
           background: #070b09;
           color: #ece6dc;
-          display: flex;
-          align-items: center;
-          justify-content: center;
           overflow: hidden;
           touch-action: manipulation;
         }
@@ -386,19 +383,22 @@ export default function SignatureCoffeeProject() {
         .showcase-container {
           position: relative;
           width: 100%;
-          max-width: 1380px;
-          margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
+          max-width: 100%;
+          height: 100svh;
+          margin: 0;
         }
 
         .showcase-header {
+          position: absolute;
+          top: 24px;
+          left: 28px;
+          right: 28px;
+          z-index: 12;
           display: flex;
-          align-items: flex-end;
+          align-items: flex-start;
           justify-content: space-between;
           gap: 16px;
-          flex-wrap: wrap;
+          pointer-events: none;
         }
 
         .showcase-meta {
@@ -406,6 +406,7 @@ export default function SignatureCoffeeProject() {
           flex-direction: column;
           gap: 4px;
           max-width: 680px;
+          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.82);
         }
 
         .showcase-index {
@@ -433,7 +434,7 @@ export default function SignatureCoffeeProject() {
           margin: 0;
           font-size: 13.5px;
           line-height: 1.5;
-          color: rgba(243, 238, 230, 0.84);
+          color: rgba(243, 238, 230, 0.88);
         }
 
         .showcase-status {
@@ -441,7 +442,7 @@ export default function SignatureCoffeeProject() {
           letter-spacing: 0.2em;
           text-transform: uppercase;
           color: #ebe4d8;
-          background: rgba(14, 20, 17, 0.8);
+          background: rgba(10, 14, 12, 0.65);
           padding: 8px 14px;
           border: 1px solid rgba(229, 222, 213, 0.24);
           border-radius: 999px;
@@ -451,13 +452,13 @@ export default function SignatureCoffeeProject() {
         .showcase-stage {
           position: relative;
           width: 100%;
-          max-width: min(100%, calc(78svh * 16 / 9));
-          aspect-ratio: 16 / 9;
-          margin: 0 auto;
+          max-width: 100%;
+          height: 100svh;
+          margin: 0;
           background: #050806;
-          border-radius: 14px;
-          border: 1px solid rgba(229, 222, 213, 0.14);
-          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+          border-radius: 0;
+          border: none;
+          box-shadow: none;
           overflow: hidden;
           cursor: pointer;
           z-index: 1;
@@ -481,19 +482,23 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-footer {
-          position: relative;
+          position: absolute;
+          left: 28px;
+          right: 28px;
+          bottom: 24px;
           z-index: 30;
-          width: 100%;
-          max-width: min(100%, calc(78svh * 16 / 9));
-          margin: 0 auto;
+          width: auto;
+          max-width: none;
+          margin: 0;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 16px;
-          flex-wrap: wrap;
+          pointer-events: none;
         }
 
         .showcase-posts-btn {
+          pointer-events: auto;
           position: relative;
           z-index: 31;
           display: inline-flex;
@@ -502,7 +507,7 @@ export default function SignatureCoffeeProject() {
           padding: 8px 12px 8px 16px;
           border-radius: 999px;
           border: 1px solid rgba(229, 222, 213, 0.25);
-          background: rgba(14, 19, 16, 0.85);
+          background: rgba(12, 16, 13, 0.72);
           color: #f3eee6;
           font-size: 12px;
           font-weight: 400;
@@ -513,7 +518,7 @@ export default function SignatureCoffeeProject() {
 
         .showcase-posts-btn:hover {
           border-color: rgba(229, 222, 213, 0.5);
-          background: rgba(229, 222, 213, 0.12);
+          background: rgba(229, 222, 213, 0.14);
         }
 
         .showcase-icon-badge {
@@ -530,6 +535,7 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-ended-group {
+          pointer-events: auto;
           display: inline-flex;
           align-items: center;
           gap: 12px;
@@ -538,7 +544,8 @@ export default function SignatureCoffeeProject() {
 
         .showcase-ended-note {
           font-size: 12px;
-          color: rgba(243, 238, 230, 0.85);
+          color: rgba(243, 238, 230, 0.88);
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.82);
         }
 
         .showcase-replay-btn {
@@ -550,7 +557,7 @@ export default function SignatureCoffeeProject() {
           padding: 9px 15px;
           border-radius: 999px;
           border: 1px solid rgba(229, 222, 213, 0.25);
-          background: rgba(14, 19, 16, 0.85);
+          background: rgba(12, 16, 13, 0.72);
           color: #f3eee6;
           font-size: 11px;
           letter-spacing: 0.14em;
@@ -561,7 +568,7 @@ export default function SignatureCoffeeProject() {
 
         .showcase-replay-btn:hover {
           border-color: rgba(229, 222, 213, 0.5);
-          background: rgba(229, 222, 213, 0.12);
+          background: rgba(229, 222, 213, 0.14);
         }
 
         .posts-modal-backdrop {
@@ -732,9 +739,15 @@ export default function SignatureCoffeeProject() {
           }
 
           .showcase-header {
+            position: static;
             flex-direction: column;
             align-items: flex-start;
             gap: 12px;
+            pointer-events: auto;
+          }
+
+          .showcase-meta {
+            text-shadow: none;
           }
 
           .showcase-title {
@@ -755,21 +768,28 @@ export default function SignatureCoffeeProject() {
           }
 
           .showcase-stage {
+            height: auto;
             max-width: 100%;
             aspect-ratio: 16 / 9;
             border-radius: 10px;
+            border: 1px solid rgba(229, 222, 213, 0.12);
             box-shadow: none;
           }
 
           .showcase-video {
+            position: static;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
           }
 
           .showcase-footer {
+            position: static;
             max-width: 100%;
             flex-direction: column;
             align-items: stretch;
             gap: 12px;
+            pointer-events: auto;
           }
 
           .showcase-posts-btn {
@@ -784,6 +804,11 @@ export default function SignatureCoffeeProject() {
             flex-direction: column;
             align-items: stretch;
             gap: 8px;
+          }
+
+          .showcase-ended-note {
+            text-shadow: none;
+            color: rgba(236, 230, 220, 0.8);
           }
 
           .showcase-replay-btn {
