@@ -162,7 +162,7 @@ export default function ElevateProject() {
   };
 
   const isPostsVisible = stage === "posts_view";
-  const showStartInfo = stage === "idle";
+  const showStartCue = stage === "idle";
   const showReplay = stage === "ended";
 
   return (
@@ -173,17 +173,8 @@ export default function ElevateProject() {
       onContextMenu={(e) => e.preventDefault()}
     >
       <div className="showcase-container">
-        {showStartInfo && (
-          <div className="showcase-header">
-            <div className="showcase-meta">
-              <span className="showcase-index">01 / ELEVATE SOLUTIONS</span>
-              <h2 className="showcase-title">
-                ELEVATE <em>SOLUTIONS</em>
-              </h2>
-              <p className="showcase-desc">
-                Architectural identity, 3D visual storytelling, and structured brand presentation.
-              </p>
-            </div>
+        {showStartCue && (
+          <div className="showcase-top-cue">
             <span className="showcase-status">TOUCH SCREEN TO PLAY</span>
           </div>
         )}
@@ -213,20 +204,19 @@ export default function ElevateProject() {
           className="showcase-footer"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            type="button"
-            className="showcase-posts-btn"
-            onClick={handleOpenPosts}
-          >
-            <span>Click this icon to view the complete posts</span>
-            <span className="showcase-icon-badge">
-              <LayoutGrid size={15} strokeWidth={1.8} />
-            </span>
-          </button>
+          <div className="showcase-controls-stack">
+            <button
+              type="button"
+              className="showcase-posts-btn"
+              onClick={handleOpenPosts}
+            >
+              <span>Click this icon to view the complete posts</span>
+              <span className="showcase-icon-badge">
+                <LayoutGrid size={15} strokeWidth={1.8} />
+              </span>
+            </button>
 
-          {showReplay && (
-            <div className="showcase-ended-group">
-              <span className="showcase-ended-note">Sequence complete</span>
+            {showReplay && (
               <button
                 type="button"
                 className="showcase-replay-btn"
@@ -235,8 +225,8 @@ export default function ElevateProject() {
                 <RotateCcw size={13} strokeWidth={1.8} />
                 <span>REPLAY SEQUENCE</span>
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
@@ -381,53 +371,12 @@ export default function ElevateProject() {
           margin: 0;
         }
 
-        .showcase-header {
+        .showcase-top-cue {
           position: absolute;
           top: 24px;
-          left: 28px;
           right: 28px;
           z-index: 12;
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 16px;
           pointer-events: none;
-        }
-
-        .showcase-meta {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          max-width: 680px;
-          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.82);
-        }
-
-        .showcase-index {
-          font-size: 11px;
-          letter-spacing: 0.22em;
-          color: #d6c5a5;
-          text-transform: uppercase;
-        }
-
-        .showcase-title {
-          margin: 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(26px, 3vw, 40px);
-          line-height: 1.08;
-          font-weight: 400;
-          color: #f3eee6;
-        }
-
-        .showcase-title em {
-          color: #dfd0b3;
-          font-style: italic;
-        }
-
-        .showcase-desc {
-          margin: 0;
-          font-size: 13.5px;
-          line-height: 1.5;
-          color: rgba(243, 238, 230, 0.88);
         }
 
         .showcase-status {
@@ -435,7 +384,7 @@ export default function ElevateProject() {
           letter-spacing: 0.2em;
           text-transform: uppercase;
           color: #ebe4d8;
-          background: rgba(10, 14, 12, 0.65);
+          background: rgba(12, 16, 13, 0.72);
           padding: 8px 14px;
           border: 1px solid rgba(229, 222, 213, 0.24);
           border-radius: 999px;
@@ -449,9 +398,6 @@ export default function ElevateProject() {
           height: 100svh;
           margin: 0;
           background: #050806;
-          border-radius: 0;
-          border: none;
-          box-shadow: none;
           overflow: hidden;
           cursor: pointer;
           z-index: 1;
@@ -463,10 +409,9 @@ export default function ElevateProject() {
           width: 100%;
           height: 100%;
           display: block;
-          object-fit: contain;
+          object-fit: cover;
           object-position: center center;
-          transform: scale(1.08) translateZ(0);
-          transform-origin: center center;
+          transform: translateZ(0);
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
         }
@@ -477,22 +422,23 @@ export default function ElevateProject() {
 
         .showcase-footer {
           position: absolute;
-          left: 28px;
           right: 28px;
           bottom: 24px;
           z-index: 30;
-          width: auto;
-          max-width: none;
-          margin: 0;
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 16px;
+          justify-content: flex-end;
           pointer-events: none;
         }
 
-        .showcase-posts-btn {
+        .showcase-controls-stack {
           pointer-events: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 10px;
+        }
+
+        .showcase-posts-btn {
           position: relative;
           z-index: 31;
           display: inline-flex;
@@ -501,7 +447,7 @@ export default function ElevateProject() {
           padding: 8px 12px 8px 16px;
           border-radius: 999px;
           border: 1px solid rgba(229, 222, 213, 0.25);
-          background: rgba(12, 16, 13, 0.72);
+          background: rgba(12, 16, 13, 0.76);
           color: #f3eee6;
           font-size: 12px;
           font-weight: 400;
@@ -522,24 +468,9 @@ export default function ElevateProject() {
           width: 28px;
           height: 28px;
           border-radius: 50%;
-          background: rgba(229, 222, 213, 0.16);
-          color: #f3eee6;
-          border: 1px solid rgba(229, 222, 213, 0.28);
+          background: #d6c5a5;
+          color: #0d120f;
           flex-shrink: 0;
-        }
-
-        .showcase-ended-group {
-          pointer-events: auto;
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          flex-wrap: wrap;
-        }
-
-        .showcase-ended-note {
-          font-size: 12px;
-          color: rgba(243, 238, 230, 0.88);
-          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.82);
         }
 
         .showcase-replay-btn {
@@ -551,7 +482,7 @@ export default function ElevateProject() {
           padding: 9px 15px;
           border-radius: 999px;
           border: 1px solid rgba(229, 222, 213, 0.25);
-          background: rgba(12, 16, 13, 0.72);
+          background: rgba(12, 16, 13, 0.76);
           color: #f3eee6;
           font-size: 11px;
           letter-spacing: 0.14em;
@@ -726,32 +657,14 @@ export default function ElevateProject() {
 
           .showcase-container {
             height: auto;
-            max-width: 100%;
             display: flex;
             flex-direction: column;
             gap: 16px;
           }
 
-          .showcase-header {
+          .showcase-top-cue {
             position: static;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
             pointer-events: auto;
-          }
-
-          .showcase-meta {
-            text-shadow: none;
-          }
-
-          .showcase-title {
-            font-size: 28px;
-            line-height: 1.05;
-          }
-
-          .showcase-desc {
-            font-size: 13px;
-            color: rgba(236, 230, 220, 0.8);
           }
 
           .showcase-status {
@@ -763,11 +676,9 @@ export default function ElevateProject() {
 
           .showcase-stage {
             height: auto;
-            max-width: 100%;
             aspect-ratio: 16 / 9;
             border-radius: 10px;
             border: 1px solid rgba(229, 222, 213, 0.12);
-            box-shadow: none;
           }
 
           .showcase-video {
@@ -775,16 +686,18 @@ export default function ElevateProject() {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            transform: none;
           }
 
           .showcase-footer {
             position: static;
-            max-width: 100%;
-            flex-direction: column;
+            justify-content: stretch;
+            pointer-events: auto;
+          }
+
+          .showcase-controls-stack {
+            width: 100%;
             align-items: stretch;
             gap: 12px;
-            pointer-events: auto;
           }
 
           .showcase-posts-btn {
@@ -793,17 +706,6 @@ export default function ElevateProject() {
             font-size: 12px;
             padding: 10px 12px 10px 16px;
             background: rgba(229, 222, 213, 0.06);
-          }
-
-          .showcase-ended-group {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 8px;
-          }
-
-          .showcase-ended-note {
-            text-shadow: none;
-            color: rgba(236, 230, 220, 0.8);
           }
 
           .showcase-replay-btn {
