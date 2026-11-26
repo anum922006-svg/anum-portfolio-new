@@ -169,13 +169,13 @@ export default function SignatureCoffeeProject() {
   };
 
   const isPostsVisible = stage === "posts_view";
-  const showStartInfo = stage === "idle" || isPostsVisible;
+  const showStartInfo = stage === "idle";
   const showReplay = stage === "ended";
 
   return (
     <section
       id="signature-coffee"
-      className="showcase-section coffee-theme"
+      className="showcase-section"
       onClick={handleStageTap}
       onContextMenu={(e) => e.preventDefault()}
     >
@@ -191,10 +191,7 @@ export default function SignatureCoffeeProject() {
                 Specialty café identity, menu system, and interactive campaign showcase.
               </p>
             </div>
-            <span className="showcase-status">
-              {stage === "idle" && "TOUCH SCREEN TO PLAY"}
-              {stage === "posts_view" && "CAMPAIGN POSTS"}
-            </span>
+            <span className="showcase-status">TOUCH SCREEN TO PLAY</span>
           </div>
         )}
 
@@ -217,131 +214,11 @@ export default function SignatureCoffeeProject() {
               <code>public/projects/signature-coffee/Signature cofee video/</code>.
             </div>
           )}
-
-          {isPostsVisible && (
-            <div
-              className="elevate-posts-overlay"
-              onClick={(e) => e.stopPropagation()}
-              onPointerDown={(e) => e.stopPropagation()}
-            >
-              <div className="posts-inner">
-                <div className="posts-header-row">
-                  <div>
-                    <p className="posts-kicker">CAMPAIGN &amp; MENU CREATIVES</p>
-                    <h3 className="posts-heading">
-                      SIGNATURE <span>COFFEE</span> POSTS
-                    </h3>
-                  </div>
-                  <button
-                    type="button"
-                    className="posts-back-btn"
-                    onClick={handleBackToScene}
-                  >
-                    <ArrowLeft size={14} />
-                    <span>BACK TO SHOWCASE</span>
-                  </button>
-                </div>
-
-                <div className="posts-grid">
-                  {COFFEE_POSTS.map((post, idx) => (
-                    <article
-                      key={post.id}
-                      className="post-card"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActivePostIndex(idx);
-                      }}
-                    >
-                      <div className="post-media">
-                        {missingImages[post.id] ? (
-                          <div className="post-fallback">
-                            Image not found at <code>{post.src}</code>
-                          </div>
-                        ) : (
-                          <img
-                            src={post.src}
-                            alt={post.title}
-                            className="post-img"
-                            onError={() =>
-                              setMissingImages((prev) => ({ ...prev, [post.id]: true }))
-                            }
-                          />
-                        )}
-                      </div>
-                      <div className="post-meta">
-                        <span className="post-num">{post.indexLabel}</span>
-                        <h4 className="post-title">{post.title}</h4>
-                        <p className="post-caption">{post.caption}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </div>
-
-              {activePostIndex !== null && (
-                <div
-                  className="post-lightbox"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActivePostIndex(null);
-                  }}
-                  role="dialog"
-                  aria-modal="true"
-                >
-                  <button
-                    type="button"
-                    className="lightbox-close"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActivePostIndex(null);
-                    }}
-                    aria-label="Close preview"
-                  >
-                    <X size={20} />
-                  </button>
-
-                  <button
-                    type="button"
-                    className="lightbox-nav prev"
-                    onClick={handlePrevPost}
-                    aria-label="Previous post"
-                  >
-                    <ChevronLeft size={24} />
-                  </button>
-
-                  <div
-                    className="lightbox-content"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <img
-                      src={COFFEE_POSTS[activePostIndex].src}
-                      alt={COFFEE_POSTS[activePostIndex].title}
-                      className="lightbox-img"
-                    />
-                    <div className="lightbox-caption">
-                      <span>{COFFEE_POSTS[activePostIndex].indexLabel}</span>
-                      <p>{COFFEE_POSTS[activePostIndex].title}</p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="lightbox-nav next"
-                    onClick={handleNextPost}
-                    aria-label="Next post"
-                  >
-                    <ChevronRight size={24} />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
         <div
           className="showcase-footer"
           onClick={(e) => e.stopPropagation()}
-          onPointerDown={(e) => e.stopPropagation()}
         >
           <button
             type="button"
@@ -350,19 +227,19 @@ export default function SignatureCoffeeProject() {
           >
             <span>Click this icon to view the complete posts</span>
             <span className="showcase-icon-badge">
-              <LayoutGrid size={16} strokeWidth={2.2} />
+              <LayoutGrid size={15} strokeWidth={1.8} />
             </span>
           </button>
 
           {showReplay && (
             <div className="showcase-ended-group">
-              <span className="showcase-ended-note">Sequence complete — replay or view posts</span>
+              <span className="showcase-ended-note">Sequence complete</span>
               <button
                 type="button"
                 className="showcase-replay-btn"
                 onClick={handleReplay}
               >
-                <RotateCcw size={14} strokeWidth={2.2} />
+                <RotateCcw size={13} strokeWidth={1.8} />
                 <span>REPLAY SEQUENCE</span>
               </button>
             </div>
@@ -370,29 +247,140 @@ export default function SignatureCoffeeProject() {
         </div>
       </div>
 
+      {isPostsVisible && (
+        <div
+          className="elevate-posts-overlay"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="posts-inner">
+            <div className="posts-header-row">
+              <div>
+                <p className="posts-kicker">CAMPAIGN &amp; MENU CREATIVES</p>
+                <h3 className="posts-heading">
+                  SIGNATURE <span>COFFEE</span> POSTS
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="posts-back-btn"
+                onClick={handleBackToScene}
+              >
+                <ArrowLeft size={14} />
+                <span>BACK TO SHOWCASE</span>
+              </button>
+            </div>
+
+            <div className="posts-grid">
+              {COFFEE_POSTS.map((post, idx) => (
+                <article
+                  key={post.id}
+                  className="post-card"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActivePostIndex(idx);
+                  }}
+                >
+                  <div className="post-media">
+                    {missingImages[post.id] ? (
+                      <div className="post-fallback">
+                        Image not found at <code>{post.src}</code>
+                      </div>
+                    ) : (
+                      <img
+                        src={post.src}
+                        alt={post.title}
+                        className="post-img"
+                        onError={() =>
+                          setMissingImages((prev) => ({ ...prev, [post.id]: true }))
+                        }
+                      />
+                    )}
+                  </div>
+                  <div className="post-meta">
+                    <span className="post-num">{post.indexLabel}</span>
+                    <h4 className="post-title">{post.title}</h4>
+                    <p className="post-caption">{post.caption}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          {activePostIndex !== null && (
+            <div
+              className="post-lightbox"
+              onClick={(e) => {
+                e.stopPropagation();
+                setActivePostIndex(null);
+              }}
+              role="dialog"
+              aria-modal="true"
+            >
+              <button
+                type="button"
+                className="lightbox-close"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActivePostIndex(null);
+                }}
+                aria-label="Close preview"
+              >
+                <X size={20} />
+              </button>
+
+              <button
+                type="button"
+                className="lightbox-nav prev"
+                onClick={handlePrevPost}
+                aria-label="Previous post"
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              <div
+                className="lightbox-content"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img
+                  src={COFFEE_POSTS[activePostIndex].src}
+                  alt={COFFEE_POSTS[activePostIndex].title}
+                  className="lightbox-img"
+                />
+                <div className="lightbox-caption">
+                  <span>{COFFEE_POSTS[activePostIndex].indexLabel}</span>
+                  <p>{COFFEE_POSTS[activePostIndex].title}</p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="lightbox-nav next"
+                onClick={handleNextPost}
+                aria-label="Next post"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       <style jsx>{`
         .showcase-section {
           position: relative;
           width: 100%;
-          height: 100svh;
+          min-height: 100svh;
           padding: 0;
           background: #070b09;
-          color: #f5f0e8;
+          color: #ece6dc;
           overflow: hidden;
           touch-action: manipulation;
-        }
-
-        .coffee-theme {
-          --accent: #dfa072;
-          --accent-soft: rgba(223, 160, 114, 0.24);
-          --accent-border: rgba(223, 160, 114, 0.65);
-          --badge-ink: #140c07;
         }
 
         .showcase-container {
           position: relative;
           width: 100%;
-          height: 100%;
+          min-height: 100svh;
         }
 
         .showcase-header {
@@ -413,15 +401,14 @@ export default function SignatureCoffeeProject() {
           flex-direction: column;
           gap: 4px;
           max-width: 660px;
-          text-shadow: 0 2px 18px rgba(0, 0, 0, 0.9);
+          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.78);
         }
 
         .showcase-index {
           font-size: 11px;
           letter-spacing: 0.22em;
-          color: var(--accent);
+          color: #d6c5a5;
           text-transform: uppercase;
-          font-weight: 600;
         }
 
         .showcase-title {
@@ -430,11 +417,11 @@ export default function SignatureCoffeeProject() {
           font-size: clamp(24px, 2.8vw, 38px);
           line-height: 1.08;
           font-weight: 400;
-          color: #faf6ef;
+          color: #f3eee6;
         }
 
         .showcase-title em {
-          color: var(--accent);
+          color: #dfd0b3;
           font-style: italic;
         }
 
@@ -442,27 +429,28 @@ export default function SignatureCoffeeProject() {
           margin: 0;
           font-size: 13.5px;
           line-height: 1.5;
-          color: #f5f0e8;
+          color: rgba(243, 238, 230, 0.86);
         }
 
         .showcase-status {
           font-size: 10px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #faf6ef;
-          background: rgba(12, 9, 7, 0.82);
-          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+          color: #ebe4d8;
+          background: rgba(10, 14, 12, 0.55);
           padding: 8px 14px;
-          border: 1px solid var(--accent-border);
+          border: 1px solid rgba(229, 222, 213, 0.24);
           border-radius: 999px;
           white-space: nowrap;
-          font-weight: 600;
         }
 
         .showcase-stage {
           position: relative;
           width: 100%;
-          height: 100%;
+          min-height: 100svh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background: #070b09;
           overflow: hidden;
           cursor: pointer;
@@ -471,18 +459,19 @@ export default function SignatureCoffeeProject() {
 
         .showcase-video {
           width: 100%;
-          height: 100%;
+          height: auto;
+          max-height: 100svh;
+          margin: auto;
           display: block;
           object-fit: contain;
           object-position: center;
-          image-rendering: high-quality;
           transform: translateZ(0);
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
         }
 
         .showcase-video.is-faded {
-          opacity: 0.18;
+          opacity: 0.2;
         }
 
         .showcase-footer {
@@ -490,7 +479,7 @@ export default function SignatureCoffeeProject() {
           left: 28px;
           right: 28px;
           bottom: 24px;
-          z-index: 15;
+          z-index: 30;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -501,25 +490,25 @@ export default function SignatureCoffeeProject() {
         .showcase-posts-btn {
           pointer-events: auto;
           position: relative;
-          z-index: 16;
+          z-index: 31;
           display: inline-flex;
           align-items: center;
           gap: 12px;
           padding: 8px 12px 8px 16px;
           border-radius: 999px;
-          border: 1px solid var(--accent-border);
-          background: rgba(12, 9, 7, 0.85);
-          color: #faf6ef;
+          border: 1px solid rgba(229, 222, 213, 0.25);
+          background: rgba(12, 16, 13, 0.62);
+          color: #f3eee6;
           font-size: 12px;
-          font-weight: 500;
+          font-weight: 400;
           cursor: pointer;
           touch-action: manipulation;
           transition: border-color 0.2s ease, background 0.2s ease;
         }
 
         .showcase-posts-btn:hover {
-          border-color: var(--accent);
-          background: var(--accent-soft);
+          border-color: rgba(229, 222, 213, 0.5);
+          background: rgba(229, 222, 213, 0.12);
         }
 
         .showcase-icon-badge {
@@ -529,8 +518,9 @@ export default function SignatureCoffeeProject() {
           width: 28px;
           height: 28px;
           border-radius: 50%;
-          background: var(--accent);
-          color: var(--badge-ink);
+          background: rgba(229, 222, 213, 0.16);
+          color: #f3eee6;
+          border: 1px solid rgba(229, 222, 213, 0.28);
           flex-shrink: 0;
         }
 
@@ -544,23 +534,22 @@ export default function SignatureCoffeeProject() {
 
         .showcase-ended-note {
           font-size: 12px;
-          color: #faf6ef;
-          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+          color: rgba(243, 238, 230, 0.85);
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
         }
 
         .showcase-replay-btn {
           position: relative;
-          z-index: 16;
+          z-index: 31;
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 10px 16px;
+          padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid var(--accent-border);
-          background: rgba(12, 9, 7, 0.85);
-          color: var(--accent);
+          border: 1px solid rgba(229, 222, 213, 0.25);
+          background: rgba(12, 16, 13, 0.62);
+          color: #f3eee6;
           font-size: 11px;
-          font-weight: 600;
           letter-spacing: 0.14em;
           cursor: pointer;
           touch-action: manipulation;
@@ -568,8 +557,17 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-replay-btn:hover {
-          border-color: var(--accent);
-          background: var(--accent-soft);
+          border-color: rgba(229, 222, 213, 0.5);
+          background: rgba(229, 222, 213, 0.12);
+        }
+
+        .elevate-posts-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 60;
+          overflow-y: auto;
+          background: rgba(9, 13, 11, 0.96);
+          padding: 36px 20px;
         }
 
         @media (max-width: 800px) {
@@ -585,6 +583,7 @@ export default function SignatureCoffeeProject() {
 
           .showcase-container {
             height: auto;
+            min-height: 0;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -609,22 +608,29 @@ export default function SignatureCoffeeProject() {
 
           .showcase-desc {
             font-size: 13px;
-            color: #e8e1d5;
+            color: rgba(236, 230, 220, 0.8);
           }
 
           .showcase-status {
             background: transparent;
-            text-shadow: none;
-            color: var(--accent);
-            border-color: rgba(223, 160, 114, 0.4);
+            color: #d6c5a5;
+            border-color: rgba(229, 222, 213, 0.25);
             padding: 8px 12px;
           }
 
           .showcase-stage {
             height: auto;
+            min-height: 0;
             aspect-ratio: 16 / 9;
             border-radius: 10px;
             border: 1px solid rgba(229, 222, 213, 0.12);
+          }
+
+          .showcase-video {
+            width: 100%;
+            height: 100%;
+            max-height: none;
+            object-fit: contain;
           }
 
           .showcase-footer {
@@ -642,7 +648,7 @@ export default function SignatureCoffeeProject() {
             font-size: 12px;
             padding: 10px 12px 10px 16px;
             background: rgba(229, 222, 213, 0.06);
-            border-color: var(--accent-border);
+            border-color: rgba(229, 222, 213, 0.24);
           }
 
           .showcase-ended-group {
@@ -653,7 +659,7 @@ export default function SignatureCoffeeProject() {
 
           .showcase-ended-note {
             text-shadow: none;
-            color: #e8e1d5;
+            color: rgba(236, 230, 220, 0.8);
           }
 
           .showcase-replay-btn {
@@ -661,7 +667,7 @@ export default function SignatureCoffeeProject() {
             justify-content: center;
             background: transparent;
             border-color: rgba(229, 222, 213, 0.24);
-            color: #faf6ef;
+            color: #f3eee6;
           }
         }
       `}</style>
