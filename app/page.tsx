@@ -740,9 +740,10 @@ export default function Home() {
           flex-direction: column;
           align-items: flex-start;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(70px, 9.2vw, 148px);
-          line-height: 0.78;
-          letter-spacing: -0.065em;
+          font-size: clamp(64px, 8.6vw, 136px);
+          line-height: 0.88;
+          letter-spacing: -0.02em;
+          word-spacing: 0.08em;
           text-transform: uppercase;
           transform-style: preserve-3d;
           color: #e5ded5;
@@ -769,7 +770,7 @@ export default function Home() {
         .hero-description p {
           margin: 0;
           color: #e5ded5;
-          opacity: 0.7;
+          opacity: 0.72;
           font-size: 13px;
           line-height: 1.8;
         }
@@ -782,7 +783,7 @@ export default function Home() {
           margin-left: 7vw;
           font-size: 9px;
           letter-spacing: 0.22em;
-          opacity: 0.6;
+          opacity: 0.65;
           color: #e5ded5;
         }
 
@@ -864,7 +865,7 @@ export default function Home() {
           font-family: Georgia, serif;
           font-size: 12px;
           letter-spacing: 0.18em;
-          opacity: 0.45;
+          opacity: 0.5;
         }
 
         .section-grid {
@@ -878,7 +879,7 @@ export default function Home() {
           padding-top: 10px;
           font-size: 10px;
           letter-spacing: 0.25em;
-          opacity: 0.55;
+          opacity: 0.6;
         }
 
         .about-copy {
@@ -889,9 +890,10 @@ export default function Home() {
           margin: 0;
           max-width: 900px;
           font-family: Georgia, serif;
-          font-size: clamp(46px, 5.5vw, 88px);
-          line-height: 0.95;
-          letter-spacing: -0.05em;
+          font-size: clamp(44px, 5.2vw, 82px);
+          line-height: 1.04;
+          letter-spacing: -0.02em;
+          word-spacing: 0.05em;
           font-weight: 400;
           color: #1c2d27;
         }
@@ -906,7 +908,7 @@ export default function Home() {
           margin-top: 50px;
           font-size: 15px;
           line-height: 1.9;
-          opacity: 0.72;
+          opacity: 0.78;
           color: #1c2d27;
         }
 
@@ -927,7 +929,7 @@ export default function Home() {
           justify-content: space-between;
           font-size: 9px;
           letter-spacing: 0.22em;
-          opacity: 0.5;
+          opacity: 0.55;
         }
 
         .approach-flow {
@@ -945,9 +947,9 @@ export default function Home() {
 
         .flow-step {
           font-family: Georgia, serif;
-          font-size: clamp(52px, 6vw, 92px);
-          line-height: 0.95;
-          letter-spacing: -0.05em;
+          font-size: clamp(48px, 5.6vw, 86px);
+          line-height: 1.04;
+          letter-spacing: -0.02em;
           font-weight: 400;
           text-align: center;
           transform-style: preserve-3d;
@@ -984,7 +986,7 @@ export default function Home() {
           max-width: 350px;
           font-size: 14px;
           line-height: 1.9;
-          opacity: 0.65;
+          opacity: 0.72;
         }
 
         .bring-content {
@@ -995,9 +997,10 @@ export default function Home() {
           max-width: 600px;
           margin: 0 0 80px;
           font-family: Georgia, serif;
-          font-size: clamp(38px, 4vw, 64px);
-          line-height: 1;
-          letter-spacing: -0.04em;
+          font-size: clamp(36px, 3.8vw, 60px);
+          line-height: 1.08;
+          letter-spacing: -0.015em;
+          word-spacing: 0.04em;
           color: #1c2d27;
         }
 
@@ -1017,6 +1020,7 @@ export default function Home() {
 
         .bring-item span {
           font-size: 10px;
+          letter-spacing: 0.14em;
           color: #9e8651;
         }
 
@@ -1024,6 +1028,7 @@ export default function Home() {
           font-family: Georgia, serif;
           font-size: clamp(24px, 3vw, 44px);
           font-weight: 400;
+          letter-spacing: -0.01em;
           color: #1c2d27;
         }
 
@@ -1032,7 +1037,7 @@ export default function Home() {
           margin: 0;
           font-size: 12px;
           line-height: 1.7;
-          opacity: 0.6;
+          opacity: 0.72;
           color: #1c2d27;
         }
 
@@ -1063,9 +1068,9 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           font-family: Georgia, serif;
-          font-size: clamp(80px, 13vw, 210px);
-          line-height: 0.76;
-          letter-spacing: -0.07em;
+          font-size: clamp(72px, 11.5vw, 190px);
+          line-height: 0.86;
+          letter-spacing: -0.025em;
         }
 
         .transition-title em {
@@ -1085,7 +1090,7 @@ export default function Home() {
           max-width: 420px;
           margin-left: auto;
           color: #e5ded5;
-          opacity: 0.55;
+          opacity: 0.68;
           font-size: 12px;
           line-height: 1.8;
         }
@@ -1112,7 +1117,9 @@ export default function Home() {
           }
 
           .hero-content h1 {
-            font-size: clamp(50px, 14.5vw, 88px);
+            font-size: clamp(48px, 13vw, 82px);
+            line-height: 0.92;
+            letter-spacing: -0.015em;
           }
 
           .gold-word {
@@ -1146,7 +1153,9 @@ export default function Home() {
           }
 
           .about-copy h2 {
-            font-size: 42px;
+            font-size: 40px;
+            line-height: 1.06;
+            letter-spacing: -0.015em;
           }
 
           .about-copy p {
@@ -1165,7 +1174,7 @@ export default function Home() {
           }
 
           .flow-step {
-            font-size: 48px;
+            font-size: 46px;
           }
 
           .flow-arrow {
@@ -1180,7 +1189,7 @@ export default function Home() {
 
           .bring-intro {
             margin-bottom: 44px;
-            font-size: 34px;
+            font-size: 32px;
           }
 
           .bring-item {
@@ -1199,7 +1208,8 @@ export default function Home() {
           }
 
           .transition-title {
-            font-size: clamp(56px, 18vw, 92px);
+            font-size: clamp(54px, 16vw, 88px);
+            line-height: 0.92;
           }
 
           .transition-line {
