@@ -470,9 +470,10 @@ export default function SignatureCoffeeProject() {
           width: 100%;
           height: 100%;
           display: block;
-          object-fit: cover;
-          object-position: center;
-          transform: translateZ(0);
+          object-fit: contain;
+          object-position: center center;
+          transform: scale(1.08) translateZ(0);
+          transform-origin: center center;
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
         }
@@ -781,6 +782,7 @@ export default function SignatureCoffeeProject() {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            transform: none;
           }
 
           .showcase-footer {
