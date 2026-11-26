@@ -162,44 +162,46 @@ export default function ElevateProject() {
   };
 
   const isPostsVisible = stage === "posts_view";
+  const showStartInfo = stage === "idle" || isPostsVisible;
 
   return (
     <section
       id="elevate-solutions"
-      className="showcase-section"
+      className="showcase-section elevate-theme"
       onClick={handleStageTap}
       onContextMenu={(e) => e.preventDefault()}
     >
       <div className="showcase-container">
-        <div className="showcase-header">
-          <div className="showcase-meta">
-            <span className="showcase-index">01 / ELEVATE SOLUTIONS</span>
-            <h2 className="showcase-title">
-              ELEVATE <em>SOLUTIONS</em>
-            </h2>
-            <p className="showcase-desc">
-              Architectural identity, 3D visual storytelling, and structured brand presentation.
-            </p>
+        {showStartInfo && (
+          <div className="showcase-header">
+            <div className="showcase-meta">
+              <span className="showcase-index">01 / ELEVATE SOLUTIONS</span>
+              <h2 className="showcase-title">
+                ELEVATE <em>SOLUTIONS</em>
+              </h2>
+              <p className="showcase-desc">
+                Architectural identity, 3D visual storytelling, and structured brand presentation.
+              </p>
+            </div>
+            <span className="showcase-status">
+              {stage === "idle" && "TOUCH SCREEN TO PLAY"}
+              {stage === "posts_view" && "CAMPAIGN POSTS"}
+            </span>
           </div>
-          <span className="showcase-status">
-            {stage === "idle" && "TAP VIDEO TO PLAY"}
-            {stage === "playing" && "NOW PLAYING"}
-            {stage === "ended" && "SEQUENCE COMPLETE"}
-            {stage === "posts_view" && "CAMPAIGN POSTS"}
-          </span>
-        </div>
+        )}
 
         <div className="showcase-stage">
           <video
             ref={videoRef}
             className={`showcase-video ${isPostsVisible ? "is-faded" : ""}`}
-            src={ELEVATE_VIDEO_SRC}
             muted
             playsInline
             preload={isMobile ? "auto" : "auto"}
             controlsList="nodownload nofullscreen noremoteplayback"
             disablePictureInPicture
-          />
+          >
+            <source src={ELEVATE_VIDEO_SRC} type="video/mp4" />
+          </video>
 
           {videoError && !isPostsVisible && (
             <div className="video-missing-note">
@@ -212,6 +214,7 @@ export default function ElevateProject() {
             <div
               className="elevate-posts-overlay"
               onClick={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
             >
               <div className="posts-inner">
                 <div className="posts-header-row">
@@ -236,7 +239,10 @@ export default function ElevateProject() {
                     <article
                       key={post.id}
                       className="post-card"
-                      onClick={() => setActivePostIndex(idx)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActivePostIndex(idx);
+                      }}
                     >
                       <div className="post-media">
                         {missingImages[post.id] ? (
@@ -267,14 +273,20 @@ export default function ElevateProject() {
               {activePostIndex !== null && (
                 <div
                   className="post-lightbox"
-                  onClick={() => setActivePostIndex(null)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActivePostIndex(null);
+                  }}
                   role="dialog"
                   aria-modal="true"
                 >
                   <button
                     type="button"
                     className="lightbox-close"
-                    onClick={() => setActivePostIndex(null)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePostIndex(null);
+                    }}
                     aria-label="Close preview"
                   >
                     <X size={20} />
@@ -321,6 +333,7 @@ export default function ElevateProject() {
         <div
           className="showcase-footer"
           onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           <button
             type="button"
@@ -329,7 +342,7 @@ export default function ElevateProject() {
           >
             <span>Click this icon to view the complete posts</span>
             <span className="showcase-icon-badge">
-              <LayoutGrid size={16} strokeWidth={1.9} />
+              <LayoutGrid size={16} strokeWidth={2.2} />
             </span>
           </button>
 
@@ -338,7 +351,7 @@ export default function ElevateProject() {
             className="showcase-replay-btn"
             onClick={handleReplay}
           >
-            <RotateCcw size={13} />
+            <RotateCcw size={14} strokeWidth={2.2} />
             <span>REPLAY SEQUENCE</span>
           </button>
         </div>
@@ -356,6 +369,13 @@ export default function ElevateProject() {
           touch-action: manipulation;
         }
 
+        .elevate-theme {
+          --accent: #d4af37;
+          --accent-soft: rgba(212, 175, 55, 0.22);
+          --accent-border: rgba(212, 175, 55, 0.55);
+          --badge-ink: #0c100e;
+        }
+
         .showcase-container {
           position: relative;
           width: 100%;
@@ -367,7 +387,7 @@ export default function ElevateProject() {
           top: 24px;
           left: 28px;
           right: 28px;
-          z-index: 4;
+          z-index: 12;
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
@@ -379,15 +399,20 @@ export default function ElevateProject() {
           display: flex;
           flex-direction: column;
           gap: 4px;
-          max-width: 640px;
-          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.75);
+          max-width: 660px;
+          padding: 12px 16px;
+          border-radius: 12px;
+          background: rgba(7, 11, 9, 0.65);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(229, 222, 213, 0.12);
         }
 
         .showcase-index {
           font-size: 11px;
           letter-spacing: 0.22em;
-          color: #9e8651;
+          color: var(--accent);
           text-transform: uppercase;
+          font-weight: 600;
         }
 
         .showcase-title {
@@ -396,11 +421,11 @@ export default function ElevateProject() {
           font-size: clamp(24px, 2.8vw, 38px);
           line-height: 1.08;
           font-weight: 400;
-          color: #e5ded5;
+          color: #f3eee7;
         }
 
         .showcase-title em {
-          color: #9e8651;
+          color: var(--accent);
           font-style: italic;
         }
 
@@ -408,20 +433,21 @@ export default function ElevateProject() {
           margin: 0;
           font-size: 13px;
           line-height: 1.45;
-          color: rgba(229, 222, 213, 0.85);
+          color: rgba(243, 238, 231, 0.88);
         }
 
         .showcase-status {
           font-size: 10px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #e5ded5;
-          background: rgba(13, 19, 16, 0.72);
+          color: var(--accent);
+          background: rgba(7, 11, 9, 0.78);
           backdrop-filter: blur(8px);
-          padding: 8px 14px;
-          border: 1px solid rgba(158, 134, 81, 0.45);
+          padding: 9px 15px;
+          border: 1px solid var(--accent-border);
           border-radius: 999px;
           white-space: nowrap;
+          font-weight: 600;
         }
 
         .showcase-stage {
@@ -431,6 +457,7 @@ export default function ElevateProject() {
           background: #070b09;
           overflow: hidden;
           cursor: pointer;
+          z-index: 1;
         }
 
         .showcase-video {
@@ -439,13 +466,14 @@ export default function ElevateProject() {
           display: block;
           object-fit: cover;
           object-position: center;
+          filter: contrast(1.05) saturate(1.06);
           transform: translateZ(0);
           backface-visibility: hidden;
           transition: opacity 0.35s ease;
         }
 
         .showcase-video.is-faded {
-          opacity: 0.2;
+          opacity: 0.18;
         }
 
         .showcase-footer {
@@ -453,31 +481,37 @@ export default function ElevateProject() {
           left: 28px;
           right: 28px;
           bottom: 24px;
-          z-index: 4;
+          z-index: 15;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 16px;
+          pointer-events: none;
         }
 
         .showcase-posts-btn {
+          pointer-events: auto;
+          position: relative;
+          z-index: 16;
           display: inline-flex;
           align-items: center;
           gap: 12px;
           padding: 9px 13px 9px 16px;
           border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.24);
-          background: rgba(13, 19, 16, 0.78);
+          border: 1px solid var(--accent-border);
+          background: rgba(10, 15, 12, 0.86);
           backdrop-filter: blur(8px);
-          color: #e5ded5;
+          color: #f3eee7;
           font-size: 12px;
+          font-weight: 500;
           cursor: pointer;
+          touch-action: manipulation;
           transition: border-color 0.2s ease, background 0.2s ease;
         }
 
         .showcase-posts-btn:hover {
-          border-color: #9e8651;
-          background: rgba(158, 134, 81, 0.22);
+          border-color: var(--accent);
+          background: var(--accent-soft);
         }
 
         .showcase-icon-badge {
@@ -487,30 +521,35 @@ export default function ElevateProject() {
           width: 28px;
           height: 28px;
           border-radius: 50%;
-          background: #9e8651;
-          color: #111815;
+          background: var(--accent);
+          color: var(--badge-ink);
           flex-shrink: 0;
         }
 
         .showcase-replay-btn {
+          pointer-events: auto;
+          position: relative;
+          z-index: 16;
           display: inline-flex;
           align-items: center;
           gap: 8px;
           padding: 10px 16px;
           border-radius: 999px;
-          border: 1px solid rgba(229, 222, 213, 0.24);
-          background: rgba(13, 19, 16, 0.78);
+          border: 1px solid var(--accent-border);
+          background: rgba(10, 15, 12, 0.86);
           backdrop-filter: blur(8px);
-          color: #e5ded5;
+          color: var(--accent);
           font-size: 11px;
+          font-weight: 600;
           letter-spacing: 0.14em;
           cursor: pointer;
-          transition: border-color 0.2s ease, color 0.2s ease;
+          touch-action: manipulation;
+          transition: border-color 0.2s ease, background 0.2s ease;
         }
 
         .showcase-replay-btn:hover {
-          border-color: #9e8651;
-          color: #9e8651;
+          border-color: var(--accent);
+          background: var(--accent-soft);
         }
 
         @media (max-width: 800px) {
@@ -540,7 +579,10 @@ export default function ElevateProject() {
           }
 
           .showcase-meta {
-            text-shadow: none;
+            padding: 0;
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
           }
 
           .showcase-title {
@@ -556,8 +598,8 @@ export default function ElevateProject() {
           .showcase-status {
             background: transparent;
             backdrop-filter: none;
-            color: #9e8651;
-            border-color: rgba(158, 134, 81, 0.35);
+            color: var(--accent);
+            border-color: rgba(212, 175, 55, 0.35);
             padding: 8px 12px;
           }
 
@@ -578,6 +620,7 @@ export default function ElevateProject() {
             align-items: stretch;
             gap: 12px;
             padding-top: 2px;
+            pointer-events: auto;
           }
 
           .showcase-posts-btn {
@@ -585,9 +628,9 @@ export default function ElevateProject() {
             justify-content: space-between;
             font-size: 12px;
             padding: 10px 12px 10px 16px;
-            background: rgba(229, 222, 213, 0.05);
+            background: rgba(229, 222, 213, 0.06);
             backdrop-filter: none;
-            border-color: rgba(229, 222, 213, 0.18);
+            border-color: var(--accent-border);
           }
 
           .showcase-replay-btn {
@@ -595,7 +638,8 @@ export default function ElevateProject() {
             justify-content: center;
             background: transparent;
             backdrop-filter: none;
-            border-color: rgba(229, 222, 213, 0.16);
+            border-color: rgba(229, 222, 213, 0.22);
+            color: #e5ded5;
           }
         }
       `}</style>
