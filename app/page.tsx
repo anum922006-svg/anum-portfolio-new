@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ElevateProject from "./components/ElevateProject";
 import SignatureCoffeeProject from "./components/SignatureCoffeeProject";
 import BrewCoProject from "./components/BrewCoProject";
+import LumineStudioProject from "./components/LumineStudioProject";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -618,6 +619,8 @@ export default function Home() {
       <SignatureCoffeeProject />
 
       <BrewCoProject />
+
+      <LumineStudioProject />
 
       <style jsx global>{`
         *,
