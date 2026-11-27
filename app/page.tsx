@@ -539,13 +539,17 @@ export default function Home() {
               idea first, then shaping the visual language around it.
             </p>
 
-            <p className="about-reveal">
-              What I create: I create visual content and digital experiences that
-              help businesses present their products, communicate their ideas and
-              connect with their audiences. My work explores social media
-              campaigns, 3D product visuals, promotional videos and interactive
-              digital presentations — bringing ideas to life through thoughtful
-              design and visual storytelling.
+            <p className="about-reveal about-create">
+              <span className="create-lead">What I create:</span> I create visual
+              content and digital experiences that help businesses present their
+              products, communicate their ideas and connect with their
+              audiences. My work explores{" "}
+              <em className="create-emphasis">social media campaigns</em>,{" "}
+              <em className="create-emphasis">3D product visuals</em>,{" "}
+              <em className="create-emphasis">promotional videos</em> and{" "}
+              <em className="create-emphasis">interactive digital presentations</em>{" "}
+              — bringing ideas to life through thoughtful design and visual
+              storytelling.
             </p>
           </div>
         </div>
@@ -1017,6 +1021,31 @@ export default function Home() {
           color: #1c2d27;
         }
 
+        .about-copy p.about-create {
+          max-width: 620px;
+          margin-top: 32px;
+          padding-left: 18px;
+          border-left: 2px solid rgba(158, 134, 81, 0.55);
+          opacity: 0.94;
+          color: #1c2d27;
+        }
+
+        .about-create .create-lead {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 16px;
+          font-style: italic;
+          color: #876c36;
+          margin-right: 4px;
+        }
+
+        .about-create .create-emphasis {
+          font-family: Georgia, "Times New Roman", serif;
+          font-style: italic;
+          color: #16251f;
+          border-bottom: 1px solid rgba(158, 134, 81, 0.45);
+          padding-bottom: 1px;
+        }
+
         .approach-card {
           padding: 60px;
           min-height: 570px;
@@ -1271,6 +1300,11 @@ export default function Home() {
 
           .about-copy p {
             margin-top: 28px;
+          }
+
+          .about-copy p.about-create {
+            margin-top: 22px;
+            padding-left: 14px;
           }
 
           .approach-card {
