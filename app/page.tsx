@@ -710,15 +710,17 @@ export default function Home() {
               </p>
 
               <p>
-                I believe every project begins with an idea, and bringing that
-                idea to life takes thoughtful design, clear direction and
+                Every creative journey is shaped by new ideas, different
+                perspectives and the willingness to keep exploring what&apos;s
+                possible. My work reflects an ongoing interest in bringing ideas
+                to life through thoughtful design, visual storytelling and
                 attention to detail.
               </p>
 
               <p>
-                Whether you have a project in mind, a concept you&apos;d like to
-                explore, or an opportunity to discuss, I&apos;d be glad to hear
-                from you.
+                I&apos;m always open to new perspectives, creative
+                collaborations and opportunities to turn ideas into something
+                meaningful.
               </p>
             </div>
 
@@ -728,7 +730,8 @@ export default function Home() {
               </h3>
 
               <p className="closing-cta-sub">
-                Have an idea? Let&apos;s talk.
+                Have a project in mind or an idea you&apos;d like to explore?
+                I&apos;d love to hear about it.
               </p>
 
               <span className="closing-touch-label">GET IN TOUCH</span>
@@ -776,7 +779,7 @@ export default function Home() {
               </div>
 
               <div className="closing-signature">
-                <span>-ANUM FARID</span>
+                <span>ANUM FARID</span>
                 <small>PORTFOLIO / 2026</small>
               </div>
             </div>
@@ -1602,8 +1605,9 @@ export default function Home() {
 
         .closing-signature span {
           font-family: Georgia, "Times New Roman", serif;
-          font-style: italic;
-          font-size: 17px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          font-size: 13px;
           color: #e5ded5;
         }
 
