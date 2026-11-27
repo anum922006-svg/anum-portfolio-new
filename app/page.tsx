@@ -5,7 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Mail } from "lucide-react";
+import { Mail, ArrowUpRight } from "lucide-react";
 import ElevateProject from "./components/ElevateProject";
 import SignatureCoffeeProject from "./components/SignatureCoffeeProject";
 import BrewCoProject from "./components/BrewCoProject";
@@ -406,6 +406,26 @@ export default function Home() {
         }
       );
 
+      gsap.fromTo(
+        ".closing-reveal",
+        {
+          opacity: 0,
+          y: 44,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".closing-section",
+            start: "top 78%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
       requestAnimationFrame(() => {
         ScrollTrigger.refresh();
       });
@@ -665,6 +685,111 @@ export default function Home() {
       <BrewCoProject />
 
       <LumineStudioProject />
+
+      <footer className="closing-section" id="contact">
+        <div className="closing-inner">
+          <div className="closing-top closing-reveal">
+            <span className="closing-kicker">06 / CLOSING NOTE</span>
+            <span className="closing-availability">
+              <span className="closing-dot" />
+              OPEN FOR COLLABORATIONS
+            </span>
+          </div>
+
+          <h2 className="closing-title closing-reveal">
+            <span>THANK YOU FOR</span>
+            <em>BEING HERE.</em>
+          </h2>
+
+          <div className="closing-divider closing-reveal" />
+
+          <div className="closing-grid">
+            <div className="closing-story closing-reveal">
+              <p className="closing-lead">
+                Thank you for taking the time to explore my work.
+              </p>
+
+              <p>
+                I&apos;m at the beginning of my creative journey, constantly
+                learning, experimenting and discovering new ways to bring ideas
+                to life. I may still be growing my experience, but I bring
+                curiosity, dedication and a genuine willingness to understand
+                every project I take on.
+              </p>
+
+              <p>
+                I believe good work begins with the right mindset, thoughtful
+                ideas and the effort to turn them into something meaningful.
+              </p>
+
+              <p>
+                If you have a project in mind, an idea you&apos;d like to
+                explore, or simply feel that we could create something
+                worthwhile together, I&apos;d love to hear from you.
+              </p>
+            </div>
+
+            <div className="closing-cta-card closing-reveal">
+              <h3 className="closing-cta-heading">
+                Let&apos;s make something <em>meaningful.</em>
+              </h3>
+
+              <p className="closing-cta-sub">
+                I&apos;d be happy to hear about your next idea.
+              </p>
+
+              <span className="closing-touch-label">GET IN TOUCH</span>
+
+              <div className="closing-actions">
+                <a
+                  href="mailto:anum922006@gmail.com"
+                  className="closing-action-btn primary"
+                  aria-label="Email Anum Farid"
+                >
+                  <span className="closing-action-icon">
+                    <Mail size={16} strokeWidth={1.9} aria-hidden="true" />
+                  </span>
+                  <span className="closing-action-text">
+                    <strong>Email</strong>
+                    <small>anum922006@gmail.com</small>
+                  </span>
+                  <ArrowUpRight size={15} strokeWidth={1.9} className="closing-arrow" />
+                </a>
+
+                <a
+                  href="https://www.linkedin.com/in/anumfaridcreative/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="closing-action-btn"
+                  aria-label="Connect with Anum Farid on LinkedIn"
+                >
+                  <span className="closing-action-icon">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19ZM8.34 17.34V10.67H6.12V17.34H8.34ZM7.23 9.76C7.98 9.76 8.45 9.26 8.45 8.64C8.44 8 7.98 7.52 7.25 7.52C6.51 7.52 6.03 8 6.03 8.64C6.03 9.26 6.5 9.76 7.21 9.76H7.23ZM18 17.34V13.59C18 11.58 16.93 10.64 15.5 10.64C14.35 10.64 13.84 11.27 13.55 11.72V10.67H11.33C11.36 11.27 11.33 17.34 11.33 17.34H13.55V13.62C13.55 13.42 13.57 13.22 13.62 13.08C13.77 12.71 14.11 12.33 14.68 12.33C15.42 12.33 15.78 12.89 15.78 13.71V17.34H18Z" />
+                    </svg>
+                  </span>
+                  <span className="closing-action-text">
+                    <strong>LinkedIn</strong>
+                    <small>/in/anumfaridcreative</small>
+                  </span>
+                  <ArrowUpRight size={15} strokeWidth={1.9} className="closing-arrow" />
+                </a>
+              </div>
+
+              <div className="closing-signature">
+                <span>— Anum Farid</span>
+                <small>PORTFOLIO / 2026</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       <style jsx global>{`
         *,
@@ -1229,6 +1354,272 @@ export default function Home() {
           line-height: 1.8;
         }
 
+        /* =========================================================
+           CLOSING / THANK YOU & CONTACT SECTION (06)
+           ========================================================= */
+
+        .closing-section {
+          position: relative;
+          min-height: 100svh;
+          padding: 130px 8vw 96px;
+          background: radial-gradient(
+              circle at 78% 28%,
+              rgba(158, 134, 81, 0.16),
+              transparent 42%
+            ),
+            radial-gradient(
+              circle at 18% 82%,
+              rgba(28, 45, 39, 0.65),
+              transparent 52%
+            ),
+            linear-gradient(155deg, #111815 0%, #1a2a24 54%, #0f1512 100%);
+          border-top: 1px solid rgba(229, 222, 213, 0.12);
+          color: #e5ded5;
+          display: flex;
+          align-items: center;
+        }
+
+        .closing-inner {
+          width: 100%;
+          max-width: 1360px;
+          margin: 0 auto;
+        }
+
+        .closing-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          flex-wrap: wrap;
+          margin-bottom: 34px;
+        }
+
+        .closing-kicker {
+          font-size: 10px;
+          letter-spacing: 0.24em;
+          color: #9e8651;
+          text-transform: uppercase;
+        }
+
+        .closing-availability {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 10px;
+          letter-spacing: 0.2em;
+          color: rgba(229, 222, 213, 0.8);
+          padding: 7px 14px;
+          border-radius: 999px;
+          border: 1px solid rgba(214, 179, 106, 0.26);
+          background: rgba(214, 179, 106, 0.07);
+        }
+
+        .closing-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #d6b36a;
+          box-shadow: 0 0 10px #d6b36a;
+        }
+
+        .closing-title {
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(50px, 7.6vw, 124px);
+          line-height: 0.9;
+          letter-spacing: -0.025em;
+          font-weight: 400;
+          color: #e5ded5;
+          text-transform: uppercase;
+        }
+
+        .closing-title em {
+          margin-left: 7vw;
+          color: #b79c63;
+          font-style: italic;
+        }
+
+        .closing-divider {
+          width: 100%;
+          height: 1px;
+          margin: 56px 0 48px;
+          background: linear-gradient(
+            90deg,
+            rgba(214, 179, 106, 0.45),
+            rgba(229, 222, 213, 0.14) 55%,
+            transparent
+          );
+        }
+
+        .closing-grid {
+          display: grid;
+          grid-template-columns: 1.2fr 0.9fr;
+          gap: 64px;
+          align-items: start;
+        }
+
+        .closing-story {
+          max-width: 580px;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .closing-story p {
+          margin: 0;
+          font-size: 14.5px;
+          line-height: 1.85;
+          color: rgba(229, 222, 213, 0.78);
+        }
+
+        .closing-story p.closing-lead {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(20px, 2vw, 25px);
+          line-height: 1.4;
+          color: #f3ede4;
+        }
+
+        .closing-cta-card {
+          padding: 38px 36px;
+          border-radius: 18px;
+          border: 1px solid rgba(214, 179, 106, 0.3);
+          background: linear-gradient(
+            145deg,
+            rgba(229, 222, 213, 0.055),
+            rgba(214, 179, 106, 0.06)
+          );
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .closing-cta-heading {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(28px, 2.8vw, 38px);
+          line-height: 1.12;
+          font-weight: 400;
+          color: #f5efe6;
+        }
+
+        .closing-cta-heading em {
+          color: #d6b36a;
+          font-style: italic;
+        }
+
+        .closing-cta-sub {
+          margin: 0 0 6px;
+          font-size: 14px;
+          line-height: 1.65;
+          color: rgba(229, 222, 213, 0.78);
+        }
+
+        .closing-touch-label {
+          font-size: 10px;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          color: #d6b36a;
+          font-weight: 700;
+          margin-top: 4px;
+        }
+
+        .closing-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .closing-action-btn {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 12px 16px;
+          border-radius: 14px;
+          border: 1px solid rgba(229, 222, 213, 0.2);
+          background: rgba(17, 24, 21, 0.65);
+          color: #f5efe6;
+          text-decoration: none;
+          transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .closing-action-btn.primary {
+          border-color: rgba(214, 179, 106, 0.48);
+          background: rgba(214, 179, 106, 0.12);
+        }
+
+        .closing-action-btn:hover,
+        .closing-action-btn:focus-visible {
+          transform: translateY(-2px);
+          border-color: rgba(214, 179, 106, 0.85);
+          background: rgba(214, 179, 106, 0.2);
+        }
+
+        .closing-action-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #d6b36a;
+          color: #111815;
+          flex-shrink: 0;
+        }
+
+        .closing-action-text {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          flex: 1;
+          min-width: 0;
+        }
+
+        .closing-action-text strong {
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          color: #f7f1e6;
+        }
+
+        .closing-action-text small {
+          font-size: 11.5px;
+          color: rgba(229, 222, 213, 0.72);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .closing-arrow {
+          color: #d6b36a;
+          flex-shrink: 0;
+        }
+
+        .closing-signature {
+          margin-top: 14px;
+          padding-top: 18px;
+          border-top: 1px solid rgba(229, 222, 213, 0.14);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        }
+
+        .closing-signature span {
+          font-family: Georgia, "Times New Roman", serif;
+          font-style: italic;
+          font-size: 17px;
+          color: #e5ded5;
+        }
+
+        .closing-signature small {
+          font-size: 9.5px;
+          letter-spacing: 0.2em;
+          color: rgba(229, 222, 213, 0.5);
+        }
+
         @media (max-width: 800px) {
           .hero-section {
             min-height: 100svh;
@@ -1359,6 +1750,33 @@ export default function Home() {
 
           .transition-line {
             margin: 40px 0 24px;
+          }
+
+          .closing-section {
+            min-height: auto;
+            padding: 88px 22px 72px;
+          }
+
+          .closing-title {
+            font-size: clamp(42px, 12vw, 68px);
+            line-height: 0.94;
+          }
+
+          .closing-title em {
+            margin-left: 4vw;
+          }
+
+          .closing-divider {
+            margin: 36px 0 32px;
+          }
+
+          .closing-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+          }
+
+          .closing-cta-card {
+            padding: 26px 22px;
           }
         }
       `}</style>
