@@ -692,7 +692,7 @@ export default function Home() {
             <span className="closing-kicker">06 / CLOSING NOTE</span>
             <span className="closing-availability">
               <span className="closing-dot" />
-              OPEN FOR COLLABORATIONS
+              CRAFTED WITH PURPOSE
             </span>
           </div>
 
