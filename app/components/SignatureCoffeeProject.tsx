@@ -55,7 +55,6 @@ export default function SignatureCoffeeProject() {
     stageRef.current = stage;
   }, [stage]);
 
-  // Lazy-activate full video buffering only when section nears viewport
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -220,7 +219,7 @@ export default function SignatureCoffeeProject() {
                 SIGNATURE <em>COFFEE</em>
               </h2>
               <p className="showcase-desc">
-                Warm, product-focused specialty café identity, curated menu catalog, and promotional campaign series.
+                Botanical specialty café identity, curated menu catalog, and promotional campaign series.
               </p>
             </div>
             <span className="showcase-status">TOUCH SCREEN TO PLAY</span>
@@ -409,11 +408,11 @@ export default function SignatureCoffeeProject() {
           padding: 48px 4vw;
           background: radial-gradient(
               circle at 24% 26%,
-              rgba(181, 131, 74, 0.16),
+              rgba(84, 134, 102, 0.18),
               transparent 44%
             ),
-            linear-gradient(155deg, #17100c 0%, #231711 54%, #120c09 100%);
-          color: #f6efe6;
+            linear-gradient(155deg, #0c1712 0%, #14261e 54%, #09120e 100%);
+          color: #f1f4ef;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -449,7 +448,7 @@ export default function SignatureCoffeeProject() {
         .showcase-index {
           font-size: 11px;
           letter-spacing: 0.22em;
-          color: #d4b078;
+          color: #8fb89f;
           text-transform: uppercase;
         }
 
@@ -459,11 +458,11 @@ export default function SignatureCoffeeProject() {
           font-size: clamp(26px, 3vw, 40px);
           line-height: 1.08;
           font-weight: 400;
-          color: #f6efe6;
+          color: #f1f4ef;
         }
 
         .showcase-title em {
-          color: #e4c794;
+          color: #d6bc84;
           font-style: italic;
         }
 
@@ -471,17 +470,17 @@ export default function SignatureCoffeeProject() {
           margin: 0;
           font-size: 13.5px;
           line-height: 1.55;
-          color: rgba(246, 239, 230, 0.82);
+          color: rgba(241, 244, 239, 0.82);
         }
 
         .showcase-status {
           font-size: 10px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #efe3d3;
-          background: rgba(212, 176, 120, 0.08);
+          color: #e4ede7;
+          background: rgba(143, 184, 159, 0.1);
           padding: 8px 14px;
-          border: 1px solid rgba(212, 176, 120, 0.24);
+          border: 1px solid rgba(143, 184, 159, 0.26);
           border-radius: 999px;
           white-space: nowrap;
         }
@@ -492,9 +491,9 @@ export default function SignatureCoffeeProject() {
           max-width: min(100%, calc(74svh * var(--video-ratio, 1.7778)));
           aspect-ratio: var(--video-ratio, 16 / 9);
           margin: 0 auto;
-          background: #0d0806;
+          background: #070e0b;
           border-radius: 14px;
-          border: 1px solid rgba(212, 176, 120, 0.22);
+          border: 1px solid rgba(143, 184, 159, 0.24);
           box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
           overflow: hidden;
           cursor: pointer;
@@ -524,8 +523,8 @@ export default function SignatureCoffeeProject() {
           justify-content: center;
           text-align: center;
           padding: 16px;
-          background: rgba(13, 8, 6, 0.9);
-          color: #f6efe6;
+          background: rgba(7, 14, 11, 0.9);
+          color: #f1f4ef;
           font-size: 13px;
           border-radius: 10px;
         }
@@ -551,9 +550,9 @@ export default function SignatureCoffeeProject() {
           gap: 11px;
           padding: 7px 16px 7px 8px;
           border-radius: 999px;
-          border: 1px solid rgba(212, 176, 120, 0.48);
-          background: rgba(212, 176, 120, 0.14);
-          color: #f7f0e6;
+          border: 1px solid rgba(214, 188, 132, 0.48);
+          background: rgba(214, 188, 132, 0.14);
+          color: #f5f3ec;
           font-size: 11px;
           font-weight: 600;
           letter-spacing: 0.14em;
@@ -564,8 +563,8 @@ export default function SignatureCoffeeProject() {
 
         .showcase-posts-btn:hover {
           transform: translateY(-1px);
-          border-color: rgba(212, 176, 120, 0.85);
-          background: rgba(212, 176, 120, 0.22);
+          border-color: rgba(214, 188, 132, 0.85);
+          background: rgba(214, 188, 132, 0.22);
         }
 
         .showcase-posts-btn:active {
@@ -579,8 +578,8 @@ export default function SignatureCoffeeProject() {
           width: 30px;
           height: 30px;
           border-radius: 50%;
-          background: #d4b078;
-          color: #17100c;
+          background: #d6bc84;
+          color: #0c1712;
           flex-shrink: 0;
         }
 
@@ -589,7 +588,7 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-posts-arrow {
-          color: #d4b078;
+          color: #d6bc84;
           flex-shrink: 0;
         }
 
@@ -602,7 +601,7 @@ export default function SignatureCoffeeProject() {
 
         .showcase-ended-note {
           font-size: 12px;
-          color: rgba(246, 239, 230, 0.8);
+          color: rgba(241, 244, 239, 0.8);
         }
 
         .showcase-replay-btn {
@@ -613,9 +612,9 @@ export default function SignatureCoffeeProject() {
           gap: 8px;
           padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid rgba(212, 176, 120, 0.28);
+          border: 1px solid rgba(143, 184, 159, 0.28);
           background: transparent;
-          color: #f6efe6;
+          color: #f1f4ef;
           font-size: 11px;
           letter-spacing: 0.14em;
           cursor: pointer;
@@ -624,8 +623,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-replay-btn:hover {
-          border-color: rgba(212, 176, 120, 0.55);
-          background: rgba(212, 176, 120, 0.1);
+          border-color: rgba(143, 184, 159, 0.55);
+          background: rgba(143, 184, 159, 0.1);
         }
 
         .posts-modal-backdrop {
@@ -633,7 +632,7 @@ export default function SignatureCoffeeProject() {
           inset: 0;
           z-index: 80;
           overflow-y: auto;
-          background: rgba(14, 9, 7, 0.96);
+          background: rgba(8, 15, 11, 0.96);
           padding: 28px 20px 56px;
         }
 
@@ -651,7 +650,7 @@ export default function SignatureCoffeeProject() {
           justify-content: space-between;
           gap: 16px;
           padding-bottom: 16px;
-          border-bottom: 1px solid rgba(246, 239, 230, 0.12);
+          border-bottom: 1px solid rgba(241, 244, 239, 0.12);
           flex-wrap: wrap;
         }
 
@@ -664,7 +663,7 @@ export default function SignatureCoffeeProject() {
         .posts-sheet-kicker {
           font-size: 10px;
           letter-spacing: 0.22em;
-          color: #d4b078;
+          color: #8fb89f;
           text-transform: uppercase;
         }
 
@@ -673,11 +672,11 @@ export default function SignatureCoffeeProject() {
           font-family: Georgia, "Times New Roman", serif;
           font-size: clamp(24px, 3vw, 36px);
           font-weight: 400;
-          color: #f6efe6;
+          color: #f1f4ef;
         }
 
         .posts-sheet-heading em {
-          color: #e4c794;
+          color: #d6bc84;
           font-style: italic;
         }
 
@@ -687,9 +686,9 @@ export default function SignatureCoffeeProject() {
           gap: 8px;
           padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid rgba(246, 239, 230, 0.22);
-          background: rgba(246, 239, 230, 0.06);
-          color: #f6efe6;
+          border: 1px solid rgba(241, 244, 239, 0.22);
+          background: rgba(241, 244, 239, 0.06);
+          color: #f1f4ef;
           font-size: 11px;
           letter-spacing: 0.14em;
           cursor: pointer;
@@ -702,8 +701,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .editorial-post-card {
-          background: #1d140f;
-          border: 1px solid rgba(246, 239, 230, 0.12);
+          background: #102019;
+          border: 1px solid rgba(241, 244, 239, 0.12);
           border-radius: 16px;
           overflow: hidden;
           display: flex;
@@ -714,13 +713,13 @@ export default function SignatureCoffeeProject() {
 
         .editorial-post-card:hover {
           transform: translateY(-2px);
-          border-color: rgba(212, 176, 120, 0.42);
+          border-color: rgba(214, 188, 132, 0.42);
         }
 
         .editorial-post-frame {
-          background: #110b08;
+          background: #09130f;
           padding: 12px;
-          border-bottom: 1px solid rgba(246, 239, 230, 0.08);
+          border-bottom: 1px solid rgba(241, 244, 239, 0.08);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -736,7 +735,7 @@ export default function SignatureCoffeeProject() {
         .post-fallback {
           padding: 24px;
           font-size: 12px;
-          color: rgba(246, 239, 230, 0.7);
+          color: rgba(241, 244, 239, 0.7);
           text-align: center;
         }
 
@@ -757,13 +756,13 @@ export default function SignatureCoffeeProject() {
         .editorial-post-num {
           font-size: 10px;
           letter-spacing: 0.2em;
-          color: #d4b078;
+          color: #8fb89f;
         }
 
         .editorial-post-hint {
           font-size: 10px;
           letter-spacing: 0.14em;
-          color: rgba(246, 239, 230, 0.56);
+          color: rgba(241, 244, 239, 0.56);
         }
 
         .editorial-post-title {
@@ -772,21 +771,21 @@ export default function SignatureCoffeeProject() {
           font-size: 18px;
           font-weight: 400;
           line-height: 1.3;
-          color: #f6efe6;
+          color: #f1f4ef;
         }
 
         .editorial-post-caption {
           margin: 0;
           font-size: 13px;
           line-height: 1.55;
-          color: rgba(246, 239, 230, 0.76);
+          color: rgba(241, 244, 239, 0.76);
         }
 
         .post-lightbox {
           position: fixed;
           inset: 0;
           z-index: 100;
-          background: rgba(10, 6, 5, 0.94);
+          background: rgba(6, 12, 9, 0.94);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -801,9 +800,9 @@ export default function SignatureCoffeeProject() {
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          border: 1px solid rgba(246, 239, 230, 0.25);
-          background: rgba(29, 20, 15, 0.85);
-          color: #f6efe6;
+          border: 1px solid rgba(241, 244, 239, 0.25);
+          background: rgba(16, 32, 25, 0.85);
+          color: #f1f4ef;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -818,9 +817,9 @@ export default function SignatureCoffeeProject() {
           width: 42px;
           height: 42px;
           border-radius: 50%;
-          border: 1px solid rgba(246, 239, 230, 0.25);
-          background: rgba(29, 20, 15, 0.85);
-          color: #f6efe6;
+          border: 1px solid rgba(241, 244, 239, 0.25);
+          background: rgba(16, 32, 25, 0.85);
+          color: #f1f4ef;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -860,13 +859,13 @@ export default function SignatureCoffeeProject() {
         .lightbox-caption span {
           font-size: 10px;
           letter-spacing: 0.2em;
-          color: #d4b078;
+          color: #8fb89f;
         }
 
         .lightbox-caption p {
           margin: 4px 0 0;
           font-size: 13px;
-          color: #f6efe6;
+          color: #f1f4ef;
         }
 
         @media (max-width: 800px) {
@@ -874,7 +873,7 @@ export default function SignatureCoffeeProject() {
             min-height: auto;
             display: block;
             padding: 64px 16px;
-            border-top: 1px solid rgba(212, 176, 120, 0.14);
+            border-top: 1px solid rgba(143, 184, 159, 0.14);
             overflow: visible;
           }
 

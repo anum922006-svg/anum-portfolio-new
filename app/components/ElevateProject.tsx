@@ -48,7 +48,6 @@ export default function ElevateProject() {
     stageRef.current = stage;
   }, [stage]);
 
-  // Lazy-activate full video buffering only when section nears viewport
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;

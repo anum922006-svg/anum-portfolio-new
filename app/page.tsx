@@ -470,33 +470,41 @@ export default function Home() {
           </div>
 
           <div className="hero-contacts hero-small" aria-label="Contact links">
-            <a
-              href="mailto:anum922006@gmail.com"
-              className="hero-contact-link"
-              aria-label="Email Anum Farid"
-            >
-              <Mail size={13} strokeWidth={1.75} aria-hidden="true" />
-              <span>anum922006@gmail.com</span>
-            </a>
+            <span className="hero-contact-prompt">Let&apos;s work — Contact me</span>
 
-            <a
-              href="https://www.linkedin.com/in/anumfaridcreative/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-contact-link"
-              aria-label="Anum Farid on LinkedIn"
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
+            <div className="hero-contact-actions">
+              <a
+                href="mailto:anum922006@gmail.com"
+                className="hero-contact-link"
+                aria-label="Email Anum Farid"
               >
-                <path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19ZM8.34 17.34V10.67H6.12V17.34H8.34ZM7.23 9.76C7.98 9.76 8.45 9.26 8.45 8.64C8.44 8 7.98 7.52 7.25 7.52C6.51 7.52 6.03 8 6.03 8.64C6.03 9.26 6.5 9.76 7.21 9.76H7.23ZM18 17.34V13.59C18 11.58 16.93 10.64 15.5 10.64C14.35 10.64 13.84 11.27 13.55 11.72V10.67H11.33C11.36 11.27 11.33 17.34 11.33 17.34H13.55V13.62C13.55 13.42 13.57 13.22 13.62 13.08C13.77 12.71 14.11 12.33 14.68 12.33C15.42 12.33 15.78 12.89 15.78 13.71V17.34H18Z" />
-              </svg>
-              <span>LinkedIn</span>
-            </a>
+                <span className="hero-contact-badge">
+                  <Mail size={15} strokeWidth={1.9} aria-hidden="true" />
+                </span>
+                <span>anum922006@gmail.com</span>
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/anumfaridcreative/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-contact-link"
+                aria-label="Anum Farid on LinkedIn"
+              >
+                <span className="hero-contact-badge">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19ZM8.34 17.34V10.67H6.12V17.34H8.34ZM7.23 9.76C7.98 9.76 8.45 9.26 8.45 8.64C8.44 8 7.98 7.52 7.25 7.52C6.51 7.52 6.03 8 6.03 8.64C6.03 9.26 6.5 9.76 7.21 9.76H7.23ZM18 17.34V13.59C18 11.58 16.93 10.64 15.5 10.64C14.35 10.64 13.84 11.27 13.55 11.72V10.67H11.33C11.36 11.27 11.33 17.34 11.33 17.34H13.55V13.62C13.55 13.42 13.57 13.22 13.62 13.08C13.77 12.71 14.11 12.33 14.68 12.33C15.42 12.33 15.78 12.89 15.78 13.71V17.34H18Z" />
+                  </svg>
+                </span>
+                <span>LinkedIn</span>
+              </a>
+            </div>
           </div>
 
           <div className="hero-bottom hero-small">
@@ -532,11 +540,12 @@ export default function Home() {
             </p>
 
             <p className="about-reveal">
-              I create purposeful visual experiences where strategy, design and
-              storytelling work together to communicate clearly and leave a
-              lasting impression. From brand identities and editorial
-              compositions to digital experiences, every visual decision has a
-              reason, a hierarchy and a purpose.
+              What I create: I create visual content and digital experiences that
+              help businesses present their products, communicate their ideas and
+              connect with their audiences. My work explores social media
+              campaigns, 3D product visuals, promotional videos and interactive
+              digital presentations — bringing ideas to life through thoughtful
+              design and visual storytelling.
             </p>
           </div>
         </div>
@@ -584,53 +593,44 @@ export default function Home() {
         <div className="section-number">04</div>
 
         <div className="section-grid">
-          <div className="section-label">WHAT I CREATE</div>
+          <div className="section-label">WHAT I BRING</div>
 
           <div className="bring-content">
             <p className="bring-intro">
-              I create visual content and digital experiences that help
-              businesses present their products, communicate their ideas and
-              connect with their audiences.
-            </p>
-
-            <p className="bring-summary">
-              My work explores social media campaigns, 3D product visuals,
-              promotional videos and interactive digital presentations —
-              bringing ideas to life through thoughtful design and visual
-              storytelling.
+              A combination of strategic thinking and visual execution.
             </p>
 
             <div className="bring-list">
               <div className="bring-item">
                 <span>01</span>
 
-                <strong>SOCIAL MEDIA CAMPAIGNS</strong>
+                <strong>CLARITY</strong>
 
-                <p>Social media campaign design tailored to brand voice and audience.</p>
+                <p>Turning complex ideas into clear visual communication.</p>
               </div>
 
               <div className="bring-item">
                 <span>02</span>
 
-                <strong>3D PRODUCT ADVERTISING</strong>
+                <strong>STRATEGY</strong>
 
-                <p>3D product visuals crafted to showcase form, detail and atmosphere.</p>
+                <p>Designing with the objective and audience in mind.</p>
               </div>
 
               <div className="bring-item">
                 <span>03</span>
 
-                <strong>PROMOTIONAL VIDEOS</strong>
+                <strong>VISUAL STORYTELLING</strong>
 
-                <p>Promotional video content that communicates ideas with clarity.</p>
+                <p>Creating visuals that guide, communicate and connect.</p>
               </div>
 
               <div className="bring-item">
                 <span>04</span>
 
-                <strong>DIGITAL EXPERIENCES</strong>
+                <strong>DETAIL</strong>
 
-                <p>Interactive digital presentations built around visual storytelling.</p>
+                <p>Refining typography, composition, hierarchy and interaction.</p>
               </div>
             </div>
           </div>
@@ -823,34 +823,61 @@ export default function Home() {
 
         .hero-contacts {
           display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          margin-top: 26px;
+          margin-left: 7vw;
+        }
+
+        .hero-contact-prompt {
+          font-size: 10px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: #e3c278;
+          font-weight: 700;
+        }
+
+        .hero-contact-actions {
+          display: flex;
           align-items: center;
           flex-wrap: wrap;
-          gap: 10px 20px;
-          margin-top: 24px;
-          margin-left: 7vw;
+          gap: 10px;
         }
 
         .hero-contact-link {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          color: rgba(229, 222, 213, 0.78);
+          gap: 8px;
+          padding: 7px 14px 7px 7px;
+          border-radius: 999px;
+          border: 1px solid rgba(227, 194, 120, 0.55);
+          background: rgba(227, 194, 120, 0.14);
+          color: #f7f1e6;
           text-decoration: none;
-          font-size: 11px;
-          letter-spacing: 0.08em;
-          transition: color 0.2s ease;
-        }
-
-        .hero-contact-link svg {
-          color: #9e8651;
-          flex-shrink: 0;
+          font-size: 11.5px;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         }
 
         .hero-contact-link:hover,
         .hero-contact-link:focus-visible {
-          color: #e5ded5;
-          text-decoration: underline;
-          text-underline-offset: 4px;
+          transform: translateY(-1px);
+          border-color: rgba(227, 194, 120, 0.9);
+          background: rgba(227, 194, 120, 0.24);
+        }
+
+        .hero-contact-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          background: #d6b36a;
+          color: #111815;
+          flex-shrink: 0;
         }
 
         .hero-bottom {
@@ -1072,22 +1099,13 @@ export default function Home() {
         }
 
         .bring-intro {
-          max-width: 680px;
-          margin: 0 0 28px;
+          max-width: 600px;
+          margin: 0 0 80px;
           font-family: Georgia, serif;
-          font-size: clamp(32px, 3.4vw, 52px);
-          line-height: 1.12;
+          font-size: clamp(36px, 3.8vw, 60px);
+          line-height: 1.08;
           letter-spacing: -0.015em;
           word-spacing: 0.04em;
-          color: #1c2d27;
-        }
-
-        .bring-summary {
-          max-width: 620px;
-          margin: 0 0 72px;
-          font-size: 15px;
-          line-height: 1.85;
-          opacity: 0.8;
           color: #1c2d27;
         }
 
@@ -1097,7 +1115,7 @@ export default function Home() {
 
         .bring-item {
           display: grid;
-          grid-template-columns: 70px 1.25fr 1fr;
+          grid-template-columns: 70px 1fr 1fr;
           align-items: center;
           gap: 30px;
           padding: 30px 0;
@@ -1113,18 +1131,18 @@ export default function Home() {
 
         .bring-item strong {
           font-family: Georgia, serif;
-          font-size: clamp(22px, 2.5vw, 38px);
+          font-size: clamp(24px, 3vw, 44px);
           font-weight: 400;
           letter-spacing: -0.01em;
           color: #1c2d27;
         }
 
         .bring-item p {
-          max-width: 340px;
+          max-width: 320px;
           margin: 0;
-          font-size: 13px;
+          font-size: 12px;
           line-height: 1.7;
-          opacity: 0.75;
+          opacity: 0.72;
           color: #1c2d27;
         }
 
@@ -1220,9 +1238,9 @@ export default function Home() {
           }
 
           .hero-contacts {
-            margin-top: 16px;
+            margin-top: 18px;
             margin-left: 0;
-            gap: 8px 16px;
+            gap: 8px;
           }
 
           .hero-bottom {
@@ -1281,13 +1299,8 @@ export default function Home() {
           }
 
           .bring-intro {
-            margin-bottom: 18px;
-            font-size: 28px;
-          }
-
-          .bring-summary {
-            margin-bottom: 36px;
-            font-size: 14px;
+            margin-bottom: 44px;
+            font-size: 32px;
           }
 
           .bring-item {
