@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Mail } from "lucide-react";
 import ElevateProject from "./components/ElevateProject";
 import SignatureCoffeeProject from "./components/SignatureCoffeeProject";
 import BrewCoProject from "./components/BrewCoProject";
@@ -468,6 +469,36 @@ export default function Home() {
             </p>
           </div>
 
+          <div className="hero-contacts hero-small" aria-label="Contact links">
+            <a
+              href="mailto:anum922006@gmail.com"
+              className="hero-contact-link"
+              aria-label="Email Anum Farid"
+            >
+              <Mail size={13} strokeWidth={1.75} aria-hidden="true" />
+              <span>anum922006@gmail.com</span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/anumfaridcreative/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hero-contact-link"
+              aria-label="Anum Farid on LinkedIn"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19ZM8.34 17.34V10.67H6.12V17.34H8.34ZM7.23 9.76C7.98 9.76 8.45 9.26 8.45 8.64C8.44 8 7.98 7.52 7.25 7.52C6.51 7.52 6.03 8 6.03 8.64C6.03 9.26 6.5 9.76 7.21 9.76H7.23ZM18 17.34V13.59C18 11.58 16.93 10.64 15.5 10.64C14.35 10.64 13.84 11.27 13.55 11.72V10.67H11.33C11.36 11.27 11.33 17.34 11.33 17.34H13.55V13.62C13.55 13.42 13.57 13.22 13.62 13.08C13.77 12.71 14.11 12.33 14.68 12.33C15.42 12.33 15.78 12.89 15.78 13.71V17.34H18Z" />
+              </svg>
+              <span>LinkedIn</span>
+            </a>
+          </div>
+
           <div className="hero-bottom hero-small">
             <span>SCROLL TO EXPLORE</span>
 
@@ -553,44 +584,53 @@ export default function Home() {
         <div className="section-number">04</div>
 
         <div className="section-grid">
-          <div className="section-label">WHAT I BRING</div>
+          <div className="section-label">WHAT I CREATE</div>
 
           <div className="bring-content">
             <p className="bring-intro">
-              A combination of strategic thinking and visual execution.
+              I create visual content and digital experiences that help
+              businesses present their products, communicate their ideas and
+              connect with their audiences.
+            </p>
+
+            <p className="bring-summary">
+              My work explores social media campaigns, 3D product visuals,
+              promotional videos and interactive digital presentations —
+              bringing ideas to life through thoughtful design and visual
+              storytelling.
             </p>
 
             <div className="bring-list">
               <div className="bring-item">
                 <span>01</span>
 
-                <strong>CLARITY</strong>
+                <strong>SOCIAL MEDIA CAMPAIGNS</strong>
 
-                <p>Turning complex ideas into clear visual communication.</p>
+                <p>Social media campaign design tailored to brand voice and audience.</p>
               </div>
 
               <div className="bring-item">
                 <span>02</span>
 
-                <strong>STRATEGY</strong>
+                <strong>3D PRODUCT ADVERTISING</strong>
 
-                <p>Designing with the objective and audience in mind.</p>
+                <p>3D product visuals crafted to showcase form, detail and atmosphere.</p>
               </div>
 
               <div className="bring-item">
                 <span>03</span>
 
-                <strong>VISUAL STORYTELLING</strong>
+                <strong>PROMOTIONAL VIDEOS</strong>
 
-                <p>Creating visuals that guide, communicate and connect.</p>
+                <p>Promotional video content that communicates ideas with clarity.</p>
               </div>
 
               <div className="bring-item">
                 <span>04</span>
 
-                <strong>DETAIL</strong>
+                <strong>DIGITAL EXPERIENCES</strong>
 
-                <p>Refining typography, composition, hierarchy and interaction.</p>
+                <p>Interactive digital presentations built around visual storytelling.</p>
               </div>
             </div>
           </div>
@@ -781,11 +821,43 @@ export default function Home() {
           line-height: 1.8;
         }
 
+        .hero-contacts {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 10px 20px;
+          margin-top: 24px;
+          margin-left: 7vw;
+        }
+
+        .hero-contact-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          color: rgba(229, 222, 213, 0.78);
+          text-decoration: none;
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          transition: color 0.2s ease;
+        }
+
+        .hero-contact-link svg {
+          color: #9e8651;
+          flex-shrink: 0;
+        }
+
+        .hero-contact-link:hover,
+        .hero-contact-link:focus-visible {
+          color: #e5ded5;
+          text-decoration: underline;
+          text-underline-offset: 4px;
+        }
+
         .hero-bottom {
           display: flex;
           align-items: center;
           gap: 18px;
-          margin-top: 75px;
+          margin-top: 44px;
           margin-left: 7vw;
           font-size: 9px;
           letter-spacing: 0.22em;
@@ -1000,13 +1072,22 @@ export default function Home() {
         }
 
         .bring-intro {
-          max-width: 600px;
-          margin: 0 0 80px;
+          max-width: 680px;
+          margin: 0 0 28px;
           font-family: Georgia, serif;
-          font-size: clamp(36px, 3.8vw, 60px);
-          line-height: 1.08;
+          font-size: clamp(32px, 3.4vw, 52px);
+          line-height: 1.12;
           letter-spacing: -0.015em;
           word-spacing: 0.04em;
+          color: #1c2d27;
+        }
+
+        .bring-summary {
+          max-width: 620px;
+          margin: 0 0 72px;
+          font-size: 15px;
+          line-height: 1.85;
+          opacity: 0.8;
           color: #1c2d27;
         }
 
@@ -1016,7 +1097,7 @@ export default function Home() {
 
         .bring-item {
           display: grid;
-          grid-template-columns: 70px 1fr 1fr;
+          grid-template-columns: 70px 1.25fr 1fr;
           align-items: center;
           gap: 30px;
           padding: 30px 0;
@@ -1032,18 +1113,18 @@ export default function Home() {
 
         .bring-item strong {
           font-family: Georgia, serif;
-          font-size: clamp(24px, 3vw, 44px);
+          font-size: clamp(22px, 2.5vw, 38px);
           font-weight: 400;
           letter-spacing: -0.01em;
           color: #1c2d27;
         }
 
         .bring-item p {
-          max-width: 320px;
+          max-width: 340px;
           margin: 0;
-          font-size: 12px;
+          font-size: 13px;
           line-height: 1.7;
-          opacity: 0.72;
+          opacity: 0.75;
           color: #1c2d27;
         }
 
@@ -1138,8 +1219,14 @@ export default function Home() {
             width: min(320px, 85vw);
           }
 
+          .hero-contacts {
+            margin-top: 16px;
+            margin-left: 0;
+            gap: 8px 16px;
+          }
+
           .hero-bottom {
-            margin-top: 28px;
+            margin-top: 24px;
             margin-left: 0;
           }
 
@@ -1194,8 +1281,13 @@ export default function Home() {
           }
 
           .bring-intro {
-            margin-bottom: 44px;
-            font-size: 32px;
+            margin-bottom: 18px;
+            font-size: 28px;
+          }
+
+          .bring-summary {
+            margin-bottom: 36px;
+            font-size: 14px;
           }
 
           .bring-item {

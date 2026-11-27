@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 
 type Stage = "idle" | "playing" | "ended" | "posts_view";
 
@@ -54,32 +54,53 @@ const LUMINE_POSTS: PostItem[] = [
 ];
 
 export default function LumineStudioProject() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const stageRef = useRef<Stage>("idle");
 
   const [stage, setStage] = useState<Stage>("idle");
   const [videoError, setVideoError] = useState(false);
+  const [videoRatio, setVideoRatio] = useState<number>(16 / 9);
+  const [shouldPreload, setShouldPreload] = useState(false);
   const [activePostIndex, setActivePostIndex] = useState<number | null>(null);
   const [missingImages, setMissingImages] = useState<Record<string, boolean>>({});
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkViewport = () => setIsMobile(window.innerWidth <= 800);
-    checkViewport();
-    window.addEventListener("resize", checkViewport);
-    return () => window.removeEventListener("resize", checkViewport);
-  }, []);
 
   useEffect(() => {
     stageRef.current = stage;
   }, [stage]);
 
+  // Lazy-activate full video buffering only when section nears viewport
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldPreload(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "350px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    const handleMetadata = () => {
+      if (video.videoWidth > 0 && video.videoHeight > 0) {
+        setVideoRatio(video.videoWidth / video.videoHeight);
+      }
+    };
+
     const lockFirstFrame = () => {
       setVideoError(false);
+      handleMetadata();
       try {
         video.pause();
         video.currentTime = 0.02;
@@ -96,9 +117,13 @@ export default function LumineStudioProject() {
       setStage("ended");
     };
 
+    video.addEventListener("loadedmetadata", handleMetadata);
     video.addEventListener("error", handleError);
     video.addEventListener("ended", handleEnded);
 
+    if (video.readyState >= 1) {
+      handleMetadata();
+    }
     if (video.readyState >= 2) {
       lockFirstFrame();
     } else {
@@ -106,6 +131,7 @@ export default function LumineStudioProject() {
     }
 
     return () => {
+      video.removeEventListener("loadedmetadata", handleMetadata);
       video.removeEventListener("error", handleError);
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("loadeddata", lockFirstFrame);
@@ -186,10 +212,16 @@ export default function LumineStudioProject() {
   const showStartInfo = stage === "idle";
   const showReplay = stage === "ended";
 
+  const frameDynamicStyle = {
+    "--video-ratio": `${videoRatio}`,
+  } as React.CSSProperties;
+
   return (
     <section
+      ref={sectionRef}
       id="lumine-studio"
       className="showcase-section"
+      style={frameDynamicStyle}
       onClick={handleStageTap}
       onContextMenu={(e) => e.preventDefault()}
     >
@@ -202,7 +234,7 @@ export default function LumineStudioProject() {
                 LUMINE <em>BEAUTY STUDIO</em>
               </h2>
               <p className="showcase-desc">
-                Serene spa and beauty studio visual identity, signature glow facial showcase, and campaign series.
+                Refined beauty and skincare visual identity, signature glow facial presentation, and campaign series.
               </p>
             </div>
             <span className="showcase-status">TOUCH SCREEN TO PLAY</span>
@@ -215,7 +247,7 @@ export default function LumineStudioProject() {
             className={`showcase-video ${isPostsVisible ? "is-faded" : ""}`}
             muted
             playsInline
-            preload={isMobile ? "auto" : "auto"}
+            preload={shouldPreload ? "auto" : "metadata"}
             controlsList="nodownload nofullscreen noremoteplayback"
             disablePictureInPicture
           >
@@ -239,10 +271,11 @@ export default function LumineStudioProject() {
             className="showcase-posts-btn"
             onClick={handleOpenPosts}
           >
-            <span>Click this icon to view the complete posts</span>
             <span className="showcase-icon-badge">
-              <LayoutGrid size={15} strokeWidth={1.8} />
+              <LayoutGrid size={15} strokeWidth={1.9} />
             </span>
+            <span className="showcase-posts-label">EXPLORE THE CAMPAIGN POSTS</span>
+            <ArrowUpRight size={14} strokeWidth={1.9} className="showcase-posts-arrow" />
           </button>
 
           {showReplay && (
@@ -387,8 +420,13 @@ export default function LumineStudioProject() {
           position: relative;
           width: 100%;
           min-height: 100svh;
-          padding: 40px 4vw;
-          background: #141011;
+          padding: 48px 4vw;
+          background: radial-gradient(
+              circle at 26% 24%,
+              rgba(180, 120, 122, 0.16),
+              transparent 44%
+            ),
+            linear-gradient(155deg, #171012 0%, #22171a 54%, #120c0e 100%);
           color: #f6efe9;
           display: flex;
           align-items: center;
@@ -404,7 +442,7 @@ export default function LumineStudioProject() {
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 18px;
         }
 
         .showcase-header {
@@ -418,7 +456,7 @@ export default function LumineStudioProject() {
         .showcase-meta {
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 5px;
           max-width: 680px;
         }
 
@@ -446,7 +484,7 @@ export default function LumineStudioProject() {
         .showcase-desc {
           margin: 0;
           font-size: 13.5px;
-          line-height: 1.5;
+          line-height: 1.55;
           color: rgba(246, 239, 233, 0.82);
         }
 
@@ -455,9 +493,9 @@ export default function LumineStudioProject() {
           letter-spacing: 0.2em;
           text-transform: uppercase;
           color: #f2e6e1;
-          background: rgba(246, 239, 233, 0.05);
+          background: rgba(221, 179, 174, 0.08);
           padding: 8px 14px;
-          border: 1px solid rgba(246, 239, 233, 0.2);
+          border: 1px solid rgba(221, 179, 174, 0.24);
           border-radius: 999px;
           white-space: nowrap;
         }
@@ -465,12 +503,13 @@ export default function LumineStudioProject() {
         .showcase-stage {
           position: relative;
           width: 100%;
-          max-width: min(100%, calc(76svh * 16 / 9));
-          aspect-ratio: 16 / 9;
+          max-width: min(100%, calc(74svh * var(--video-ratio, 1.7778)));
+          aspect-ratio: var(--video-ratio, 16 / 9);
           margin: 0 auto;
           background: #0d090a;
           border-radius: 14px;
-          border: 1px solid rgba(246, 239, 233, 0.14);
+          border: 1px solid rgba(221, 179, 174, 0.22);
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
           overflow: hidden;
           cursor: pointer;
           z-index: 1;
@@ -491,11 +530,25 @@ export default function LumineStudioProject() {
           opacity: 0.2;
         }
 
+        .video-missing-note {
+          position: absolute;
+          inset: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 16px;
+          background: rgba(13, 9, 10, 0.9);
+          color: #f6efe9;
+          font-size: 13px;
+          border-radius: 10px;
+        }
+
         .showcase-footer {
           position: relative;
           z-index: 30;
           width: 100%;
-          max-width: min(100%, calc(76svh * 16 / 9));
+          max-width: min(100%, calc(74svh * var(--video-ratio, 1.7778)));
           margin: 0 auto;
           display: flex;
           align-items: center;
@@ -509,34 +562,48 @@ export default function LumineStudioProject() {
           z-index: 31;
           display: inline-flex;
           align-items: center;
-          gap: 12px;
-          padding: 8px 12px 8px 16px;
+          gap: 11px;
+          padding: 7px 16px 7px 8px;
           border-radius: 999px;
-          border: 1px solid rgba(246, 239, 233, 0.22);
-          background: rgba(246, 239, 233, 0.05);
-          color: #f6efe9;
-          font-size: 12px;
-          font-weight: 400;
+          border: 1px solid rgba(221, 179, 174, 0.48);
+          background: rgba(221, 179, 174, 0.14);
+          color: #f8f1ee;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
           cursor: pointer;
           touch-action: manipulation;
-          transition: border-color 0.2s ease, background 0.2s ease;
+          transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         }
 
         .showcase-posts-btn:hover {
-          border-color: rgba(246, 239, 233, 0.45);
-          background: rgba(246, 239, 233, 0.1);
+          transform: translateY(-1px);
+          border-color: rgba(221, 179, 174, 0.85);
+          background: rgba(221, 179, 174, 0.22);
+        }
+
+        .showcase-posts-btn:active {
+          transform: scale(0.98);
         }
 
         .showcase-icon-badge {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 28px;
-          height: 28px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
-          background: rgba(221, 179, 174, 0.2);
-          color: #f6efe9;
-          border: 1px solid rgba(221, 179, 174, 0.35);
+          background: #ddb3ae;
+          color: #171012;
+          flex-shrink: 0;
+        }
+
+        .showcase-posts-label {
+          line-height: 1.2;
+        }
+
+        .showcase-posts-arrow {
+          color: #ddb3ae;
           flex-shrink: 0;
         }
 
@@ -560,7 +627,7 @@ export default function LumineStudioProject() {
           gap: 8px;
           padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid rgba(246, 239, 233, 0.22);
+          border: 1px solid rgba(221, 179, 174, 0.28);
           background: transparent;
           color: #f6efe9;
           font-size: 11px;
@@ -571,8 +638,8 @@ export default function LumineStudioProject() {
         }
 
         .showcase-replay-btn:hover {
-          border-color: rgba(246, 239, 233, 0.45);
-          background: rgba(246, 239, 233, 0.08);
+          border-color: rgba(221, 179, 174, 0.55);
+          background: rgba(221, 179, 174, 0.1);
         }
 
         .posts-modal-backdrop {
@@ -649,7 +716,7 @@ export default function LumineStudioProject() {
         }
 
         .editorial-post-card {
-          background: #1a1415;
+          background: #1d1416;
           border: 1px solid rgba(246, 239, 233, 0.12);
           border-radius: 16px;
           overflow: hidden;
@@ -661,7 +728,7 @@ export default function LumineStudioProject() {
 
         .editorial-post-card:hover {
           transform: translateY(-2px);
-          border-color: rgba(246, 239, 233, 0.3);
+          border-color: rgba(221, 179, 174, 0.42);
         }
 
         .editorial-post-frame {
@@ -678,6 +745,13 @@ export default function LumineStudioProject() {
           height: auto;
           display: block;
           border-radius: 10px;
+        }
+
+        .post-fallback {
+          padding: 24px;
+          font-size: 12px;
+          color: rgba(246, 239, 233, 0.7);
+          text-align: center;
         }
 
         .editorial-post-body {
@@ -722,13 +796,99 @@ export default function LumineStudioProject() {
           color: rgba(246, 239, 233, 0.76);
         }
 
+        .post-lightbox {
+          position: fixed;
+          inset: 0;
+          z-index: 100;
+          background: rgba(11, 7, 8, 0.94);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        }
+
+        .lightbox-close {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 105;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 1px solid rgba(246, 239, 233, 0.25);
+          background: rgba(29, 20, 22, 0.85);
+          color: #f6efe9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+
+        .lightbox-nav {
+          position: fixed;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 105;
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          border: 1px solid rgba(246, 239, 233, 0.25);
+          background: rgba(29, 20, 22, 0.85);
+          color: #f6efe9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+
+        .lightbox-nav.prev {
+          left: 18px;
+        }
+
+        .lightbox-nav.next {
+          right: 18px;
+        }
+
+        .lightbox-content {
+          max-width: min(860px, 88vw);
+          max-height: 86svh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .lightbox-img {
+          max-width: 100%;
+          max-height: calc(86svh - 54px);
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          border-radius: 12px;
+        }
+
+        .lightbox-caption {
+          text-align: center;
+        }
+
+        .lightbox-caption span {
+          font-size: 10px;
+          letter-spacing: 0.2em;
+          color: #ddb3ae;
+        }
+
+        .lightbox-caption p {
+          margin: 4px 0 0;
+          font-size: 13px;
+          color: #f6efe9;
+        }
+
         @media (max-width: 800px) {
           .showcase-section {
             min-height: auto;
             display: block;
             padding: 64px 16px;
-            background: #141011;
-            border-top: 1px solid rgba(246, 239, 233, 0.08);
+            border-top: 1px solid rgba(221, 179, 174, 0.14);
             overflow: visible;
           }
 
@@ -754,7 +914,9 @@ export default function LumineStudioProject() {
 
           .showcase-stage {
             max-width: 100%;
-            aspect-ratio: 16 / 9;
+            width: 100%;
+            height: auto;
+            aspect-ratio: var(--video-ratio, 16 / 9);
             border-radius: 10px;
           }
 
@@ -768,7 +930,7 @@ export default function LumineStudioProject() {
           .showcase-posts-btn {
             width: 100%;
             justify-content: space-between;
-            padding: 10px 12px 10px 16px;
+            padding: 8px 14px 8px 8px;
           }
 
           .showcase-ended-group {

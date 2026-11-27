@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutGrid, RotateCcw, ArrowLeft, X, ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 
 type Stage = "idle" | "playing" | "ended" | "posts_view";
 
@@ -40,32 +40,53 @@ const COFFEE_POSTS: PostItem[] = [
 ];
 
 export default function SignatureCoffeeProject() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const stageRef = useRef<Stage>("idle");
 
   const [stage, setStage] = useState<Stage>("idle");
   const [videoError, setVideoError] = useState(false);
+  const [videoRatio, setVideoRatio] = useState<number>(16 / 9);
+  const [shouldPreload, setShouldPreload] = useState(false);
   const [activePostIndex, setActivePostIndex] = useState<number | null>(null);
   const [missingImages, setMissingImages] = useState<Record<string, boolean>>({});
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkViewport = () => setIsMobile(window.innerWidth <= 800);
-    checkViewport();
-    window.addEventListener("resize", checkViewport);
-    return () => window.removeEventListener("resize", checkViewport);
-  }, []);
 
   useEffect(() => {
     stageRef.current = stage;
   }, [stage]);
 
+  // Lazy-activate full video buffering only when section nears viewport
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldPreload(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "350px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    const handleMetadata = () => {
+      if (video.videoWidth > 0 && video.videoHeight > 0) {
+        setVideoRatio(video.videoWidth / video.videoHeight);
+      }
+    };
+
     const lockFirstFrame = () => {
       setVideoError(false);
+      handleMetadata();
       try {
         video.pause();
         video.currentTime = 0.02;
@@ -82,9 +103,13 @@ export default function SignatureCoffeeProject() {
       setStage("ended");
     };
 
+    video.addEventListener("loadedmetadata", handleMetadata);
     video.addEventListener("error", handleError);
     video.addEventListener("ended", handleEnded);
 
+    if (video.readyState >= 1) {
+      handleMetadata();
+    }
     if (video.readyState >= 2) {
       lockFirstFrame();
     } else {
@@ -92,6 +117,7 @@ export default function SignatureCoffeeProject() {
     }
 
     return () => {
+      video.removeEventListener("loadedmetadata", handleMetadata);
       video.removeEventListener("error", handleError);
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("loadeddata", lockFirstFrame);
@@ -172,10 +198,16 @@ export default function SignatureCoffeeProject() {
   const showStartInfo = stage === "idle";
   const showReplay = stage === "ended";
 
+  const frameDynamicStyle = {
+    "--video-ratio": `${videoRatio}`,
+  } as React.CSSProperties;
+
   return (
     <section
+      ref={sectionRef}
       id="signature-coffee"
       className="showcase-section"
+      style={frameDynamicStyle}
       onClick={handleStageTap}
       onContextMenu={(e) => e.preventDefault()}
     >
@@ -188,7 +220,7 @@ export default function SignatureCoffeeProject() {
                 SIGNATURE <em>COFFEE</em>
               </h2>
               <p className="showcase-desc">
-                Specialty café identity, menu system, and interactive campaign showcase.
+                Warm, product-focused specialty café identity, curated menu catalog, and promotional campaign series.
               </p>
             </div>
             <span className="showcase-status">TOUCH SCREEN TO PLAY</span>
@@ -201,7 +233,7 @@ export default function SignatureCoffeeProject() {
             className={`showcase-video ${isPostsVisible ? "is-faded" : ""}`}
             muted
             playsInline
-            preload={isMobile ? "auto" : "auto"}
+            preload={shouldPreload ? "auto" : "metadata"}
             controlsList="nodownload nofullscreen noremoteplayback"
             disablePictureInPicture
           >
@@ -225,10 +257,11 @@ export default function SignatureCoffeeProject() {
             className="showcase-posts-btn"
             onClick={handleOpenPosts}
           >
-            <span>Click this icon to view the complete posts</span>
             <span className="showcase-icon-badge">
-              <LayoutGrid size={15} strokeWidth={1.8} />
+              <LayoutGrid size={15} strokeWidth={1.9} />
             </span>
+            <span className="showcase-posts-label">EXPLORE THE CAMPAIGN POSTS</span>
+            <ArrowUpRight size={14} strokeWidth={1.9} className="showcase-posts-arrow" />
           </button>
 
           {showReplay && (
@@ -373,9 +406,14 @@ export default function SignatureCoffeeProject() {
           position: relative;
           width: 100%;
           min-height: 100svh;
-          padding: 40px 4vw;
-          background: #0d1310;
-          color: #f3eee6;
+          padding: 48px 4vw;
+          background: radial-gradient(
+              circle at 24% 26%,
+              rgba(181, 131, 74, 0.16),
+              transparent 44%
+            ),
+            linear-gradient(155deg, #17100c 0%, #231711 54%, #120c09 100%);
+          color: #f6efe6;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -390,7 +428,7 @@ export default function SignatureCoffeeProject() {
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 18px;
         }
 
         .showcase-header {
@@ -404,14 +442,14 @@ export default function SignatureCoffeeProject() {
         .showcase-meta {
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 5px;
           max-width: 680px;
         }
 
         .showcase-index {
           font-size: 11px;
           letter-spacing: 0.22em;
-          color: #d6c5a5;
+          color: #d4b078;
           text-transform: uppercase;
         }
 
@@ -421,29 +459,29 @@ export default function SignatureCoffeeProject() {
           font-size: clamp(26px, 3vw, 40px);
           line-height: 1.08;
           font-weight: 400;
-          color: #f3eee6;
+          color: #f6efe6;
         }
 
         .showcase-title em {
-          color: #dfd0b3;
+          color: #e4c794;
           font-style: italic;
         }
 
         .showcase-desc {
           margin: 0;
           font-size: 13.5px;
-          line-height: 1.5;
-          color: rgba(243, 238, 230, 0.82);
+          line-height: 1.55;
+          color: rgba(246, 239, 230, 0.82);
         }
 
         .showcase-status {
           font-size: 10px;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #ebe4d8;
-          background: rgba(243, 238, 230, 0.05);
+          color: #efe3d3;
+          background: rgba(212, 176, 120, 0.08);
           padding: 8px 14px;
-          border: 1px solid rgba(243, 238, 230, 0.2);
+          border: 1px solid rgba(212, 176, 120, 0.24);
           border-radius: 999px;
           white-space: nowrap;
         }
@@ -451,12 +489,13 @@ export default function SignatureCoffeeProject() {
         .showcase-stage {
           position: relative;
           width: 100%;
-          max-width: min(100%, calc(76svh * 16 / 9));
-          aspect-ratio: 16 / 9;
+          max-width: min(100%, calc(74svh * var(--video-ratio, 1.7778)));
+          aspect-ratio: var(--video-ratio, 16 / 9);
           margin: 0 auto;
-          background: #070b09;
+          background: #0d0806;
           border-radius: 14px;
-          border: 1px solid rgba(243, 238, 230, 0.14);
+          border: 1px solid rgba(212, 176, 120, 0.22);
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
           overflow: hidden;
           cursor: pointer;
           z-index: 1;
@@ -477,11 +516,25 @@ export default function SignatureCoffeeProject() {
           opacity: 0.2;
         }
 
+        .video-missing-note {
+          position: absolute;
+          inset: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 16px;
+          background: rgba(13, 8, 6, 0.9);
+          color: #f6efe6;
+          font-size: 13px;
+          border-radius: 10px;
+        }
+
         .showcase-footer {
           position: relative;
           z-index: 30;
           width: 100%;
-          max-width: min(100%, calc(76svh * 16 / 9));
+          max-width: min(100%, calc(74svh * var(--video-ratio, 1.7778)));
           margin: 0 auto;
           display: flex;
           align-items: center;
@@ -495,34 +548,48 @@ export default function SignatureCoffeeProject() {
           z-index: 31;
           display: inline-flex;
           align-items: center;
-          gap: 12px;
-          padding: 8px 12px 8px 16px;
+          gap: 11px;
+          padding: 7px 16px 7px 8px;
           border-radius: 999px;
-          border: 1px solid rgba(243, 238, 230, 0.22);
-          background: rgba(243, 238, 230, 0.05);
-          color: #f3eee6;
-          font-size: 12px;
-          font-weight: 400;
+          border: 1px solid rgba(212, 176, 120, 0.48);
+          background: rgba(212, 176, 120, 0.14);
+          color: #f7f0e6;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
           cursor: pointer;
           touch-action: manipulation;
-          transition: border-color 0.2s ease, background 0.2s ease;
+          transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         }
 
         .showcase-posts-btn:hover {
-          border-color: rgba(243, 238, 230, 0.45);
-          background: rgba(243, 238, 230, 0.1);
+          transform: translateY(-1px);
+          border-color: rgba(212, 176, 120, 0.85);
+          background: rgba(212, 176, 120, 0.22);
+        }
+
+        .showcase-posts-btn:active {
+          transform: scale(0.98);
         }
 
         .showcase-icon-badge {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 28px;
-          height: 28px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
-          background: rgba(214, 197, 165, 0.2);
-          color: #f3eee6;
-          border: 1px solid rgba(214, 197, 165, 0.35);
+          background: #d4b078;
+          color: #17100c;
+          flex-shrink: 0;
+        }
+
+        .showcase-posts-label {
+          line-height: 1.2;
+        }
+
+        .showcase-posts-arrow {
+          color: #d4b078;
           flex-shrink: 0;
         }
 
@@ -535,7 +602,7 @@ export default function SignatureCoffeeProject() {
 
         .showcase-ended-note {
           font-size: 12px;
-          color: rgba(243, 238, 230, 0.8);
+          color: rgba(246, 239, 230, 0.8);
         }
 
         .showcase-replay-btn {
@@ -546,9 +613,9 @@ export default function SignatureCoffeeProject() {
           gap: 8px;
           padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid rgba(243, 238, 230, 0.22);
+          border: 1px solid rgba(212, 176, 120, 0.28);
           background: transparent;
-          color: #f3eee6;
+          color: #f6efe6;
           font-size: 11px;
           letter-spacing: 0.14em;
           cursor: pointer;
@@ -557,8 +624,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .showcase-replay-btn:hover {
-          border-color: rgba(243, 238, 230, 0.45);
-          background: rgba(243, 238, 230, 0.08);
+          border-color: rgba(212, 176, 120, 0.55);
+          background: rgba(212, 176, 120, 0.1);
         }
 
         .posts-modal-backdrop {
@@ -566,7 +633,7 @@ export default function SignatureCoffeeProject() {
           inset: 0;
           z-index: 80;
           overflow-y: auto;
-          background: rgba(9, 13, 11, 0.96);
+          background: rgba(14, 9, 7, 0.96);
           padding: 28px 20px 56px;
         }
 
@@ -584,7 +651,7 @@ export default function SignatureCoffeeProject() {
           justify-content: space-between;
           gap: 16px;
           padding-bottom: 16px;
-          border-bottom: 1px solid rgba(243, 238, 230, 0.12);
+          border-bottom: 1px solid rgba(246, 239, 230, 0.12);
           flex-wrap: wrap;
         }
 
@@ -597,7 +664,7 @@ export default function SignatureCoffeeProject() {
         .posts-sheet-kicker {
           font-size: 10px;
           letter-spacing: 0.22em;
-          color: #d6c5a5;
+          color: #d4b078;
           text-transform: uppercase;
         }
 
@@ -606,11 +673,11 @@ export default function SignatureCoffeeProject() {
           font-family: Georgia, "Times New Roman", serif;
           font-size: clamp(24px, 3vw, 36px);
           font-weight: 400;
-          color: #f3eee6;
+          color: #f6efe6;
         }
 
         .posts-sheet-heading em {
-          color: #dfd0b3;
+          color: #e4c794;
           font-style: italic;
         }
 
@@ -620,9 +687,9 @@ export default function SignatureCoffeeProject() {
           gap: 8px;
           padding: 9px 15px;
           border-radius: 999px;
-          border: 1px solid rgba(243, 238, 230, 0.22);
-          background: rgba(243, 238, 230, 0.06);
-          color: #f3eee6;
+          border: 1px solid rgba(246, 239, 230, 0.22);
+          background: rgba(246, 239, 230, 0.06);
+          color: #f6efe6;
           font-size: 11px;
           letter-spacing: 0.14em;
           cursor: pointer;
@@ -635,8 +702,8 @@ export default function SignatureCoffeeProject() {
         }
 
         .editorial-post-card {
-          background: #121815;
-          border: 1px solid rgba(243, 238, 230, 0.12);
+          background: #1d140f;
+          border: 1px solid rgba(246, 239, 230, 0.12);
           border-radius: 16px;
           overflow: hidden;
           display: flex;
@@ -647,13 +714,13 @@ export default function SignatureCoffeeProject() {
 
         .editorial-post-card:hover {
           transform: translateY(-2px);
-          border-color: rgba(243, 238, 230, 0.3);
+          border-color: rgba(212, 176, 120, 0.42);
         }
 
         .editorial-post-frame {
-          background: #090d0b;
+          background: #110b08;
           padding: 12px;
-          border-bottom: 1px solid rgba(243, 238, 230, 0.08);
+          border-bottom: 1px solid rgba(246, 239, 230, 0.08);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -664,6 +731,13 @@ export default function SignatureCoffeeProject() {
           height: auto;
           display: block;
           border-radius: 10px;
+        }
+
+        .post-fallback {
+          padding: 24px;
+          font-size: 12px;
+          color: rgba(246, 239, 230, 0.7);
+          text-align: center;
         }
 
         .editorial-post-body {
@@ -683,13 +757,13 @@ export default function SignatureCoffeeProject() {
         .editorial-post-num {
           font-size: 10px;
           letter-spacing: 0.2em;
-          color: #d6c5a5;
+          color: #d4b078;
         }
 
         .editorial-post-hint {
           font-size: 10px;
           letter-spacing: 0.14em;
-          color: rgba(243, 238, 230, 0.56);
+          color: rgba(246, 239, 230, 0.56);
         }
 
         .editorial-post-title {
@@ -698,14 +772,101 @@ export default function SignatureCoffeeProject() {
           font-size: 18px;
           font-weight: 400;
           line-height: 1.3;
-          color: #f3eee6;
+          color: #f6efe6;
         }
 
         .editorial-post-caption {
           margin: 0;
           font-size: 13px;
           line-height: 1.55;
-          color: rgba(243, 238, 230, 0.76);
+          color: rgba(246, 239, 230, 0.76);
+        }
+
+        .post-lightbox {
+          position: fixed;
+          inset: 0;
+          z-index: 100;
+          background: rgba(10, 6, 5, 0.94);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        }
+
+        .lightbox-close {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 105;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 1px solid rgba(246, 239, 230, 0.25);
+          background: rgba(29, 20, 15, 0.85);
+          color: #f6efe6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+
+        .lightbox-nav {
+          position: fixed;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 105;
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          border: 1px solid rgba(246, 239, 230, 0.25);
+          background: rgba(29, 20, 15, 0.85);
+          color: #f6efe6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+
+        .lightbox-nav.prev {
+          left: 18px;
+        }
+
+        .lightbox-nav.next {
+          right: 18px;
+        }
+
+        .lightbox-content {
+          max-width: min(860px, 88vw);
+          max-height: 86svh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .lightbox-img {
+          max-width: 100%;
+          max-height: calc(86svh - 54px);
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          border-radius: 12px;
+        }
+
+        .lightbox-caption {
+          text-align: center;
+        }
+
+        .lightbox-caption span {
+          font-size: 10px;
+          letter-spacing: 0.2em;
+          color: #d4b078;
+        }
+
+        .lightbox-caption p {
+          margin: 4px 0 0;
+          font-size: 13px;
+          color: #f6efe6;
         }
 
         @media (max-width: 800px) {
@@ -713,8 +874,7 @@ export default function SignatureCoffeeProject() {
             min-height: auto;
             display: block;
             padding: 64px 16px;
-            background: #0d1310;
-            border-top: 1px solid rgba(243, 238, 230, 0.08);
+            border-top: 1px solid rgba(212, 176, 120, 0.14);
             overflow: visible;
           }
 
@@ -740,7 +900,9 @@ export default function SignatureCoffeeProject() {
 
           .showcase-stage {
             max-width: 100%;
-            aspect-ratio: 16 / 9;
+            width: 100%;
+            height: auto;
+            aspect-ratio: var(--video-ratio, 16 / 9);
             border-radius: 10px;
           }
 
@@ -754,7 +916,7 @@ export default function SignatureCoffeeProject() {
           .showcase-posts-btn {
             width: 100%;
             justify-content: space-between;
-            padding: 10px 12px 10px 16px;
+            padding: 8px 14px 8px 8px;
           }
 
           .showcase-ended-group {
