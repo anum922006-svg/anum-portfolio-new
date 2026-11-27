@@ -710,32 +710,25 @@ export default function Home() {
               </p>
 
               <p>
-                I&apos;m at the beginning of my creative journey, constantly
-                learning, experimenting and discovering new ways to bring ideas
-                to life. I may still be growing my experience, but I bring
-                curiosity, dedication and a genuine willingness to understand
-                every project I take on.
+                I believe every project begins with an idea, and bringing that
+                idea to life takes thoughtful design, clear direction and
+                attention to detail.
               </p>
 
               <p>
-                I believe good work begins with the right mindset, thoughtful
-                ideas and the effort to turn them into something meaningful.
-              </p>
-
-              <p>
-                If you have a project in mind, an idea you&apos;d like to
-                explore, or simply feel that we could create something
-                worthwhile together, I&apos;d love to hear from you.
+                Whether you have a project in mind, a concept you&apos;d like to
+                explore, or an opportunity to discuss, I&apos;d be glad to hear
+                from you.
               </p>
             </div>
 
             <div className="closing-cta-card closing-reveal">
               <h3 className="closing-cta-heading">
-                Let&apos;s make something <em>meaningful.</em>
+                LET&apos;S CREATE SOMETHING <em>MEANINGFUL.</em>
               </h3>
 
               <p className="closing-cta-sub">
-                I&apos;d be happy to hear about your next idea.
+                Have an idea? Let&apos;s talk.
               </p>
 
               <span className="closing-touch-label">GET IN TOUCH</span>
@@ -783,7 +776,7 @@ export default function Home() {
               </div>
 
               <div className="closing-signature">
-                <span>— Anum Farid</span>
+                <span>-ANUM FARID</span>
                 <small>PORTFOLIO / 2026</small>
               </div>
             </div>
@@ -1499,8 +1492,8 @@ export default function Home() {
         .closing-cta-heading {
           margin: 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(28px, 2.8vw, 38px);
-          line-height: 1.12;
+          font-size: clamp(26px, 2.5vw, 34px);
+          line-height: 1.15;
           font-weight: 400;
           color: #f5efe6;
         }
